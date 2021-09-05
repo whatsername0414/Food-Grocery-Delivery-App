@@ -1,0 +1,15 @@
+query HomeData {
+    getCategories {
+        id
+        name
+        img_url
+    }
+    getRestaurants {
+        id
+        name
+        img_url
+        categories
+        rating
+        isOpen
+    }
+}
