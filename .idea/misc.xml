@@ -3,11 +3,19 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/macel/AndroidStudioProjects/VroomVroom4/app/src/main/res/drawable/btn_background.xml" value="0.2169230769230769" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/VroomVroom4/app/src/main/res/drawable/cat_bg.xml" value="0.1" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/VroomVroom4/app/src/main/res/drawable/cat_img_bg.xml" value="0.19907407407407407" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/VroomVroom4/app/src/main/res/drawable/ic_check.xml" value="0.2203125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/VroomVroom4/app/src/main/res/layout/activity_auth.xml" value="0.18" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/VroomVroom4/app/src/main/res/layout/activity_home.xml" value="0.1" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/VroomVroom4/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/VroomVroom4/app/src/main/res/layout/fragment_blank.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/VroomVroom4/app/src/main/res/layout/fragment_hom.xml" value="0.22" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/VroomVroom4/app/src/main/res/layout/fragment_home.xml" value="0.22" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/VroomVroom4/app/src/main/res/layout/fragment_login.xml" value="0.25" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/VroomVroom4/app/src/main/res/layout/fragment_main_categories.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/VroomVroom4/app/src/main/res/layout/fragment_register.xml" value="0.4517543859649123" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/VroomVroom4/app/src/main/res/layout/item_category.xml" value="0.33" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/VroomVroom4/app/src/main/res/layout/item_restaurant.xml" value="0.25" />
       </map>

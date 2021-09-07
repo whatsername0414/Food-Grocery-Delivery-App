@@ -19,7 +19,7 @@ type Restaurant {
   name: String!
   img_url: String!
   categories: String!
-  rating: Float!
+  rating: Float
   isOpen: Boolean!
 }
 
@@ -96,7 +96,6 @@ input DeliveryInfoInput {
 }
 
 input RegisterInput {
-  full_name: String!
   username: String!
   email: String!
   password: String!

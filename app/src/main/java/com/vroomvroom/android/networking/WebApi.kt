@@ -13,7 +13,7 @@ class WebApi {
 
         val okHttpClient = OkHttpClient.Builder().build()
         return ApolloClient.builder()
-            .serverUrl("http://192.168.1.11:5000/")
+            .serverUrl("http://192.168.1.4:5000/")
             .okHttpClient(okHttpClient)
             .build()
     }

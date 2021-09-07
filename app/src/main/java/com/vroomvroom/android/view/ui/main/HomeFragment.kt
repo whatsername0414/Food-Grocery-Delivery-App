@@ -1,4 +1,4 @@
-package com.vroomvroom.android.view.ui
+package com.vroomvroom.android.view.ui.main
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -36,12 +36,12 @@ class HomeFragment: Fragment() {
 
         binding.categoriesRv.adapter = categoryAdapter
         binding.restaurantsRv.adapter = restaurantAdapter
-        viewModel.queryMainCategories()
+        viewModel.queryHomeData()
         observeLiveData()
     }
 
     private fun observeLiveData() {
-        viewModel.mainCategories.observe(viewLifecycleOwner) {response ->
+        viewModel.homeData.observe(viewLifecycleOwner) { response ->
             when(response) {
                 is ViewState.Loading -> {
                     binding.categoriesRv.visibility = View.GONE

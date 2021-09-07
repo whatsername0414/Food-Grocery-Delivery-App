@@ -22,10 +22,10 @@ class DataViewModel @Inject constructor(
 ): ViewModel() {
     private val _homeData by lazy { MutableLiveData<ViewState<Response<HomeDataQuery.Data>>>() }
 
-    val mainCategories: LiveData<ViewState<Response<HomeDataQuery.Data>>>
+    val homeData: LiveData<ViewState<Response<HomeDataQuery.Data>>>
         get() = _homeData
 
-    fun queryMainCategories() = viewModelScope.launch {
+    fun queryHomeData() = viewModelScope.launch {
         _homeData.postValue(ViewState.Loading())
         try {
             val response = repository.queryHomeData()

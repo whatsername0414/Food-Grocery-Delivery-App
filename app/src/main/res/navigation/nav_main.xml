@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_main.xml"
-    app:startDestination="@id/categories_list_fragment">
+    app:startDestination="@id/restaurantFragment">
 
     <fragment
-        android:id="@+id/categories_list_fragment"
-        android:name="com.vroomvroom.android.view.ui.HomeFragment"
+        android:id="@+id/restaurantFragment"
+        android:name="com.vroomvroom.android.view.ui.main.HomeFragment"
         tools:layout="@layout/fragment_home" />
 
 </navigation>
