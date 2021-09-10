@@ -1,6 +1,6 @@
 package com.vroomvroom.android.di
 
-import com.vroomvroom.android.networking.WebApi
+import com.vroomvroom.android.networking.GraphQLApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,5 +13,5 @@ object RepoModule {
 
     @Singleton
     @Provides
-    fun provideWebServices() = WebApi()
+    fun provideWebServices() = GraphQLApi()
 }

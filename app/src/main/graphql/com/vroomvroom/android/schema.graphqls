@@ -7,28 +7,25 @@ type Product {
   likes: [String]!
   likeCount: Int!
 }
-
 type Category {
   id: ID!
   name: String!
   img_url: String!
 }
-
 type Restaurant {
   id: ID!
   name: String!
   img_url: String!
-  categories: String!
+  categories: [String]!
   rating: Float
+  opening: String!
   isOpen: Boolean!
 }
-
 type Rate {
   id: ID!
   rate: Int!
   username: String!
 }
-
 type User {
   id: ID!
   full_name: String!
@@ -38,7 +35,6 @@ type User {
   token: String!
   createdAt: String!
 }
-
 type DeliveryInfo {
   id: ID!
   landmarks: String!
@@ -46,7 +42,6 @@ type DeliveryInfo {
   city: String!
   phoneNumber: String!
 }
-
 type Order {
   id: ID!
   customer: ID!
@@ -56,26 +51,22 @@ type Order {
   status: String!
   createdAt: String!
 }
-
-type Payment {
-  method: String!
-  createdAt: String!
-  id: ID!
-}
-
 type OrderProductDetail {
   menuId: ID!
   quantity: Int!
   total_price: Int!
 }
-
+type Payment {
+  id: ID!
+  method: String!
+  createdAt: String!
+}
 input RestaurantInput {
   name: String!
   img_url: String!
-  categories: String!
+  categories: [String]!
   isOpen: Boolean!
 }
-
 input PlaceOrderInput {
   landmarks: String!
   address: String!
@@ -87,53 +78,52 @@ input PlaceOrderInput {
   total_price: Int!
   status: String!
 }
-
 input DeliveryInfoInput {
   landmarks: String!
   address: String!
   city: String!
   phoneNumber: String!
 }
-
 input RegisterInput {
   username: String!
   email: String!
   password: String!
   confirmPassword: String!
 }
-
 input ProductInput {
   name: String!
   img_url: String!
   description: String!
   categories: [String]!
 }
-
 type Query {
-  getRestaurants: [Restaurant]
-  getRestaurantByCategory(category: String!): [Restaurant]
+  getRestaurants(category: String): [Restaurant]
   getOrders: [Order]
   getCategories: [Category]
   getProducts: [Product]
   getProductByCategory(category: String!): [Product]
 }
-
 type Mutation {
   register(registerInput: RegisterInput): User!
   login(username: String!, password: String!): User!
+
   createRestaurant(restaurantInput: RestaurantInput): Restaurant!
   deleteRestaurant(restaurantId: ID!): String!
+
   deliveryInfo(deliveryInfoInput: DeliveryInfoInput): User!
   deleteDeliveryInfo(deliveryInfoId: ID!): String!
+
   createProduct(productInput: ProductInput): Product!
   deleteProduct(productId: ID!): String!
+
   createCategory(name: String!, img_url: String!): Category!
   deleteCategory(categoryId: ID!): String!
+
   placeOrder(placeOrderInput: PlaceOrderInput): Order!
+
   likeProduct(productId: ID!): Product!
   rateRestaurant(restaurantId: ID!, rate: Int!): Restaurant!
 }
-
 type Subscription {
   newOrder: Order!
 }

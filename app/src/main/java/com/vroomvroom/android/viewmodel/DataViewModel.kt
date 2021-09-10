@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.exception.ApolloException
 import com.vroomvroom.android.HomeDataQuery
-import com.vroomvroom.android.repository.DataRepository
+import com.vroomvroom.android.repository.remote.GraphQLRepository
 import com.vroomvroom.android.view.state.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -18,9 +18,11 @@ import javax.inject.Inject
 @ExperimentalCoroutinesApi
 @HiltViewModel
 class DataViewModel @Inject constructor(
-    private val repository: DataRepository,
+    private val repository: GraphQLRepository,
 ): ViewModel() {
     private val _homeData by lazy { MutableLiveData<ViewState<Response<HomeDataQuery.Data>>>() }
+
+    private val TAG = "DataViewModel"
 
     val homeData: LiveData<ViewState<Response<HomeDataQuery.Data>>>
         get() = _homeData
@@ -31,8 +33,19 @@ class DataViewModel @Inject constructor(
             val response = repository.queryHomeData()
             _homeData.postValue(ViewState.Success(response))
         } catch (e: ApolloException) {
-            Log.d("ApolloException", "Failure", e)
-            _homeData.postValue(ViewState.Error("Error fetching categories"))
+            Log.e(TAG, "ApolloException", e)
+            _homeData.postValue(ViewState.Error("Error fetching restaurant"))
+        }
+    }
+
+    fun queryRestaurantByCategory(category: String) = viewModelScope.launch {
+        _homeData.postValue(ViewState.Loading())
+        try {
+            val response = repository.queryRestaurantByCategory(category)
+            _homeData.postValue(ViewState.Success(response))
+        } catch (e: ApolloException) {
+            Log.e(TAG, "ApolloException",e)
+            _homeData.postValue(ViewState.Error("Error fetching restaurant"))
         }
     }
 }

@@ -1,7 +1,7 @@
 package com.vroomvroom.android.di
 
-import com.vroomvroom.android.repository.DataRepository
-import com.vroomvroom.android.repository.DataRepositoryImpl
+import com.vroomvroom.android.repository.remote.GraphQLRepository
+import com.vroomvroom.android.repository.remote.GraphQLRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -14,5 +14,5 @@ abstract class ViewModelModule {
 
     @Binds
     @ViewModelScoped
-    abstract fun binRepository(repo: DataRepositoryImpl): DataRepository
+    abstract fun binRepository(repo: GraphQLRepositoryImpl): GraphQLRepository
 }

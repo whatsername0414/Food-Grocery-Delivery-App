@@ -36,8 +36,20 @@ class HomeFragment: Fragment() {
 
         binding.categoriesRv.adapter = categoryAdapter
         binding.restaurantsRv.adapter = restaurantAdapter
+
         viewModel.queryHomeData()
         observeLiveData()
+
+        categoryAdapter.onCategoryClicked = { category ->
+            category.let {
+                if (category?.name != null) {
+                    viewModel.queryRestaurantByCategory(category.name)
+                } else {
+                    viewModel.queryRestaurantByCategory("")
+                }
+                observeRestaurantLiveData()
+            }
+        }
     }
 
     private fun observeLiveData() {
@@ -63,6 +75,39 @@ class HomeFragment: Fragment() {
                     val category = response.value?.data?.getCategories
                     val restaurant = response.value?.data?.getRestaurants
                     categoryAdapter.submitList(category)
+                    restaurantAdapter.submitList(restaurant)
+                    binding.fetchProgress.visibility = View.GONE
+                }
+                is ViewState.Error -> {
+                    categoryAdapter.submitList(emptyList())
+                    restaurantAdapter.submitList(emptyList())
+                    binding.fetchProgress.visibility = View.GONE
+                    binding.categoriesRv.visibility = View.GONE
+                    binding.restaurantsRv.visibility = View.GONE
+                    binding.homeEmptyText.visibility = View.VISIBLE
+                }
+            }
+        }
+    }
+
+    private fun observeRestaurantLiveData() {
+        viewModel.homeData.observe(viewLifecycleOwner) { response ->
+            when(response) {
+                is ViewState.Loading -> {
+                    binding.categoriesRv.visibility = View.VISIBLE
+                    binding.restaurantsRv.visibility = View.VISIBLE
+                    binding.fetchProgress.visibility = View.VISIBLE
+                }
+                is ViewState.Success -> {
+                    if (response.value?.data == null) {
+                        restaurantAdapter.submitList(emptyList())
+                        binding.fetchProgress.visibility = View.GONE
+                        binding.restaurantsRv.visibility = View.GONE
+                        binding.homeEmptyText.visibility = View.VISIBLE
+                    } else {
+                        binding.homeEmptyText.visibility = View.GONE
+                    }
+                    val restaurant = response.value?.data?.getRestaurants
                     restaurantAdapter.submitList(restaurant)
                     binding.fetchProgress.visibility = View.GONE
                 }

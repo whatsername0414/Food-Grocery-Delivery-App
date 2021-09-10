@@ -14,12 +14,15 @@
         android:theme="@style/Theme.VroomVroom"
         android:usesCleartextTraffic="true">
         <activity
+            android:screenOrientation="portrait"
             android:name=".view.ui.auth.AuthActivity"
             android:exported="true" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".view.ui.main.HomeActivity"
             android:exported="true" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

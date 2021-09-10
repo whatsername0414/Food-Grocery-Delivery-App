@@ -9,39 +9,41 @@
     </data>
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/categoryCardView"
         android:layout_width="75dp"
         android:layout_height="125dp"
         android:layout_margin="8dp"
+        app:cardElevation="5dp"
         app:cardCornerRadius="100dp">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="8dp"
             android:background="@drawable/cat_img_bg"
             >
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.533"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 categoryImageUrl="@{category.img_url}" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
+            android:id="@+id/txt_catName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@{category.name}"
+            android:textSize="12sp"
             android:layout_gravity="center"
             android:textAlignment="center"
-            android:textColor="#000"
             android:layout_marginTop="24dp"
             />
     </androidx.cardview.widget.CardView>

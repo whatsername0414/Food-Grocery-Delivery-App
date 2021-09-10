@@ -10,12 +10,11 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:text="Main \nCategory"
         android:textSize="32sp"
-        android:textStyle="bold"
-        android:textColor="#000"
-        android:layout_marginTop="32dp"
-        android:text="Main \nCategories"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -24,7 +23,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:orientation="horizontal"
         android:overScrollMode="never"
@@ -33,23 +31,23 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
-        tools:listitem="@layout/item_category"/>
+        tools:listitem="@layout/item_category" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/restaurants_rv"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
+        android:orientation="vertical"
         android:overScrollMode="never"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:orientation="vertical"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintTop_toBottomOf="@+id/categories_rv"
-        tools:listitem="@layout/item_restaurant"/>
+        tools:listitem="@layout/item_merchant" />
 
     <ProgressBar
         android:id="@+id/fetch_progress"

@@ -4,7 +4,7 @@ import android.os.Looper
 import com.apollographql.apollo.ApolloClient
 import okhttp3.OkHttpClient
 
-class WebApi {
+class GraphQLApi {
 
     fun getApolloClient(): ApolloClient {
         check(Looper.myLooper() == Looper.getMainLooper()) {

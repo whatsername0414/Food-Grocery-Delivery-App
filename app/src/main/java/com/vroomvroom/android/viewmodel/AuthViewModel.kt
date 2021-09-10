@@ -9,7 +9,7 @@ import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.exception.ApolloException
 import com.vroomvroom.android.LoginMutation
 import com.vroomvroom.android.RegisterMutation
-import com.vroomvroom.android.repository.DataRepository
+import com.vroomvroom.android.repository.remote.GraphQLRepository
 import com.vroomvroom.android.view.state.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -19,7 +19,7 @@ import javax.inject.Inject
 @ExperimentalCoroutinesApi
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val repository: DataRepository,
+    private val repository: GraphQLRepository,
 ): ViewModel() {
     private val _loginToken by lazy { MutableLiveData<ViewState<Response<LoginMutation.Data>>>() }
     private val _registerToken by lazy { MutableLiveData<ViewState<Response<RegisterMutation.Data>>>() }

@@ -1,6 +1,7 @@
 package com.vroomvroom.android.view.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
@@ -11,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.vroomvroom.android.HomeDataQuery
 import com.vroomvroom.android.R
-import com.vroomvroom.android.databinding.ItemRestaurantBinding
+import com.vroomvroom.android.databinding.ItemMerchantBinding
 
 class RestaurantDiffUtil: DiffUtil.ItemCallback<HomeDataQuery.GetRestaurant>() {
 
@@ -36,9 +37,9 @@ class RestaurantAdapter:
     var onRestaurantClicked: ((HomeDataQuery.GetRestaurant) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RestaurantViewHolder {
-        val binding: ItemRestaurantBinding = DataBindingUtil.inflate(
+        val binding: ItemMerchantBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
-            R.layout.item_restaurant,
+            R.layout.item_merchant,
             parent,
             false,
 
@@ -47,7 +48,25 @@ class RestaurantAdapter:
     }
 
     override fun onBindViewHolder(holder: RestaurantViewHolder, position: Int) {
-        holder.binding.restaurant = getItem(position)
+        holder.binding.merchant = getItem(position)
+
+        val categoryList = StringBuilder()
+        holder.binding.merchant?.categories?.forEach { category ->
+            categoryList.append("$category . ")
+        }
+        holder.binding.restaurantCategories.text = categoryList
+        if (holder.binding.merchant?.isOpen == false) {
+            holder.binding.closedBg.visibility = View.VISIBLE
+            holder.binding.tvOpening.visibility = View.VISIBLE
+            holder.binding.preorderBtn.visibility = View.VISIBLE
+            holder.binding.cardView.isClickable = false
+        } else {
+            holder.binding.closedBg.visibility = View.GONE
+            holder.binding.closedBg.visibility = View.GONE
+            holder.binding.tvOpening.visibility = View.GONE
+            holder.binding.preorderBtn.visibility = View.GONE
+            holder.binding.cardView.isClickable = false
+        }
 
         val restaurant = getItem(position)
         holder.binding.root.setOnClickListener {
@@ -57,7 +76,7 @@ class RestaurantAdapter:
 
 }
 
-class RestaurantViewHolder(val binding: ItemRestaurantBinding): RecyclerView.ViewHolder(binding.root)
+class RestaurantViewHolder(val binding: ItemMerchantBinding): RecyclerView.ViewHolder(binding.root)
 
 @BindingAdapter("restaurantImageUrl")
 fun setImageUrl(imageView: ImageView, url: String) {

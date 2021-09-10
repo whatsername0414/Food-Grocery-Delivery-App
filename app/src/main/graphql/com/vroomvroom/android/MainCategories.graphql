@@ -1,15 +1,16 @@
-query HomeData {
+query HomeData($category: String!) {
     getCategories {
         id
         name
         img_url
     }
-    getRestaurants {
+    getRestaurants(category: $category) {
         id
         name
         img_url
         categories
         rating
+        opening
         isOpen
     }
 }
