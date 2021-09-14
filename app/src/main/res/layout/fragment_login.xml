@@ -6,24 +6,22 @@
     android:layout_height="match_parent"
     tools:context=".view.ui.auth.LoginFragment">
 
-
     <LinearLayout
         android:id="@+id/login_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:gravity="center_horizontal"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/logo"
+            android:id="@+id/imageView2"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:layout_marginTop="100dp"
-            app:srcCompat="@drawable/logo" />
+            android:src="@mipmap/logo" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/usernameInputLayout"
@@ -34,6 +32,8 @@
             android:layout_marginTop="32dp"
             android:layout_marginEnd="32dp"
             android:hint="Username"
+            app:boxStrokeColor="@color/maroon"
+            app:hintTextColor="@color/maroon"
             app:helperTextTextColor="#fa0606"
             app:boxCornerRadiusBottomEnd="15dp"
             app:boxCornerRadiusBottomStart="15dp"
@@ -56,6 +56,8 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"
             android:hint="Password"
+            app:boxStrokeColor="@color/maroon"
+            app:hintTextColor="@color/maroon"
             app:helperTextTextColor="#fa0606"
             app:boxCornerRadiusBottomEnd="15dp"
             app:boxCornerRadiusBottomStart="15dp"
@@ -71,7 +73,7 @@
                 android:inputType="textPassword"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/loginButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -79,6 +81,7 @@
             android:layout_marginTop="32dp"
             android:layout_marginEnd="32dp"
             android:background="@drawable/auth_btn_background"
+            app:backgroundTint="@color/maroon"
             android:text="Login"
             android:textSize="18sp"
             />
@@ -148,11 +151,12 @@
             app:layout_constraintStart_toStartOf="@+id/register_empty_text_title"
             app:layout_constraintTop_toBottomOf="@+id/register_empty_text_title" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/loginRetryButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="retry"
+            app:backgroundTint="@color/maroon"
             app:layout_constraintEnd_toEndOf="@+id/register_empty_text_body"
             app:layout_constraintStart_toStartOf="@+id/register_empty_text_body"
             app:layout_constraintTop_toBottomOf="@+id/register_empty_text_body" />

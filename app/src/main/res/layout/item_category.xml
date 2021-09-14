@@ -10,25 +10,26 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/categoryCardView"
-        android:layout_width="75dp"
-        android:layout_height="125dp"
-        android:layout_margin="8dp"
-        app:cardElevation="5dp"
-        app:cardCornerRadius="100dp">
+        android:layout_width="72dp"
+        android:layout_height="118dp"
+        android:layout_margin="6dp"
+        app:cardCornerRadius="100dp"
+        android:elevation="8dp">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="55dp"
-            android:layout_height="55dp"
+            android:id="@+id/cl_bg"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/cat_img_bg"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/cat_img_bg_light_gray"
             >
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="38dp"
-                android:layout_height="38dp"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -44,7 +45,7 @@
             android:textSize="12sp"
             android:layout_gravity="center"
             android:textAlignment="center"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="18dp"
             />
     </androidx.cardview.widget.CardView>
 

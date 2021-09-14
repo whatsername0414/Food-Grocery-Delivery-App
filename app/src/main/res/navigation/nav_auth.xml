@@ -11,7 +11,10 @@
         tools:layout="@layout/fragment_login" >
         <action
             android:id="@+id/action_loginFragment"
-            app:destination="@id/registerFragment" />
+            app:destination="@id/registerFragment"
+            app:launchSingleTop="true"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:popEnterAnim="@android:anim/slide_in_left" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
@@ -19,7 +22,11 @@
         android:label="fragment_register"
         tools:layout="@layout/fragment_register" >
         <action
+            app:popUpToInclusive="true"
+            app:launchSingleTop="true"
             android:id="@+id/action_registerFragment"
-            app:destination="@id/loginFragment" />
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/loginFragment"
+            app:enterAnim="@android:anim/slide_in_left" />
     </fragment>
 </navigation>
