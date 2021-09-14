@@ -14,29 +14,29 @@ import com.vroomvroom.android.HomeDataQuery
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.ItemMerchantBinding
 
-class RestaurantDiffUtil: DiffUtil.ItemCallback<HomeDataQuery.GetRestaurant>() {
+class MerchantDiffUtil: DiffUtil.ItemCallback<HomeDataQuery.GetMerchant>() {
 
     override fun areItemsTheSame(
-        oldItem: HomeDataQuery.GetRestaurant,
-        newItem: HomeDataQuery.GetRestaurant
+        oldItem: HomeDataQuery.GetMerchant,
+        newItem: HomeDataQuery.GetMerchant
     ): Boolean {
         return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(
-        oldItem: HomeDataQuery.GetRestaurant,
-        newItem: HomeDataQuery.GetRestaurant
+        oldItem: HomeDataQuery.GetMerchant,
+        newItem: HomeDataQuery.GetMerchant
     ): Boolean {
         return oldItem == newItem
     }
 }
 
-class RestaurantAdapter:
-    ListAdapter<HomeDataQuery.GetRestaurant, RestaurantViewHolder>(RestaurantDiffUtil()) {
+class MerchantAdapter:
+    ListAdapter<HomeDataQuery.GetMerchant, MerchantViewHolder>(MerchantDiffUtil()) {
 
-    var onRestaurantClicked: ((HomeDataQuery.GetRestaurant) -> Unit)? = null
+    var onMerchantClicked: ((HomeDataQuery.GetMerchant) -> Unit)? = null
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RestaurantViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MerchantViewHolder {
         val binding: ItemMerchantBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
             R.layout.item_merchant,
@@ -44,10 +44,10 @@ class RestaurantAdapter:
             false,
 
         )
-        return RestaurantViewHolder(binding)
+        return MerchantViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: RestaurantViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: MerchantViewHolder, position: Int) {
         holder.binding.merchant = getItem(position)
 
         val categoryList = StringBuilder()
@@ -70,13 +70,13 @@ class RestaurantAdapter:
 
         val restaurant = getItem(position)
         holder.binding.root.setOnClickListener {
-            onRestaurantClicked?.invoke(restaurant)
+            onMerchantClicked?.invoke(restaurant)
         }
     }
 
 }
 
-class RestaurantViewHolder(val binding: ItemMerchantBinding): RecyclerView.ViewHolder(binding.root)
+class MerchantViewHolder(val binding: ItemMerchantBinding): RecyclerView.ViewHolder(binding.root)
 
 @BindingAdapter("restaurantImageUrl")
 fun setImageUrl(imageView: ImageView, url: String) {

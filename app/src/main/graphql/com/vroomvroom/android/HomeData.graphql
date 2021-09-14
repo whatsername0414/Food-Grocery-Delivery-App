@@ -4,7 +4,7 @@ query HomeData($category: String!) {
         name
         img_url
     }
-    getRestaurants(category: $category) {
+    getMerchants(category: $category) {
         id
         name
         img_url

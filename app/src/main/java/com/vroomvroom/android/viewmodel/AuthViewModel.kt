@@ -37,7 +37,6 @@ class AuthViewModel @Inject constructor(
             val authErrors = response.errors?.get(0)?.message
             if (authErrors == null) {
                 _loginToken.postValue(ViewState.Success(response))
-                Log.d("AuthViewModel", response.data?.login?.token.toString())
                 repository.saveToken(response.data?.login?.token.toString())
             } else {
                 _loginToken.postValue(ViewState.Auth(authErrors))
@@ -55,18 +54,18 @@ class AuthViewModel @Inject constructor(
         confirmPassword: String) = viewModelScope.launch {
             _registerToken.postValue(ViewState.Loading())
         try {
+            Log.d("AuthViewModel", email)
             val response = repository.mutationRegister(username, email, password, confirmPassword)
             val authErrors = response.errors?.get(0)?.message
             if (authErrors == null) {
                 _registerToken.postValue(ViewState.Success(response))
-                Log.d("AuthViewModel", response.data?.register?.token.toString())
                 repository.saveToken(response.data?.register?.token.toString())
             } else {
                 _registerToken.postValue(ViewState.Auth(authErrors))
             }
         } catch (exception: ApolloException) {
             Log.e("AuthViewModel", "ApolloException", exception)
-            _registerToken.postValue(ViewState.Error("Error fetching user"))
+            _registerToken.postValue(ViewState.Error("Error fetching new user"))
         }
     }
 }

@@ -12,7 +12,7 @@ type Category {
   name: String!
   img_url: String!
 }
-type Restaurant {
+type Merchant {
   id: ID!
   name: String!
   img_url: String!
@@ -97,7 +97,7 @@ input ProductInput {
   categories: [String]!
 }
 type Query {
-  getRestaurants(category: String): [Restaurant]
+  getMerchants(category: String): [Merchant]
   getOrders: [Order]
   getCategories: [Category]
   getProducts: [Product]
@@ -107,7 +107,7 @@ type Mutation {
   register(registerInput: RegisterInput): User!
   login(username: String!, password: String!): User!
 
-  createRestaurant(restaurantInput: RestaurantInput): Restaurant!
+  createRestaurant(restaurantInput: RestaurantInput): Merchant!
   deleteRestaurant(restaurantId: ID!): String!
 
   deliveryInfo(deliveryInfoInput: DeliveryInfoInput): User!
@@ -122,7 +122,7 @@ type Mutation {
   placeOrder(placeOrderInput: PlaceOrderInput): Order!
 
   likeProduct(productId: ID!): Product!
-  rateRestaurant(restaurantId: ID!, rate: Int!): Restaurant!
+  rateRestaurant(restaurantId: ID!, rate: Int!): Merchant!
 }
 type Subscription {
   newOrder: Order!

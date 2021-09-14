@@ -3,11 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_main.xml"
-    app:startDestination="@id/restaurantFragment">
+    app:startDestination="@id/merchantFragment">
 
     <fragment
-        android:id="@+id/restaurantFragment"
+        android:id="@+id/merchantFragment"
         android:name="com.vroomvroom.android.view.ui.main.HomeFragment"
         tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.vroomvroom.android.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" />
+    <fragment
+        android:id="@+id/orderFragment"
+        android:name="com.vroomvroom.android.OrderFragment"
+        android:label="fragment_order"
+        tools:layout="@layout/fragment_order" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.vroomvroom.android.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
 
 </navigation>

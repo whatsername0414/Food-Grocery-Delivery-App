@@ -2,7 +2,9 @@ package com.vroomvroom.android.view.ui.auth
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Patterns
 import android.view.View
+import androidx.annotation.Nullable
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -29,25 +31,42 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
         binding = FragmentRegisterBinding.bind(view)
 
         binding.progressbar.visibility = View.GONE
-        binding.buttonRegister.setOnClickListener {
+        binding.registerConnectionFailedNotice.visibility = View.GONE
+
+        binding.registerButton.setOnClickListener {
             register()
+        }
+        binding.registerRetryButton.setOnClickListener {
+            retry()
         }
 
         binding.usernameInputEditText.doOnTextChanged { text, _, _, _ ->
                 if (text!!.isEmpty()) {
                     binding.usernameInputLayout.helperText = "Username must not be empty"
-                } else binding.usernameInputLayout.isHelperTextEnabled = false
+                } else {
+                    binding.usernameInputLayout.isHelperTextEnabled = false
+                }
         }
 
         binding.emailInputEditText.doOnTextChanged { text, _, _, _ ->
-                if (text!!.isEmpty()) {
-                    binding.emailInputLayout.helperText = "Email must not be empty"
-                } else binding.emailInputLayout.isHelperTextEnabled = false
+                if (!Patterns.EMAIL_ADDRESS.matcher(text.toString()).matches() ) {
+                    binding.emailInputLayout.helperText = "Invalid email address"
+                    binding.emailInputLayout.isHelperTextEnabled = true
+                    if (text!!.isEmpty()) {
+                        binding.emailInputLayout.helperText = "Email must not be empty"
+                    }
+                } else {
+                    binding.emailInputLayout.isHelperTextEnabled = false
+                }
+
         }
         binding.passwordInputEditText.doOnTextChanged { text, _, _, _ ->
                 if (text!!.isEmpty()) {
                     binding.passwordInputLayout.helperText = "Password must not be empty"
-                } else binding.passwordInputLayout.isHelperTextEnabled = false
+                } else {
+                    binding.passwordInputLayout.isHelperTextEnabled = false
+                }
+
         }
         binding.confirmPasswordInputEditText.doOnTextChanged { text, _, _, _ ->
             if (text.contentEquals(binding.passwordInputEditText.text)) {
@@ -63,7 +82,7 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
 
         binding.txLogin.setOnClickListener {
             findNavController().navigate(R.id.action_registerFragment)
-            binding.buttonRegister.isEnabled = false
+            binding.registerButton.isEnabled = false
         }
     }
 
@@ -87,21 +106,26 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
                 binding.confirmPasswordInputLayout.helperText = "Password must match"
             }
             else -> {
-                viewModel.mutationLogin(username, password)
+                viewModel.mutationRegister(username, email, password, confirmPassword)
                 observeLiveData()
             }
         }
+    }
 
-        viewModel.mutationRegister(username, email, password, confirmPassword)
-        observeLiveData()
+    private fun retry() {
+        binding.registerLinearLayout.visibility = View.VISIBLE
+        binding.registerConnectionFailedNotice.visibility = View.GONE
+        binding.registerButton.isEnabled = true
     }
 
     private fun observeLiveData() {
         viewModel.registerToken.observe(viewLifecycleOwner) { response ->
             when(response) {
                 is ViewState.Loading -> {
+                    binding.registerLinearLayout.visibility = View.VISIBLE
+                    binding.registerConnectionFailedNotice.visibility = View.GONE
                     binding.progressbar.visibility = View.VISIBLE
-                    binding.buttonRegister.isEnabled = false
+                    binding.registerButton.isEnabled = false
                 }
                 is ViewState.Success -> {
                     if (response.value?.data?.register == null) {
@@ -112,7 +136,9 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
                     binding.progressbar.visibility = View.GONE
                 }
                 is ViewState.Error -> {
-                    binding.registerEmptyText.visibility = View.VISIBLE
+                    binding.registerLinearLayout.visibility = View.GONE
+                    binding.registerEmptyTextTitle.visibility = View.VISIBLE
+                    binding.registerConnectionFailedNotice.visibility = View.VISIBLE
                     binding.progressbar.visibility = View.GONE
                 }
                 is ViewState.Auth -> {

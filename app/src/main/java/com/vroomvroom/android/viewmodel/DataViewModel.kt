@@ -21,8 +21,7 @@ class DataViewModel @Inject constructor(
     private val repository: GraphQLRepository,
 ): ViewModel() {
     private val _homeData by lazy { MutableLiveData<ViewState<Response<HomeDataQuery.Data>>>() }
-
-    private val TAG = "DataViewModel"
+    private val tag: String = "DataViewModel"
 
     val homeData: LiveData<ViewState<Response<HomeDataQuery.Data>>>
         get() = _homeData
@@ -33,18 +32,18 @@ class DataViewModel @Inject constructor(
             val response = repository.queryHomeData()
             _homeData.postValue(ViewState.Success(response))
         } catch (e: ApolloException) {
-            Log.e(TAG, "ApolloException", e)
+            Log.e(tag, "ApolloException", e)
             _homeData.postValue(ViewState.Error("Error fetching restaurant"))
         }
     }
 
-    fun queryRestaurantByCategory(category: String) = viewModelScope.launch {
+    fun queryMerchantByCategory(category: String) = viewModelScope.launch {
         _homeData.postValue(ViewState.Loading())
         try {
-            val response = repository.queryRestaurantByCategory(category)
+            val response = repository.queryMerchantByCategory(category)
             _homeData.postValue(ViewState.Success(response))
         } catch (e: ApolloException) {
-            Log.e(TAG, "ApolloException",e)
+            Log.e(tag, "ApolloException",e)
             _homeData.postValue(ViewState.Error("Error fetching restaurant"))
         }
     }

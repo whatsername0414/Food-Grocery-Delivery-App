@@ -2,6 +2,7 @@ package com.vroomvroom.android.view.adapter
 
 import android.annotation.SuppressLint
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -35,8 +36,7 @@ class CategoryDiffUtil: DiffUtil.ItemCallback<HomeDataQuery.GetCategory>() {
 class CategoryAdapter: ListAdapter<HomeDataQuery.GetCategory, CategoryViewHolder>(CategoryDiffUtil()) {
 
     var onCategoryClicked: ((HomeDataQuery.GetCategory?) -> Unit)? = null
-    private var rowIndex = -1
-    private var categoryName: String? = null
+    var categoryName: String? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
         val binding: ItemCategoryBinding = DataBindingUtil.inflate(
@@ -54,21 +54,21 @@ class CategoryAdapter: ListAdapter<HomeDataQuery.GetCategory, CategoryViewHolder
 
         val category = getItem(position)
         holder.binding.root.setOnClickListener {
-            if (categoryName != category.name) {
+
+            categoryName = if (categoryName != category.name) {
                 onCategoryClicked?.invoke(category)
                 holder.binding.categoryCardView.setCardBackgroundColor(Color.parseColor("#a30000"))
                 holder.binding.txtCatName.setTextColor(Color.parseColor("#ffffff"))
-                rowIndex = position
-                notifyDataSetChanged()
-                categoryName = category.name
+                category.name
             } else {
                 holder.binding.categoryCardView.setCardBackgroundColor(Color.parseColor("#ffffff"))
                 holder.binding.txtCatName.setTextColor(Color.parseColor("#000000"))
                 onCategoryClicked?.invoke(null)
-                categoryName = null
+                null
             }
+            notifyDataSetChanged()
         }
-        if (rowIndex != position) {
+        if (categoryName != category.name) {
             holder.binding.categoryCardView.setCardBackgroundColor(Color.parseColor("#ffffff"))
             holder.binding.txtCatName.setTextColor(Color.parseColor("#000000"))
         }

@@ -9,7 +9,7 @@ interface GraphQLRepository {
 
     suspend fun queryHomeData(): Response<HomeDataQuery.Data>
 
-    suspend fun queryRestaurantByCategory(category: String): Response<HomeDataQuery.Data>
+    suspend fun queryMerchantByCategory(category: String): Response<HomeDataQuery.Data>
 
     suspend fun mutationLogin(username:String, password:String): Response<LoginMutation.Data>
 

@@ -1,14 +1,16 @@
 package com.vroomvroom.android.view.ui.main
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.vroomvroom.android.databinding.FragmentHomeBinding
-import com.vroomvroom.android.view.adapter.CategoryAdapter
-import com.vroomvroom.android.view.adapter.RestaurantAdapter
+import com.vroomvroom.android.view.adapter.HomeAdapter
 import com.vroomvroom.android.view.state.ViewState
 import com.vroomvroom.android.viewmodel.DataViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -18,9 +20,9 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class HomeFragment: Fragment() {
     private lateinit var binding: FragmentHomeBinding
-    private val categoryAdapter by lazy { CategoryAdapter() }
-    private val restaurantAdapter by lazy { RestaurantAdapter() }
     private val viewModel by viewModels<DataViewModel>()
+    private val groupList: MutableList<String> = mutableListOf()
+    private val homeAdapter by lazy { HomeAdapter(requireContext(), groupList) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,21 +33,32 @@ class HomeFragment: Fragment() {
         return binding.root
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.categoriesRv.adapter = categoryAdapter
-        binding.restaurantsRv.adapter = restaurantAdapter
+        groupList.add("Main\nCategory")
+        groupList.add("Merchants")
+
+        binding.homeConnectionFailedNotice.visibility = View.GONE
 
         viewModel.queryHomeData()
         observeLiveData()
 
-        categoryAdapter.onCategoryClicked = { category ->
+        binding.homeRv.layoutManager = LinearLayoutManager(requireContext())
+        binding.homeRv.adapter = homeAdapter
+
+        binding.homeRetryButton.setOnClickListener {
+            viewModel.queryHomeData()
+            observeLiveData()
+        }
+
+        homeAdapter.categoryAdapter.onCategoryClicked = { category ->
             category.let {
                 if (category?.name != null) {
-                    viewModel.queryRestaurantByCategory(category.name)
+                    viewModel.queryMerchantByCategory(category.name)
                 } else {
-                    viewModel.queryRestaurantByCategory("")
+                    viewModel.queryMerchantByCategory("")
                 }
                 observeRestaurantLiveData()
             }
@@ -56,35 +69,36 @@ class HomeFragment: Fragment() {
         viewModel.homeData.observe(viewLifecycleOwner) { response ->
             when(response) {
                 is ViewState.Loading -> {
-                    binding.categoriesRv.visibility = View.GONE
+                    binding.homeConnectionFailedNotice.visibility = View.GONE
+                    binding.homeRv.visibility = View.GONE
                     binding.fetchProgress.visibility = View.VISIBLE
                 }
                 is ViewState.Success -> {
                     if (response.value?.data == null) {
-                        categoryAdapter.submitList(emptyList())
-                        restaurantAdapter.submitList(emptyList())
+                        homeAdapter.categoryAdapter.submitList(emptyList())
+                        homeAdapter.merchantAdapter.submitList(emptyList())
                         binding.fetchProgress.visibility = View.GONE
-                        binding.categoriesRv.visibility = View.GONE
-                        binding.restaurantsRv.visibility = View.GONE
-                        binding.homeEmptyText.visibility = View.VISIBLE
+                        binding.homeRv.visibility = View.GONE
+                        binding.homeRv.visibility = View.GONE
+                        binding.homeConnectionFailedNotice.visibility = View.VISIBLE
                     } else {
-                        binding.categoriesRv.visibility = View.VISIBLE
-                        binding.restaurantsRv.visibility = View.VISIBLE
-                        binding.homeEmptyText.visibility = View.GONE
+                        binding.homeRv.visibility = View.VISIBLE
+                        binding.homeRv.visibility = View.VISIBLE
+                        binding.homeConnectionFailedNotice.visibility = View.GONE
                     }
                     val category = response.value?.data?.getCategories
-                    val restaurant = response.value?.data?.getRestaurants
-                    categoryAdapter.submitList(category)
-                    restaurantAdapter.submitList(restaurant)
+                    val merchant = response.value?.data?.getMerchants
+                    homeAdapter.categoryAdapter.submitList(category)
+                    homeAdapter.merchantAdapter.submitList(merchant)
                     binding.fetchProgress.visibility = View.GONE
                 }
                 is ViewState.Error -> {
-                    categoryAdapter.submitList(emptyList())
-                    restaurantAdapter.submitList(emptyList())
+                    homeAdapter.categoryAdapter.submitList(emptyList())
+                    homeAdapter.merchantAdapter.submitList(emptyList())
                     binding.fetchProgress.visibility = View.GONE
-                    binding.categoriesRv.visibility = View.GONE
-                    binding.restaurantsRv.visibility = View.GONE
-                    binding.homeEmptyText.visibility = View.VISIBLE
+                    binding.homeRv.visibility = View.GONE
+                    binding.homeRv.visibility = View.GONE
+                    binding.homeConnectionFailedNotice.visibility = View.VISIBLE
                 }
             }
         }
@@ -94,30 +108,30 @@ class HomeFragment: Fragment() {
         viewModel.homeData.observe(viewLifecycleOwner) { response ->
             when(response) {
                 is ViewState.Loading -> {
-                    binding.categoriesRv.visibility = View.VISIBLE
-                    binding.restaurantsRv.visibility = View.VISIBLE
+                    binding.homeRv.visibility = View.VISIBLE
+                    binding.homeRv.visibility = View.VISIBLE
                     binding.fetchProgress.visibility = View.VISIBLE
                 }
                 is ViewState.Success -> {
                     if (response.value?.data == null) {
-                        restaurantAdapter.submitList(emptyList())
+                        homeAdapter.merchantAdapter.submitList(emptyList())
                         binding.fetchProgress.visibility = View.GONE
-                        binding.restaurantsRv.visibility = View.GONE
-                        binding.homeEmptyText.visibility = View.VISIBLE
+                        binding.homeRv.visibility = View.GONE
+                        binding.homeConnectionFailedNotice.visibility = View.VISIBLE
                     } else {
-                        binding.homeEmptyText.visibility = View.GONE
+                        binding.homeConnectionFailedNotice.visibility = View.GONE
                     }
-                    val restaurant = response.value?.data?.getRestaurants
-                    restaurantAdapter.submitList(restaurant)
+                    val merchant = response.value?.data?.getMerchants
+                    homeAdapter.merchantAdapter.submitList(merchant)
                     binding.fetchProgress.visibility = View.GONE
                 }
                 is ViewState.Error -> {
-                    categoryAdapter.submitList(emptyList())
-                    restaurantAdapter.submitList(emptyList())
+                    homeAdapter.categoryAdapter.submitList(emptyList())
+                    homeAdapter.merchantAdapter.submitList(emptyList())
                     binding.fetchProgress.visibility = View.GONE
-                    binding.categoriesRv.visibility = View.GONE
-                    binding.restaurantsRv.visibility = View.GONE
-                    binding.homeEmptyText.visibility = View.VISIBLE
+                    binding.homeRv.visibility = View.GONE
+                    binding.homeRv.visibility = View.GONE
+                    binding.homeConnectionFailedNotice.visibility = View.VISIBLE
                 }
             }
         }

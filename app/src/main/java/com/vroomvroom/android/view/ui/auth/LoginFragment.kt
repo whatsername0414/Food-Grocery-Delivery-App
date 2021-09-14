@@ -2,6 +2,7 @@ package com.vroomvroom.android.view.ui.auth
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -27,9 +28,15 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         binding = FragmentLoginBinding.bind(view)
 
         binding.progressbar.visibility = View.GONE
-        binding.buttonLogin.setOnClickListener {
+        binding.loginConnectionFailedNotice.visibility = View.GONE
+
+        binding.loginButton.setOnClickListener {
             login()
         }
+        binding.loginRetryButton.setOnClickListener {
+            retry()
+        }
+
         binding.txSignUp.setOnClickListener {
             findNavController().navigate(R.id.action_loginFragment)
         }
@@ -44,6 +51,12 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 binding.passwordInputLayout.helperText = "Password must not be empty"
             } else binding.passwordInputLayout.isHelperTextEnabled = false
         }
+    }
+
+    private fun retry() {
+        binding.loginLinearLayout.visibility = View.VISIBLE
+        binding.loginConnectionFailedNotice.visibility = View.GONE
+        binding.loginButton.isEnabled = true
     }
 
     private fun login() {
@@ -68,8 +81,10 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         viewModel.loginToken.observe(viewLifecycleOwner) { response ->
             when(response) {
                 is ViewState.Loading -> {
+                    binding.loginConnectionFailedNotice.visibility = View.GONE
+                    binding.loginLinearLayout.visibility = View.VISIBLE
                     binding.progressbar.visibility = View.VISIBLE
-                    binding.buttonLogin.isEnabled = false
+                    binding.loginButton.isEnabled = false
                 }
                 is ViewState.Success -> {
                     println(response.value?.data?.login)
@@ -81,8 +96,10 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                     binding.progressbar.visibility = View.GONE
                 }
                 is ViewState.Error -> {
-                    binding.loginEmptyText.visibility = View.VISIBLE
+                    binding.loginEmptyTextTitle.visibility = View.VISIBLE
+                    binding.loginConnectionFailedNotice.visibility = View.VISIBLE
                     binding.progressbar.visibility = View.GONE
+                    binding.loginLinearLayout.visibility = View.GONE
                 }
                 is ViewState.Auth -> {
                     if (response.message.toString() == "User not found") {
@@ -94,7 +111,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                         binding.usernameInputLayout.isHelperTextEnabled = false
                     }
                     binding.progressbar.visibility = View.GONE
-                    binding.buttonLogin.isEnabled = true
+                    binding.loginButton.isEnabled = true
                 }
             }
         }

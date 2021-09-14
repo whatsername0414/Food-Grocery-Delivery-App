@@ -14,10 +14,10 @@ class GraphQLRepositoryImpl @Inject constructor(
     private val preferences: UserPreferences
 ) : GraphQLRepository {
     override suspend fun queryHomeData(): Response<HomeDataQuery.Data> {
-        return graphQLServices.getApolloClient().query(HomeDataQuery(category = "")).await()
+        return graphQLServices.getApolloClient().query(HomeDataQuery("")).await()
     }
 
-    override suspend fun queryRestaurantByCategory(category: String): Response<HomeDataQuery.Data> {
+    override suspend fun queryMerchantByCategory(category: String): Response<HomeDataQuery.Data> {
         return graphQLServices.getApolloClient().query(HomeDataQuery(category = category)).await()
     }
 

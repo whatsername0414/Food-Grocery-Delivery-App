@@ -6,7 +6,7 @@
     <data>
         <variable
             name="merchant"
-            type="com.vroomvroom.android.HomeDataQuery.GetRestaurant" />
+            type="com.vroomvroom.android.HomeDataQuery.GetMerchant" />
     </data>
 
     <LinearLayout
@@ -39,7 +39,7 @@
                     <ImageView
                         android:id="@+id/img_restaurant"
                         restaurantImageUrl="@{merchant.img_url}"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="150dp"
                         android:scaleType="centerCrop"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -63,7 +63,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="@{`Opens at ` + merchant.opening + `:00`}"
+                        android:text="@{`Opens at ` + merchant.opening + `:00 am`}"
                         android:textColor="@color/white"
                         android:textSize="16sp"
                         android:textStyle="bold"
@@ -102,8 +102,8 @@
 
             <ImageView
                 android:id="@+id/imageView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
                 app:layout_constraintStart_toStartOf="@+id/cardView"
                 app:layout_constraintTop_toBottomOf="@+id/textView2"
                 app:srcCompat="@drawable/ic_star_" />
