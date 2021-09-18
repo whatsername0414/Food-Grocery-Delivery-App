@@ -40,14 +40,6 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
             retry()
         }
 
-        binding.usernameInputEditText.doOnTextChanged { text, _, _, _ ->
-                if (text!!.isEmpty()) {
-                    binding.usernameInputLayout.helperText = "Username must not be empty"
-                } else {
-                    binding.usernameInputLayout.isHelperTextEnabled = false
-                }
-        }
-
         binding.emailInputEditText.doOnTextChanged { text, _, _, _ ->
                 if (!Patterns.EMAIL_ADDRESS.matcher(text.toString()).matches() ) {
                     binding.emailInputLayout.helperText = "Invalid email address"
@@ -60,22 +52,22 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
                 }
 
         }
-        binding.passwordInputEditText.doOnTextChanged { text, _, _, _ ->
+        binding.registerPasswordInputEditText.doOnTextChanged { text, _, _, _ ->
                 if (text!!.isEmpty()) {
-                    binding.passwordInputLayout.helperText = "Password must not be empty"
+                    binding.registerPasswordInputLayout.helperText = "Password must not be empty"
                 } else {
-                    binding.passwordInputLayout.isHelperTextEnabled = false
+                    binding.registerPasswordInputLayout.isHelperTextEnabled = false
                 }
 
         }
-        binding.confirmPasswordInputEditText.doOnTextChanged { text, _, _, _ ->
-            if (text.contentEquals(binding.passwordInputEditText.text)) {
-                binding.confirmPasswordInputLayout.boxStrokeColor =
+        binding.registerConfirmPasswordInputEditText.doOnTextChanged { text, _, _, _ ->
+            if (text.contentEquals(binding.registerConfirmPasswordInputEditText.text)) {
+                binding.registerConfirmPasswordInputLayout.boxStrokeColor =
                     resources.getColor(R.color.match, requireContext().theme)
-                binding.confirmPasswordInputLayout.isHelperTextEnabled = false
+                binding.registerConfirmPasswordInputLayout.isHelperTextEnabled = false
             } else {
-                binding.confirmPasswordInputLayout.helperText = "Password must match"
-                binding.confirmPasswordInputLayout.boxStrokeColor =
+                binding.registerConfirmPasswordInputLayout.helperText = "Password must match"
+                binding.registerConfirmPasswordInputLayout.boxStrokeColor =
                     resources.getColor(R.color.maroon, requireContext().theme)
             }
         }
@@ -87,26 +79,22 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
     }
 
     private fun register() {
-        val username = binding.usernameInputEditText.text.toString()
         val email = binding.emailInputEditText.text.toString()
-        val password = binding.passwordInputEditText.text.toString()
-        val confirmPassword = binding.confirmPasswordInputEditText.text.toString()
+        val password = binding.registerPasswordInputEditText.text.toString()
+        val confirmPassword = binding.registerConfirmPasswordInputEditText.text.toString()
 
         when {
-            username == "" -> {
-                binding.usernameInputLayout.helperText = "Username must not be empty"
-            }
             email == "" -> {
                 binding.emailInputLayout.helperText = "Email must not be empty"
             }
             password == "" -> {
-                binding.passwordInputLayout.helperText = "Password must not be empty"
+                binding.registerPasswordInputLayout.helperText = "Password must not be empty"
             }
             confirmPassword == "" -> {
-                binding.confirmPasswordInputLayout.helperText = "Password must match"
+                binding.registerConfirmPasswordInputLayout.helperText = "Password must match"
             }
             else -> {
-                viewModel.mutationRegister(username, email, password, confirmPassword)
+                viewModel.mutationRegister(email, password, confirmPassword)
                 observeLiveData()
             }
         }
@@ -142,8 +130,8 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
                     binding.progressbar.visibility = View.GONE
                 }
                 is ViewState.Auth -> {
-                    if (response.message == "Username is taken") {
-                        binding.usernameInputLayout.helperText = response.message
+                    if (response.message == "Email is taken") {
+                        binding.emailInputLayout.helperText = response.message
                     }
                     binding.progressbar.visibility = View.GONE
                 }

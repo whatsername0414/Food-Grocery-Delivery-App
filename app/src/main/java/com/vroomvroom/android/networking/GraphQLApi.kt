@@ -13,7 +13,7 @@ class GraphQLApi {
 
         val okHttpClient = OkHttpClient.Builder().build()
         return ApolloClient.builder()
-            .serverUrl("http://192.168.1.2:5000/")
+            .serverUrl("http://192.168.1.3:5000/")
             .okHttpClient(okHttpClient)
             .build()
     }

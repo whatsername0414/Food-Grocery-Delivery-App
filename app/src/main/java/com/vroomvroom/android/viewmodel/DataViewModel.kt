@@ -1,10 +1,7 @@
 package com.vroomvroom.android.viewmodel
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.exception.ApolloException
 import com.vroomvroom.android.HomeDataQuery
@@ -47,4 +44,10 @@ class DataViewModel @Inject constructor(
             _homeData.postValue(ViewState.Error("Error fetching restaurant"))
         }
     }
+
+    fun saveLocation(newLocation: String) = viewModelScope.launch {
+        repository.saveLocation(newLocation)
+    }
+
+    val location = repository.userPreferences.location.asLiveData()
 }

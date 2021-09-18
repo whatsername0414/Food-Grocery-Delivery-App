@@ -24,14 +24,14 @@
             android:src="@mipmap/logo" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/usernameInputLayout"
+            android:id="@+id/login_email_input_layout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="32dp"
-            android:hint="Username"
+            android:hint="Email"
             app:boxStrokeColor="@color/maroon"
             app:hintTextColor="@color/maroon"
             app:helperTextTextColor="#fa0606"
@@ -42,13 +42,13 @@
             app:startIconDrawable="@drawable/ic_person">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/usernameInputEditText"
+                android:id="@+id/login_email_input_editText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/passwordInputLayout"
+            android:id="@+id/login_password_input_layout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -67,7 +67,7 @@
             app:endIconMode="password_toggle">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/passwordInputEditText"
+                android:id="@+id/login_password_input_editText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"/>

@@ -2,7 +2,6 @@ package com.vroomvroom.android.view.ui.auth
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -41,15 +40,15 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             findNavController().navigate(R.id.action_loginFragment)
         }
 
-        binding.usernameInputEditText.doOnTextChanged { text, _, _, _ ->
+        binding.loginEmailInputEditText.doOnTextChanged { text, _, _, _ ->
             if (text!!.isEmpty()) {
-                binding.usernameInputLayout.helperText = "Username must not be empty"
-            } else binding.usernameInputLayout.isHelperTextEnabled = false
+                binding.loginEmailInputLayout.helperText = "Email must not be empty"
+            } else binding.loginEmailInputLayout.isHelperTextEnabled = false
         }
-        binding.passwordInputEditText.doOnTextChanged { text, _, _, _ ->
+        binding.loginPasswordInputEditText.doOnTextChanged { text, _, _, _ ->
             if (text!!.isEmpty()) {
-                binding.passwordInputLayout.helperText = "Password must not be empty"
-            } else binding.passwordInputLayout.isHelperTextEnabled = false
+                binding.loginPasswordInputLayout.helperText = "Password must not be empty"
+            } else binding.loginPasswordInputLayout.isHelperTextEnabled = false
         }
     }
 
@@ -60,18 +59,18 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     }
 
     private fun login() {
-        val username = binding.usernameInputEditText.text.toString()
-        val password = binding.passwordInputEditText.text.toString()
+        val email = binding.loginEmailInputEditText.text.toString()
+        val password = binding.loginPasswordInputEditText.text.toString()
 
         when {
-            username == "" -> {
-                binding.usernameInputLayout.helperText = "Username must not be empty"
+            email == "" -> {
+                binding.loginEmailInputLayout.helperText = "Email must not be empty"
             }
             password == "" -> {
-                binding.passwordInputLayout.helperText = "Password must not be empty"
+                binding.loginPasswordInputLayout.helperText = "Password must not be empty"
             }
             else -> {
-                viewModel.mutationLogin(username, password)
+                viewModel.mutationLogin(email, password)
                 observeLiveData()
             }
         }
@@ -87,7 +86,6 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                     binding.loginButton.isEnabled = false
                 }
                 is ViewState.Success -> {
-                    println(response.value?.data?.login)
                     if (response.value?.data?.login == null) {
                         binding.progressbar.visibility = View.GONE
                     } else {
@@ -103,12 +101,12 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 }
                 is ViewState.Auth -> {
                     if (response.message.toString() == "User not found") {
-                        binding.usernameInputLayout.helperText = response.message.toString()
-                        binding.passwordInputLayout.isHelperTextEnabled = false
+                        binding.loginEmailInputLayout.helperText = response.message.toString()
+                        binding.loginEmailInputLayout.isHelperTextEnabled = false
                     }
                     if (response.message.toString() == "Wrong credentials"){
-                        binding.passwordInputLayout.helperText = response.message.toString()
-                        binding.usernameInputLayout.isHelperTextEnabled = false
+                        binding.loginPasswordInputLayout.helperText = response.message.toString()
+                        binding.loginPasswordInputLayout.isHelperTextEnabled = false
                     }
                     binding.progressbar.visibility = View.GONE
                     binding.loginButton.isEnabled = true

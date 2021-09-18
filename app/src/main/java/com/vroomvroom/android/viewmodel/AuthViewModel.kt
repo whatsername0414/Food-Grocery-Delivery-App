@@ -48,14 +48,13 @@ class AuthViewModel @Inject constructor(
     }
 
     fun mutationRegister(
-        username: String,
         email: String,
         password: String,
         confirmPassword: String) = viewModelScope.launch {
             _registerToken.postValue(ViewState.Loading())
         try {
             Log.d("AuthViewModel", email)
-            val response = repository.mutationRegister(username, email, password, confirmPassword)
+            val response = repository.mutationRegister(email, password, confirmPassword)
             val authErrors = response.errors?.get(0)?.message
             if (authErrors == null) {
                 _registerToken.postValue(ViewState.Success(response))

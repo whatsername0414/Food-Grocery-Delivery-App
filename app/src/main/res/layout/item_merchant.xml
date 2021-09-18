@@ -56,7 +56,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/closed_background" />
+                        app:srcCompat="@drawable/dark_background" />
 
                     <TextView
                         android:id="@+id/tv_opening"

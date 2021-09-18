@@ -1,12 +1,11 @@
-mutation Login($username: String!, $password: String!) {
-    login(username: $username, password: $password) {
+mutation Login($email: String!, $password: String!) {
+    login(email: $email, password: $password) {
         token
     }
 }
 
-mutation Register($username: String!, $email: String!, $password: String!, $confirmPassword: String!) {
+mutation Register($email: String!, $password: String!, $confirmPassword: String!) {
     register(registerInput: {
-        username: $username,
         email: $email
         password: $password
         confirmPassword: $confirmPassword

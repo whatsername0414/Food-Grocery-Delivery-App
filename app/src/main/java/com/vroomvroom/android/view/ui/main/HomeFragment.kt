@@ -1,23 +1,15 @@
 package com.vroomvroom.android.view.ui.main
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.content.pm.PackageManager
-import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
-import com.vmadalin.easypermissions.EasyPermissions
-import com.vmadalin.easypermissions.dialogs.SettingsDialog
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.vroomvroom.android.databinding.FragmentHomeBinding
 import com.vroomvroom.android.view.adapter.HomeAdapter
 import com.vroomvroom.android.view.state.ViewState
@@ -27,25 +19,21 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class HomeFragment: Fragment(), EasyPermissions.PermissionCallbacks {
+class HomeFragment: Fragment() {
 
     private val viewModel by viewModels<DataViewModel>()
     private val groupList: MutableList<String> = mutableListOf()
     private val homeAdapter by lazy { HomeAdapter(requireContext(), groupList) }
 
     private lateinit var binding: FragmentHomeBinding
-    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
-    companion object {
-        const val PERMISSION_LOCATION_REQUEST_CODE = 1
-    }
+    private var isBottomSheetActive = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
         binding = FragmentHomeBinding.inflate(inflater)
         return binding.root
     }
@@ -54,10 +42,21 @@ class HomeFragment: Fragment(), EasyPermissions.PermissionCallbacks {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.darkBg.visibility = View.GONE
+        binding.homeConnectionFailedNotice.visibility = View.GONE
+        viewModel.location.observe(requireActivity(), { address ->
+            if (address != null) {
+                val splitAddress = address.split(", ")
+                binding.thoroughfareTv.text = splitAddress[0]
+                binding.localityTv.text = splitAddress[1]
+            } else {
+                binding.thoroughfareTv.text = "Unreachable"
+                binding.localityTv.text = "Unreachable"
+            }
+        })
+
         groupList.add("Main\nCategory")
         groupList.add("Merchants")
-
-        binding.homeConnectionFailedNotice.visibility = View.GONE
 
         viewModel.queryHomeData()
         observeLiveData()
@@ -65,39 +64,53 @@ class HomeFragment: Fragment(), EasyPermissions.PermissionCallbacks {
         binding.homeRv.layoutManager = LinearLayoutManager(requireContext())
         binding.homeRv.adapter = homeAdapter
 
-        binding.locationCv.setOnClickListener {
-            if (hasLocationPermission()) {
-                if (ActivityCompat.checkSelfPermission(
-                        requireContext(),
-                        Manifest.permission.ACCESS_FINE_LOCATION
-                    ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                        requireContext(),
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    requestLocationPermission()
-                }
-                fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
-                    val geoCoder = Geocoder(requireContext())
-                    val currentLocation = geoCoder.getFromLocation(
-                        location.latitude,
-                        location.longitude,
-                        1
-                    )
-                    val thoroughfare = currentLocation.first().thoroughfare
-                    val locality = currentLocation.first().locality
-                    binding.thoroughfareTv.text = thoroughfare
-                    binding.localityTv.text = locality
-
-                }
-            } else {
-                requestLocationPermission()
-            }
-        }
 
         binding.homeRetryButton.setOnClickListener {
             viewModel.queryHomeData()
             observeLiveData()
+        }
+
+        val bottomSheetBehavior = BottomSheetBehavior.from(binding.locationBottomSheet.root)
+
+        binding.locationCv.setOnClickListener {
+            if (!isBottomSheetActive) {
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                binding.darkBg.visibility = View.VISIBLE
+                isBottomSheetActive = true
+            } else {
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                binding.darkBg.visibility = View.GONE
+                isBottomSheetActive = false
+            }
+        }
+
+        bottomSheetBehavior.addBottomSheetCallback(object: BottomSheetBehavior.BottomSheetCallback(){
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_COLLAPSED -> {
+                        binding.darkBg.visibility = View.GONE
+                        isBottomSheetActive = false
+                    }
+                    BottomSheetBehavior.STATE_EXPANDED -> {
+                        binding.darkBg.visibility = View.VISIBLE
+                        isBottomSheetActive = true
+                    }
+                    BottomSheetBehavior.STATE_DRAGGING -> {
+                        binding.darkBg.visibility = View.VISIBLE
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                isBottomSheetActive = false
+            }
+
+        })
+
+        binding.darkBg.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            binding.darkBg.visibility = View.GONE
+            isBottomSheetActive = false
         }
 
         homeAdapter.categoryAdapter.onCategoryClicked = { category ->
@@ -110,12 +123,6 @@ class HomeFragment: Fragment(), EasyPermissions.PermissionCallbacks {
                 observeRestaurantLiveData()
             }
         }
-    }
-
-    private fun hasLocationPermission() = EasyPermissions.hasPermissions(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-
-    private fun requestLocationPermission() {
-        EasyPermissions.requestPermissions(this, "Need location permission", PERMISSION_LOCATION_REQUEST_CODE, Manifest.permission.ACCESS_FINE_LOCATION)
     }
 
     private fun observeLiveData() {
@@ -188,25 +195,5 @@ class HomeFragment: Fragment(), EasyPermissions.PermissionCallbacks {
                 }
             }
         }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
-    }
-
-    override fun onPermissionsDenied(requestCode: Int, perms: List<String>) {
-        if (EasyPermissions.permissionPermanentlyDenied(this, perms.first())) {
-            SettingsDialog.Builder(requireActivity()).build().show()
-        } else {
-            requestLocationPermission()
-        }
-    }
-
-    override fun onPermissionsGranted(requestCode: Int, perms: List<String>) {
-        Toast.makeText(requireContext(), "Permission Granted", Toast.LENGTH_SHORT).show()
     }
 }

@@ -1,5 +1,6 @@
 package com.vroomvroom.android.repository.remote
 
+import android.util.Log
 import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.coroutines.await
 import com.vroomvroom.android.HomeDataQuery
@@ -21,18 +22,16 @@ class GraphQLRepositoryImpl @Inject constructor(
         return graphQLServices.getApolloClient().query(HomeDataQuery(category = category)).await()
     }
 
-    override suspend fun mutationLogin(username: String, password: String): Response<LoginMutation.Data> {
-        return graphQLServices.getApolloClient().mutate(LoginMutation(username = username, password = password)).await()
+    override suspend fun mutationLogin(email: String, password: String): Response<LoginMutation.Data> {
+        return graphQLServices.getApolloClient().mutate(LoginMutation(email = email, password = password)).await()
     }
 
     override suspend fun mutationRegister(
-        username: String,
         email: String,
         password: String,
         confirmPassword: String
     ): Response<RegisterMutation.Data> {
         return graphQLServices.getApolloClient().mutate(RegisterMutation(
-            username = username,
             email = email,
             password = password,
             confirmPassword = confirmPassword))
@@ -41,5 +40,11 @@ class GraphQLRepositoryImpl @Inject constructor(
 
     override suspend fun saveToken(token: String) {
         preferences.saveToken(token)
+    }
+
+    override val userPreferences = preferences
+
+    override suspend fun saveLocation(newLocation: String) {
+        preferences.saveLocation(newLocation)
     }
 }

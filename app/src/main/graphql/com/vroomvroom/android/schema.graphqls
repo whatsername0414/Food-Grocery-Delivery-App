@@ -1,11 +1,10 @@
 type Product {
-  id: ID!
   name: String!
-  img_url: String!
-  description: String!
-  categories: [String]!
-  likes: [String]!
-  likeCount: Int!
+  product_img_url: String!
+  product_category: [String]!
+  price: Int!
+  description: String
+  likes: Int
 }
 type Category {
   id: ID!
@@ -17,27 +16,23 @@ type Merchant {
   name: String!
   img_url: String!
   categories: [String]!
+  product_categories: [String]!
+  products: [Product]
   rating: Float
   opening: String!
   isOpen: Boolean!
 }
-type Rate {
-  id: ID!
-  rate: Int!
-  username: String!
-}
 type User {
   id: ID!
   full_name: String!
-  username: String!
   email: String!
   deliveryInfo: [DeliveryInfo]!
   token: String!
+  status: String!
   createdAt: String!
 }
 type DeliveryInfo {
   id: ID!
-  landmarks: String!
   address: String!
   city: String!
   phoneNumber: String!
@@ -61,11 +56,21 @@ type Payment {
   method: String!
   createdAt: String!
 }
-input RestaurantInput {
+input MerchantInput {
   name: String!
   img_url: String!
+  product_categories: [String]!
+  products: [ProductInput]
   categories: [String]!
-  isOpen: Boolean!
+  opening: String!
+  closing: String!
+}
+input ProductInput {
+  name: String!
+  product_img_url: String!
+  product_category: [String]!
+  price: Int!
+  description: String
 }
 input PlaceOrderInput {
   landmarks: String!
@@ -79,50 +84,38 @@ input PlaceOrderInput {
   status: String!
 }
 input DeliveryInfoInput {
-  landmarks: String!
   address: String!
   city: String!
   phoneNumber: String!
 }
 input RegisterInput {
-  username: String!
   email: String!
   password: String!
   confirmPassword: String!
 }
-input ProductInput {
-  name: String!
-  img_url: String!
-  description: String!
-  categories: [String]!
-}
 type Query {
   getMerchants(category: String): [Merchant]
+  getMerchant(merchantId: String): Merchant
   getOrders: [Order]
   getCategories: [Category]
-  getProducts: [Product]
-  getProductByCategory(category: String!): [Product]
 }
 type Mutation {
   register(registerInput: RegisterInput): User!
-  login(username: String!, password: String!): User!
+  login(email: String!, password: String): User!
 
-  createRestaurant(restaurantInput: RestaurantInput): Merchant!
-  deleteRestaurant(restaurantId: ID!): String!
+  createMerchant(merchantInput: MerchantInput): Merchant!
+  deleteMerchant(merchantId: ID!): String!
 
   deliveryInfo(deliveryInfoInput: DeliveryInfoInput): User!
   deleteDeliveryInfo(deliveryInfoId: ID!): String!
-
-  createProduct(productInput: ProductInput): Product!
-  deleteProduct(productId: ID!): String!
 
   createCategory(name: String!, img_url: String!): Category!
   deleteCategory(categoryId: ID!): String!
 
   placeOrder(placeOrderInput: PlaceOrderInput): Order!
 
-  likeProduct(productId: ID!): Product!
-  rateRestaurant(restaurantId: ID!, rate: Int!): Merchant!
+  likeProduct(productName: String!): String!
+  rateMerchant(merchantId: ID!, rate: Int!): Merchant!
 }
 type Subscription {
   newOrder: Order!
