@@ -2,12 +2,25 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_main.xml">
+    android:id="@+id/nav_main.xml"
+    app:startDestination="@id/homeFragment">
 
     <fragment
-        android:id="@+id/merchantFragment"
+        android:id="@+id/homeFragment"
         android:name="com.vroomvroom.android.view.ui.main.HomeFragment"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_locationFragment"
+            app:destination="@id/locationFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:popEnterAnim="@anim/nav_default_enter_anim"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
+        <action
+            app:launchSingleTop="true"
+            android:id="@+id/action_homeFragment_to_mapsFragment"
+            app:destination="@id/mapsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.vroomvroom.android.view.ui.main.SearchFragment"
@@ -29,9 +42,25 @@
         android:label="fragment_location"
         tools:layout="@layout/fragment_location" >
         <action
-            android:id="@+id/action_locationFragment_to_merchantFragment"
-            app:destination="@id/merchantFragment"
-            app:enterAnim="@android:anim/fade_in" />
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/locationFragment"
+            android:id="@+id/action_locationFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:enterAnim="@android:anim/fade_in"/>
+        <action
+            android:id="@+id/action_locationFragment_to_mapsFragment"
+            app:destination="@id/mapsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mapsFragment"
+        android:name="com.vroomvroom.android.view.ui.main.MapsFragment"
+        android:label="MapsFragment"
+        tools:layout="@layout/fragment_maps">
+        <action
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/homeFragment"
+            android:id="@+id/action_mapsFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
 
 </navigation>

@@ -9,6 +9,7 @@ import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.exception.ApolloException
 import com.vroomvroom.android.LoginMutation
 import com.vroomvroom.android.RegisterMutation
+import com.vroomvroom.android.repository.UserPreferences
 import com.vroomvroom.android.repository.remote.GraphQLRepository
 import com.vroomvroom.android.view.state.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,6 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val repository: GraphQLRepository,
+    private val preferences: UserPreferences
 ): ViewModel() {
     private val _loginToken by lazy { MutableLiveData<ViewState<Response<LoginMutation.Data>>>() }
     private val _registerToken by lazy { MutableLiveData<ViewState<Response<RegisterMutation.Data>>>() }
@@ -37,7 +39,7 @@ class AuthViewModel @Inject constructor(
             val authErrors = response.errors?.get(0)?.message
             if (authErrors == null) {
                 _loginToken.postValue(ViewState.Success(response))
-                repository.saveToken(response.data?.login?.token.toString())
+                preferences.saveToken(response.data?.login?.token.toString())
             } else {
                 _loginToken.postValue(ViewState.Auth(authErrors))
             }
@@ -58,7 +60,7 @@ class AuthViewModel @Inject constructor(
             val authErrors = response.errors?.get(0)?.message
             if (authErrors == null) {
                 _registerToken.postValue(ViewState.Success(response))
-                repository.saveToken(response.data?.register?.token.toString())
+                preferences.saveToken(response.data?.register?.token.toString())
             } else {
                 _registerToken.postValue(ViewState.Auth(authErrors))
             }

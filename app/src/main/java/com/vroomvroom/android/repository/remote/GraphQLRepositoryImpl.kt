@@ -11,8 +11,7 @@ import com.vroomvroom.android.repository.UserPreferences
 import javax.inject.Inject
 
 class GraphQLRepositoryImpl @Inject constructor(
-    private val graphQLServices: GraphQLApi,
-    private val preferences: UserPreferences
+    private val graphQLServices: GraphQLApi
 ) : GraphQLRepository {
     override suspend fun queryHomeData(): Response<HomeDataQuery.Data> {
         return graphQLServices.getApolloClient().query(HomeDataQuery("")).await()
@@ -36,15 +35,5 @@ class GraphQLRepositoryImpl @Inject constructor(
             password = password,
             confirmPassword = confirmPassword))
             .await()
-    }
-
-    override suspend fun saveToken(token: String) {
-        preferences.saveToken(token)
-    }
-
-    override val userPreferences = preferences
-
-    override suspend fun saveLocation(newLocation: String) {
-        preferences.saveLocation(newLocation)
     }
 }

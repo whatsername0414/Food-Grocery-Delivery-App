@@ -15,10 +15,4 @@ interface GraphQLRepository {
     suspend fun mutationLogin(email:String, password:String): Response<LoginMutation.Data>
 
     suspend fun mutationRegister(email:String, password:String, confirmPassword:String): Response<RegisterMutation.Data>
-
-    suspend fun saveToken(token: String)
-
-    val userPreferences: UserPreferences
-
-    suspend fun saveLocation(newLocation: String)
 }

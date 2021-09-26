@@ -37,8 +37,7 @@ class UserPreferences @Inject constructor (@ApplicationContext context: Context)
         }
     }
 
-    val location: Flow<String?>
-        get() = appContext.dataStore.data
+    val location: Flow<String?> = appContext.dataStore.data
             .catch { exception ->
                 if (exception is IOException) {
                     Log.e("DataStore", exception.message.toString())

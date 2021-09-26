@@ -1,5 +1,12 @@
 <resources>
     <string name="app_name">Vroom Vroom</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment">Hello from blank fragment</string>
+    <string name="snackbar_no_connection">You are currently not connected to any network</string>
+    <string name="maps_alert_dialog_title">Sorry</string>
+    <string name="maps_alert_dialog_message">The given address is outside of our delivery range. Order might not be accepted</string>
+    <string name="maps_alert_dialog_message_invalid">The given address is not valid. Make sure to mark the correct location.</string>
+    <string name="maps_alert_dialog_cancel">Cancel</string>
+    <string name="maps_alert_dialog_understood">Understood</string>
+    <string name="maps_alert_dialog_proceed">Proceed Anyway</string>
 </resources>

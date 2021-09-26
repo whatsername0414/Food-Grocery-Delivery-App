@@ -1,13 +1,16 @@
 package com.vroomvroom.android.viewmodel
 
+import android.location.Location
 import android.util.Log
 import androidx.lifecycle.*
 import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.exception.ApolloException
 import com.vroomvroom.android.HomeDataQuery
+import com.vroomvroom.android.repository.UserPreferences
 import com.vroomvroom.android.repository.remote.GraphQLRepository
 import com.vroomvroom.android.view.state.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -16,7 +19,9 @@ import javax.inject.Inject
 @HiltViewModel
 class DataViewModel @Inject constructor(
     private val repository: GraphQLRepository,
+    private val preferences: UserPreferences
 ): ViewModel() {
+    val currentLocation: MutableLiveData<Location> by lazy { MutableLiveData<Location>() }
     private val _homeData by lazy { MutableLiveData<ViewState<Response<HomeDataQuery.Data>>>() }
     private val tag: String = "DataViewModel"
 
@@ -45,9 +50,9 @@ class DataViewModel @Inject constructor(
         }
     }
 
-    fun saveLocation(newLocation: String) = viewModelScope.launch {
-        repository.saveLocation(newLocation)
+    fun saveLocation(newLocation: String) = viewModelScope.launch(Dispatchers.IO) {
+        preferences.saveLocation(newLocation)
     }
 
-    val location = repository.userPreferences.location.asLiveData()
+    val location = preferences.location.asLiveData()
 }

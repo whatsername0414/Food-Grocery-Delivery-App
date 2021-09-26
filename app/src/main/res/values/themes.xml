@@ -15,4 +15,7 @@
         <item name="android:windowAnimationStyle">@null</item>
         <item name="android:actionMenuTextColor">@color/maroon</item>
     </style>
+    <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
+        <item name="colorControlNormal">@color/maroon</item>
+    </style>
 </resources>
