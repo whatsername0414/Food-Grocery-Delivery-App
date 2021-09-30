@@ -1,13 +1,12 @@
 package com.vroomvroom.android.repository.remote
 
-import android.util.Log
 import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.coroutines.await
 import com.vroomvroom.android.HomeDataQuery
 import com.vroomvroom.android.LoginMutation
+import com.vroomvroom.android.MerchantQuery
 import com.vroomvroom.android.RegisterMutation
 import com.vroomvroom.android.networking.GraphQLApi
-import com.vroomvroom.android.repository.UserPreferences
 import javax.inject.Inject
 
 class GraphQLRepositoryImpl @Inject constructor(
@@ -18,11 +17,15 @@ class GraphQLRepositoryImpl @Inject constructor(
     }
 
     override suspend fun queryMerchantByCategory(category: String): Response<HomeDataQuery.Data> {
-        return graphQLServices.getApolloClient().query(HomeDataQuery(category = category)).await()
+        return graphQLServices.getApolloClient().query(HomeDataQuery(category)).await()
+    }
+
+    override suspend fun queryMerchant(merchantId: String): Response<MerchantQuery.Data> {
+        return  graphQLServices.getApolloClient().query(MerchantQuery(merchantId)).await()
     }
 
     override suspend fun mutationLogin(email: String, password: String): Response<LoginMutation.Data> {
-        return graphQLServices.getApolloClient().mutate(LoginMutation(email = email, password = password)).await()
+        return graphQLServices.getApolloClient().mutate(LoginMutation(email, password)).await()
     }
 
     override suspend fun mutationRegister(

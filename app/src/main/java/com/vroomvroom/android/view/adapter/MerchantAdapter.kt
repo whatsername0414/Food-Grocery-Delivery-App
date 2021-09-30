@@ -68,9 +68,9 @@ class MerchantAdapter:
             holder.binding.cardView.isClickable = false
         }
 
-        val restaurant = getItem(position)
+        val merchant = getItem(position)
         holder.binding.root.setOnClickListener {
-            onMerchantClicked?.invoke(restaurant)
+            onMerchantClicked?.invoke(merchant)
         }
     }
 

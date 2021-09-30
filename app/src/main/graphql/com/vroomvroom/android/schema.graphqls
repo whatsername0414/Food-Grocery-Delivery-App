@@ -1,10 +1,15 @@
 type Product {
+  id: ID!
   name: String!
   product_img_url: String!
-  product_category: [String]!
   price: Int!
   description: String
   likes: Int
+}
+type ProductByCategory {
+  id: ID!
+  name: String!
+  product_by_category: [Product]!
 }
 type Category {
   id: ID!
@@ -16,10 +21,11 @@ type Merchant {
   name: String!
   img_url: String!
   categories: [String]!
-  product_categories: [String]!
-  products: [Product]
-  rating: Float
+  products: [ProductByCategory]!
+  rating: Float!
+  ratingCount: Int!
   opening: String!
+  closing: String!
   isOpen: Boolean!
 }
 type User {
@@ -33,6 +39,7 @@ type User {
 }
 type DeliveryInfo {
   id: ID!
+  coordinates: [Float]
   address: String!
   city: String!
   phoneNumber: String!
@@ -84,6 +91,7 @@ input PlaceOrderInput {
   status: String!
 }
 input DeliveryInfoInput {
+  coordinates: [Float]
   address: String!
   city: String!
   phoneNumber: String!

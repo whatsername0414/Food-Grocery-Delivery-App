@@ -27,7 +27,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_scrollFlags="scroll|enterAlways"/>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/locationCv"
@@ -80,7 +81,7 @@
             </androidx.cardview.widget.CardView>
 
             <ImageView
-                android:id="@+id/imageView5"
+                android:id="@+id/cart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
@@ -97,8 +98,8 @@
                 android:layout_marginBottom="-4dp"
                 android:backgroundTint="@color/maroon"
                 app:cardCornerRadius="16dp"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView5"
-                app:layout_constraintEnd_toEndOf="@+id/imageView5">
+                app:layout_constraintBottom_toBottomOf="@+id/cart"
+                app:layout_constraintEnd_toEndOf="@+id/cart">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -159,6 +160,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinatorLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent">

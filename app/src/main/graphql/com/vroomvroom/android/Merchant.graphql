@@ -1,0 +1,19 @@
+query Merchant($merchantId: String!) {
+    getMerchant(merchantId: $merchantId) {
+        name
+        img_url
+        products {
+            id
+            name
+            product_by_category {
+                id
+                name
+                product_img_url
+                price
+            }
+        }
+        ratingCount
+        rating
+        closing
+    }
+}

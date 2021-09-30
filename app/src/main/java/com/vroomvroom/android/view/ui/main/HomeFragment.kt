@@ -26,6 +26,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentHomeBinding
 import com.vroomvroom.android.view.adapter.HomeAdapter
+import com.vroomvroom.android.view.adapter.ProductsAdapter
 import com.vroomvroom.android.view.state.ViewState
 import com.vroomvroom.android.view.ui.Constants
 import com.vroomvroom.android.viewmodel.DataViewModel
@@ -44,8 +45,6 @@ class HomeFragment: Fragment(), OnMapReadyCallback {
 
     private var coordinates: LatLng? = null
     private lateinit var binding: FragmentHomeBinding
-
-    private var isBottomSheetActive = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -86,27 +85,24 @@ class HomeFragment: Fragment(), OnMapReadyCallback {
         binding.homeRv.layoutManager = LinearLayoutManager(requireContext())
         binding.homeRv.adapter = homeAdapter
 
-
-        binding.homeRetryButton.setOnClickListener {
-            viewModel.queryHomeData()
-            observeLiveData()
-        }
-
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.locationBottomSheet.root)
-
-        binding.locationCv.setOnClickListener {
-            if (!isBottomSheetActive) {
-                bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-                binding.darkBg.visibility = View.VISIBLE
-                isBottomSheetActive = true
-                initMapView()
-            } else {
-                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-                binding.darkBg.visibility = View.GONE
-                isBottomSheetActive = false
+        viewModel.isBottomSheetActive.observe(viewLifecycleOwner, { active ->
+            binding.locationCv.setOnClickListener {
+                if (!active) {
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                    binding.darkBg.visibility = View.VISIBLE
+                    viewModel.isBottomSheetActive.postValue(true)
+                    initMapView()
+                } else {
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                    binding.darkBg.visibility = View.GONE
+                    viewModel.isBottomSheetActive.postValue(false)
+                }
             }
-        }
+        })
+
         binding.locationBottomSheet.btnAddAddress.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             findNavController().navigate(R.id.action_homeFragment_to_mapsFragment)
         }
 
@@ -116,11 +112,11 @@ class HomeFragment: Fragment(), OnMapReadyCallback {
                 when (newState) {
                     BottomSheetBehavior.STATE_COLLAPSED -> {
                         binding.darkBg.visibility = View.GONE
-                        isBottomSheetActive = false
+                        viewModel.isBottomSheetActive.postValue(false)
                     }
                     BottomSheetBehavior.STATE_EXPANDED -> {
                         binding.darkBg.visibility = View.VISIBLE
-                        isBottomSheetActive = true
+                        viewModel.isBottomSheetActive.postValue(true)
                     }
                     BottomSheetBehavior.STATE_DRAGGING -> {
                         binding.darkBg.visibility = View.VISIBLE
@@ -129,7 +125,7 @@ class HomeFragment: Fragment(), OnMapReadyCallback {
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                isBottomSheetActive = false
+                viewModel.isBottomSheetActive.postValue(false)
             }
 
         })
@@ -137,7 +133,7 @@ class HomeFragment: Fragment(), OnMapReadyCallback {
         binding.darkBg.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             binding.darkBg.visibility = View.GONE
-            isBottomSheetActive = false
+            viewModel.isBottomSheetActive.postValue(false)
         }
 
         homeAdapter.categoryAdapter.onCategoryClicked = { category ->
@@ -149,6 +145,21 @@ class HomeFragment: Fragment(), OnMapReadyCallback {
                 }
                 observeRestaurantLiveData()
             }
+        }
+        homeAdapter.merchantAdapter.onMerchantClicked = { merchant ->
+            merchant.let {
+                if (merchant.id.isNotBlank()) {
+                    findNavController().navigate(
+                        HomeFragmentDirections.actionHomeFragmentToMerchantFragment(merchant.id)
+                    )
+                }
+            }
+
+        }
+
+        binding.homeRetryButton.setOnClickListener {
+            viewModel.queryHomeData()
+            observeLiveData()
         }
     }
 
@@ -199,6 +210,11 @@ class HomeFragment: Fragment(), OnMapReadyCallback {
         map?.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15.8f))
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        mapView?.onSaveInstanceState(outState)
+    }
+
     override fun onStart() {
         super.onStart()
         mapView?.onStart()
@@ -222,6 +238,11 @@ class HomeFragment: Fragment(), OnMapReadyCallback {
     override fun onLowMemory() {
         super.onLowMemory()
         mapView?.onLowMemory()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mapView?.onDestroy()
     }
 
     private fun observeLiveData() {
@@ -302,10 +323,5 @@ class HomeFragment: Fragment(), OnMapReadyCallback {
             draw(Canvas(bitmap))
             BitmapDescriptorFactory.fromBitmap(bitmap)
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mapView?.onDestroy()
     }
 }
