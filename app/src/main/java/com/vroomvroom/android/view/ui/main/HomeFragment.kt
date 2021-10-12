@@ -9,9 +9,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.commit
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -26,18 +28,18 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentHomeBinding
 import com.vroomvroom.android.view.adapter.HomeAdapter
-import com.vroomvroom.android.view.adapter.ProductsAdapter
 import com.vroomvroom.android.view.state.ViewState
 import com.vroomvroom.android.view.ui.Constants
-import com.vroomvroom.android.viewmodel.DataViewModel
+import com.vroomvroom.android.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import java.io.IOException
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class HomeFragment: Fragment(), OnMapReadyCallback {
 
-    private val viewModel by viewModels<DataViewModel>()
+    private val viewModel by activityViewModels<MainViewModel>()
     private val groupList: MutableList<String> = mutableListOf()
     private val homeAdapter by lazy { HomeAdapter(requireContext(), groupList) }
     private var mapView: MapView? = null
@@ -61,6 +63,10 @@ class HomeFragment: Fragment(), OnMapReadyCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val supportFragManager = activity?.supportFragmentManager
+        supportFragManager?.commit {
+            setReorderingAllowed(true)
+        }
         binding.darkBg.visibility = View.GONE
         binding.homeConnectionFailedNotice.visibility = View.GONE
 
@@ -86,17 +92,19 @@ class HomeFragment: Fragment(), OnMapReadyCallback {
         binding.homeRv.adapter = homeAdapter
 
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.locationBottomSheet.root)
-        viewModel.isBottomSheetActive.observe(viewLifecycleOwner, { active ->
+        viewModel.isLocationBottomSheetActive.observe(viewLifecycleOwner, { active ->
             binding.locationCv.setOnClickListener {
                 if (!active) {
                     bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
                     binding.darkBg.visibility = View.VISIBLE
-                    viewModel.isBottomSheetActive.postValue(true)
+                    binding.homeRetryButton.isClickable = false
+                    viewModel.isLocationBottomSheetActive.postValue(true)
                     initMapView()
                 } else {
                     bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                     binding.darkBg.visibility = View.GONE
-                    viewModel.isBottomSheetActive.postValue(false)
+                    binding.homeRetryButton.isClickable = true
+                    viewModel.isLocationBottomSheetActive.postValue(false)
                 }
             }
         })
@@ -112,20 +120,22 @@ class HomeFragment: Fragment(), OnMapReadyCallback {
                 when (newState) {
                     BottomSheetBehavior.STATE_COLLAPSED -> {
                         binding.darkBg.visibility = View.GONE
-                        viewModel.isBottomSheetActive.postValue(false)
+                        binding.homeRetryButton.isClickable = true
+                        viewModel.isLocationBottomSheetActive.postValue(false)
                     }
                     BottomSheetBehavior.STATE_EXPANDED -> {
                         binding.darkBg.visibility = View.VISIBLE
-                        viewModel.isBottomSheetActive.postValue(true)
+                        binding.homeRetryButton.isClickable = false
+                        viewModel.isLocationBottomSheetActive.postValue(true)
                     }
                     BottomSheetBehavior.STATE_DRAGGING -> {
                         binding.darkBg.visibility = View.VISIBLE
                     }
                 }
             }
-
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                viewModel.isBottomSheetActive.postValue(false)
+                binding.homeRetryButton.isClickable = true
+                viewModel.isLocationBottomSheetActive.postValue(false)
             }
 
         })
@@ -133,7 +143,8 @@ class HomeFragment: Fragment(), OnMapReadyCallback {
         binding.darkBg.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             binding.darkBg.visibility = View.GONE
-            viewModel.isBottomSheetActive.postValue(false)
+            binding.homeRetryButton.isClickable = true
+            viewModel.isLocationBottomSheetActive.postValue(false)
         }
 
         homeAdapter.categoryAdapter.onCategoryClicked = { category ->
@@ -147,6 +158,7 @@ class HomeFragment: Fragment(), OnMapReadyCallback {
             }
         }
         homeAdapter.merchantAdapter.onMerchantClicked = { merchant ->
+            binding.fetchProgress.visibility = View.VISIBLE
             merchant.let {
                 if (merchant.id.isNotBlank()) {
                     findNavController().navigate(
@@ -173,19 +185,24 @@ class HomeFragment: Fragment(), OnMapReadyCallback {
 
         val geoCoder = Geocoder(requireContext())
         if (coordinates != null) {
-            val currentLocation = geoCoder.getFromLocation(
-                coordinates!!.latitude,
-                coordinates!!.longitude,
-                1
-            )
-            binding.addressTv.text =
-                currentLocation.first().thoroughfare ?: "Street not provided"
-            binding.cityTv.text =
-                currentLocation.first().locality ?: "City not provided"
-            binding.locationBottomSheet.bsAddress.text =
-                currentLocation.first().thoroughfare ?: "Street not provided"
-            binding.locationBottomSheet.bsCity.text =
-                currentLocation.first().locality ?: "City not provided"
+            try {
+                val currentLocation = geoCoder.getFromLocation(
+                    coordinates!!.latitude,
+                    coordinates!!.longitude,
+                    1
+                )
+                binding.addressTv.text =
+                    currentLocation.first().thoroughfare ?: "Street not provided"
+                binding.cityTv.text =
+                    currentLocation.first().locality ?: "City not provided"
+                binding.locationBottomSheet.bsAddress.text =
+                    currentLocation.first().thoroughfare ?: "Street not provided"
+                binding.locationBottomSheet.bsCity.text =
+                    currentLocation.first().locality ?: "City not provided"
+            } catch (e: IOException) {
+                Toast.makeText(requireContext(), "Unknown error occurred", Toast.LENGTH_SHORT).show()
+                e.printStackTrace()
+            }
         }
     }
 

@@ -19,13 +19,13 @@
         <action
             android:id="@+id/action_homeFragment_to_mapsFragment"
             app:destination="@id/mapsFragment"
-            app:enterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@anim/slide_in_right"/>
+            app:enterAnim="@anim/custom_slide_in_left"
+            app:popExitAnim="@anim/custom_slide_out_left"/>
         <action
             android:id="@+id/action_homeFragment_to_merchantFragment"
             app:destination="@id/merchantFragment"
-            app:enterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@anim/slide_in_right"/>
+            app:enterAnim="@anim/custom_slide_in_left"
+            app:popExitAnim="@anim/custom_slide_out_left"/>
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -55,7 +55,9 @@
             app:enterAnim="@android:anim/fade_in"/>
         <action
             android:id="@+id/action_locationFragment_to_mapsFragment"
-            app:destination="@id/mapsFragment" />
+            app:destination="@id/mapsFragment"
+            app:enterAnim="@anim/custom_slide_in_left"
+            app:popExitAnim="@anim/custom_slide_out_left"/>
     </fragment>
     <fragment
         android:id="@+id/mapsFragment"

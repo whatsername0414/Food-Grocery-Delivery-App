@@ -16,13 +16,13 @@
         android:layout_height="4dp"
         android:layout_gravity="center"
         android:layout_marginTop="6dp"
-        app:srcCompat="@drawable/cat_img_bg_light_gray" />
+        app:srcCompat="@drawable/light_gray" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="#ccffc500"
+        android:backgroundTint="#fcd00b"
         app:cardElevation="0dp"
         android:layout_marginTop="24dp"
         android:layout_marginStart="16dp"

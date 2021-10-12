@@ -10,11 +10,9 @@ import android.net.Network
 import android.os.Build
 import android.os.Bundle
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -27,9 +25,9 @@ import com.vmadalin.easypermissions.dialogs.SettingsDialog
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentLocationBinding
 import com.vroomvroom.android.view.ui.Utils.hasLocationPermission
-import com.vroomvroom.android.view.ui.createLocationRequest
-import com.vroomvroom.android.view.ui.requestLocationPermission
-import com.vroomvroom.android.viewmodel.DataViewModel
+import com.vroomvroom.android.view.ui.Utils.createLocationRequest
+import com.vroomvroom.android.view.ui.Utils.requestLocationPermission
+import com.vroomvroom.android.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -37,7 +35,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class LocationFragment : Fragment(R.layout.fragment_location), EasyPermissions.PermissionCallbacks {
 
-    private val viewModel by viewModels<DataViewModel>()
+    private val viewModel by viewModels<MainViewModel>()
     private var currentLocation: Location? = null
     private var isConnected: Boolean = false
 

@@ -10,6 +10,14 @@ query Merchant($merchantId: String!) {
                 name
                 product_img_url
                 price
+                description
+                option {
+                    name
+                    choice {
+                        name
+                        additional_price
+                    }
+                }
             }
         }
         ratingCount

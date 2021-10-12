@@ -41,21 +41,20 @@ import com.vmadalin.easypermissions.dialogs.SettingsDialog
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentMapsBinding
 import com.vroomvroom.android.view.ui.Utils.hasLocationPermission
-import com.vroomvroom.android.view.ui.createLocationRequest
-import com.vroomvroom.android.view.ui.hideSoftKeyboard
-import com.vroomvroom.android.view.ui.requestLocationPermission
-import com.vroomvroom.android.view.ui.setSafeOnClickListener
-import com.vroomvroom.android.viewmodel.DataViewModel
+import com.vroomvroom.android.view.ui.Utils.hideSoftKeyboard
+import com.vroomvroom.android.view.ui.Utils.createLocationRequest
+import com.vroomvroom.android.view.ui.Utils.requestLocationPermission
+import com.vroomvroom.android.view.ui.Utils.setSafeOnClickListener
+import com.vroomvroom.android.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.io.IOException
-import java.util.*
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
-    private val viewModel by viewModels<DataViewModel>()
+    private val viewModel by viewModels<MainViewModel>()
     private var isConnected: Boolean = false
     private var newLatLng: LatLng? = null
     private var mapFragment: SupportMapFragment? = null

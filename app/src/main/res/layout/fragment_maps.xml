@@ -99,7 +99,7 @@
     <View
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:background="@drawable/cat_img_bg_light_gray"
+        android:background="@drawable/light_gray"
         android:rotationX="50"
         android:alpha="0.65"
         app:layout_constraintBottom_toBottomOf="@+id/mapFragment"

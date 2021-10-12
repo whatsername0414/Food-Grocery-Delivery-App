@@ -80,7 +80,7 @@
             android:layout_marginStart="32dp"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="32dp"
-            android:background="@drawable/auth_btn_background"
+            android:background="@drawable/btn_background"
             app:backgroundTint="@color/maroon"
             android:text="Login"
             android:textSize="18sp"

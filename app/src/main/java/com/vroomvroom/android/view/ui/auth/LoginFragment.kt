@@ -10,7 +10,7 @@ import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentLoginBinding
 import com.vroomvroom.android.view.state.ViewState
 import com.vroomvroom.android.view.ui.main.HomeActivity
-import com.vroomvroom.android.view.ui.startNewActivity
+import com.vroomvroom.android.view.ui.Utils.startNewActivity
 import com.vroomvroom.android.viewmodel.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi

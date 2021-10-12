@@ -69,7 +69,7 @@ class MerchantAdapter:
         }
 
         val merchant = getItem(position)
-        holder.binding.root.setOnClickListener {
+        holder.binding.cardView.setOnClickListener {
             onMerchantClicked?.invoke(merchant)
         }
     }
@@ -80,5 +80,5 @@ class MerchantViewHolder(val binding: ItemMerchantBinding): RecyclerView.ViewHol
 
 @BindingAdapter("restaurantImageUrl")
 fun setImageUrl(imageView: ImageView, url: String) {
-    imageView.load(url){crossfade(true)}
+    imageView.load(url)
 }

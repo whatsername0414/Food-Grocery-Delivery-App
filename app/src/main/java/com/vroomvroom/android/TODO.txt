@@ -1,4 +1,0 @@
-//TODO:
-1. Implement Appbar Layout with Toobar and Tab Layout
-    - Collapsing Appbar with image, restaurant name, rating
-    - Tab item layout from product categories

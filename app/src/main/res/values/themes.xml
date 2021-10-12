@@ -20,4 +20,11 @@
     <style name="CustomTextAppearance" parent="TextAppearance.Design.Tab">
         <item name="textAllCaps">false</item>
     </style>
+    <style name="HeaderTitleStyle" parent="@android:style/TextAppearance">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="ExpandedTitleStyle" parent="@android:style/TextAppearance">
+        <item name="android:textSize">28sp</item>
+    </style>
 </resources>

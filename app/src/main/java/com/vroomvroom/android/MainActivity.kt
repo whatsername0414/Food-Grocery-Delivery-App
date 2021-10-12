@@ -2,11 +2,8 @@ package com.vroomvroom.android
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.asLiveData
-import com.vroomvroom.android.repository.UserPreferences
-import com.vroomvroom.android.view.ui.auth.AuthActivity
 import com.vroomvroom.android.view.ui.main.HomeActivity
-import com.vroomvroom.android.view.ui.startNewActivity
+import com.vroomvroom.android.view.ui.Utils.startNewActivity
 
 
 class MainActivity : AppCompatActivity() {

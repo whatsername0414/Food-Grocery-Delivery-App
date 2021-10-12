@@ -104,7 +104,7 @@
             android:layout_marginStart="32dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"
-            android:background="@drawable/auth_btn_background"
+            android:background="@drawable/btn_background"
             android:text="Register"
             android:textSize="18sp"
             app:backgroundTint="@color/maroon" />

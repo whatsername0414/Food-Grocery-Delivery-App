@@ -1,10 +1,19 @@
 type Product {
   id: ID!
   name: String!
-  product_img_url: String!
+  product_img_url: String
   price: Int!
   description: String
+  option: [ProductOption]
   likes: Int
+}
+type ProductOption {
+  name: String!
+  choice: [OptionChoice]!
+}
+type OptionChoice {
+  name: String!
+  additional_price: Int
 }
 type ProductByCategory {
   id: ID!
