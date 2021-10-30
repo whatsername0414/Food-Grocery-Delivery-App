@@ -26,6 +26,12 @@
             app:destination="@id/merchantFragment"
             app:enterAnim="@anim/custom_slide_in_left"
             app:popExitAnim="@anim/custom_slide_out_left"/>
+        <action
+            android:id="@+id/action_homeFragment_to_locationBottomSheetFragment"
+            app:destination="@id/locationBottomSheetFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_cartBottomSheetFragment"
+            app:destination="@id/cartBottomSheetFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -64,6 +70,12 @@
         android:name="com.vroomvroom.android.view.ui.main.MapsFragment"
         android:label="MapsFragment"
         tools:layout="@layout/fragment_maps">
+        <action
+            android:id="@+id/action_mapsFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:popUpTo="@id/mapsFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/merchantFragment"
@@ -73,6 +85,130 @@
         <argument
             android:name="id"
             app:argType="string" />
+        <action
+            android:id="@+id/action_merchantFragment_to_mapsFragment"
+            app:destination="@id/mapsFragment" />
+        <action
+            android:id="@+id/action_merchantFragment_to_cartBottomSheetFragment"
+            app:destination="@id/cartBottomSheetFragment" />
+        <action
+            android:id="@+id/action_merchantFragment_to_productBottomSheetFragment"
+            app:destination="@id/productBottomSheetFragment" />
+        <action
+            android:id="@+id/action_merchantFragment_to_merchantDetailsBottomSheetFragment"
+            app:destination="@id/merchantDetailsBottomSheetFragment" />
     </fragment>
+    <dialog
+        android:id="@+id/locationBottomSheetFragment"
+        android:name="com.vroomvroom.android.view.ui.main.LocationBottomSheetFragment"
+        android:label="fragment_location_bottom_sheet"
+        tools:layout="@layout/fragment_location_bottom_sheet" >
+        <action
+            android:id="@+id/action_locationBottomSheetFragment_to_mapsFragment"
+            app:destination="@id/mapsFragment" />
+    </dialog>
+    <dialog
+        android:id="@+id/cartBottomSheetFragment"
+        android:name="com.vroomvroom.android.view.ui.main.CartBottomSheetFragment"
+        android:label="fragment_cart_bottom_sheet"
+        tools:layout="@layout/fragment_cart_bottom_sheet" >
+        <action
+            android:id="@+id/action_cartBottomSheetFragment_to_mapsFragment"
+            app:destination="@id/mapsFragment" />
+        <action
+            android:id="@+id/action_cartBottomSheetFragment_to_merchantFragment"
+            app:destination="@id/merchantFragment"
+            app:enterAnim="@anim/custom_slide_in_left"
+            app:popExitAnim="@anim/custom_slide_out_left" />
+        <action
+            android:id="@+id/action_cartBottomSheetFragment_to_checkoutFragment"
+            app:destination="@id/checkoutFragment"
+            app:enterAnim="@anim/custom_slide_in_left"
+            app:popExitAnim="@anim/custom_slide_out_left" />
+    </dialog>
+    <dialog
+        android:id="@+id/productBottomSheetFragment"
+        android:name="com.vroomvroom.android.view.ui.main.ProductBottomSheetFragment"
+        android:label="ProductBottomSheetFragment"
+        tools:layout="@layout/fragment_product_bottom_sheet">
+        <argument
+            android:name="ProductByCategory"
+            app:argType="com.vroomvroom.android.model.ProductByCategoryModel" />
+    </dialog>
+    <dialog
+        android:id="@+id/merchantDetailsBottomSheetFragment"
+        android:name="com.vroomvroom.android.view.ui.main.MerchantDetailsBottomSheetFragment"
+        android:label="fragment_merchant_details_bottom_sheet"
+        tools:layout="@layout/fragment_merchant_details_bottom_sheet" >
+        <argument
+            android:name="merchantDetails"
+            app:argType="com.vroomvroom.android.model.MerchantModel" />
+    </dialog>
+    <fragment
+        android:id="@+id/checkoutFragment"
+        android:name="com.vroomvroom.android.view.ui.main.CheckoutFragment"
+        android:label="Checkout"
+        tools:layout="@layout/fragment_checkout" >
+        <action
+            android:id="@+id/action_checkoutFragment_to_authBottomSheetFragment"
+            app:destination="@id/authBottomSheetFragment" />
+        <action
+            android:id="@+id/action_checkoutFragment_to_mapsFragment"
+            app:destination="@id/mapsFragment"
+            app:enterAnim="@anim/custom_slide_in_left"
+            app:popExitAnim="@anim/custom_slide_out_left" />
+        <action
+            android:id="@+id/action_checkoutFragment_to_paymentMethodFragment"
+            app:destination="@id/paymentMethodFragment"
+            app:enterAnim="@anim/custom_slide_in_left"
+            app:popExitAnim="@anim/custom_slide_out_left" />
+    </fragment>
+    <dialog
+        android:id="@+id/authBottomSheetFragment"
+        android:name="com.vroomvroom.android.view.ui.main.auth.AuthBottomSheetFragment"
+        android:label="fragment_auth_bottom_sheet"
+        tools:layout="@layout/fragment_auth_bottom_sheet" >
+        <action
+            android:id="@+id/action_authBottomSheetFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:enterAnim="@anim/custom_slide_in_left"
+            app:popExitAnim="@anim/custom_slide_out_left" />
+    </dialog>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.vroomvroom.android.view.ui.main.auth.LoginFragment"
+        android:label="Login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_registerFragment"
+            app:destination="@id/registerFragment"
+            app:enterAnim="@anim/custom_slide_in_left"
+            app:popExitAnim="@anim/custom_slide_out_left" />
+        <action
+            android:id="@+id/action_loginFragment_to_passwordResetFragment"
+            app:destination="@id/passwordResetFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.vroomvroom.android.view.ui.main.auth.RegisterFragment"
+        android:label="Register"
+        tools:layout="@layout/fragment_register" >
+        <action
+            app:popUpTo="@id/registerFragment"
+            app:popUpToInclusive="true"
+            android:id="@+id/action_registerFragment_to_checkoutFragment"
+            app:destination="@id/checkoutFragment"
+            app:enterAnim="@anim/custom_slide_in_left" />
+    </fragment>
+    <dialog
+        android:id="@+id/passwordResetFragment"
+        android:name="com.vroomvroom.android.view.ui.main.auth.PasswordResetBottomSheetFragment"
+        android:label="fragment_password_reset"
+        tools:layout="@layout/fragment_password_reset_bottom_sheet" />
+    <fragment
+        android:id="@+id/paymentMethodFragment"
+        android:name="com.vroomvroom.android.view.ui.main.PaymentMethodFragment"
+        android:label="Payment"
+        tools:layout="@layout/fragment_payment_method" />
 
 </navigation>

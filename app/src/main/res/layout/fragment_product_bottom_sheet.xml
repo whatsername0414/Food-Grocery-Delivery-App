@@ -1,88 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable
             name="product"
-            type="com.vroomvroom.android.MerchantQuery.Product_by_category" />
+            type="com.vroomvroom.android.model.ProductByCategoryModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:behavior_hideable="true"
-        app:behavior_peekHeight="0dp"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+        android:layout_height="wrap_content"
+        tools:context=".view.ui.main.ProductBottomSheetFragment">
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="48dp"
+            android:layout_height="6dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/light_gray"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nestedScrollView"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="16dp"
-            android:overScrollMode="never"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:overScrollMode="always"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view">
 
             <LinearLayout
                 android:id="@+id/layout_product_bottom_sheet"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/bottom_sheet_bg"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:background="@drawable/bottom_sheet_bg"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:orientation="vertical">
-
-                    <View
-                        android:id="@+id/view"
-                        android:layout_width="48dp"
-                        android:layout_height="6dp"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="6dp"
-                        android:background="@drawable/light_gray"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <ImageView
-                        android:id="@+id/minimizeBottomSheet"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_gravity="end"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginBottom="8dp"
-                        android:src="@drawable/ic_minimize"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@drawable/light_gray"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/bottom_sheet_cardView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginTop="2dp"
                     android:layout_marginEnd="32dp"
                     app:cardCornerRadius="16dp">
 
@@ -112,9 +82,9 @@
                     android:layout_gravity="start"
                     android:layout_marginStart="32dp"
                     android:layout_marginTop="16dp"
-                    android:textSize="16sp"
+                    android:text="@{`₱` + product.price + `.00`}"
                     android:textColor="@color/black"
-                    android:text="@{`₱` + product.price + `.00`}"/>
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/bottomSheetTextDescription"
@@ -124,34 +94,56 @@
                     android:layout_marginStart="32dp"
                     android:layout_marginTop="16dp"
                     android:text="@{product.description}"
-                    android:textSize="16dp" />
+                    android:textSize="16sp" />
 
                 <LinearLayout
                     android:id="@+id/optionLinearLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
+                    android:layout_marginStart="32dp"
                     android:layout_marginTop="16dp"
+                    android:layout_marginEnd="32dp"
+                    android:layout_marginBottom="16dp"
+                    android:orientation="vertical" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
                     android:layout_marginEnd="32dp"
-                    android:layout_marginBottom="16dp">
-                </LinearLayout>
+                    android:hint="@string/special_instructions"
+                    app:boxCornerRadiusBottomEnd="8dp"
+                    app:boxCornerRadiusBottomStart="8dp"
+                    app:boxCornerRadiusTopEnd="8dp"
+                    app:boxCornerRadiusTopStart="8dp"
+                    app:hintTextColor="@color/maroon">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/instruction_input_editText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textMultiLine"
+                        android:maxHeight="96dp"
+                        android:maxLength="100"
+                        android:nestedScrollingEnabled="true" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
                     android:layout_marginStart="32dp"
-                    android:layout_marginBottom="32dp"
+                    android:layout_marginTop="16dp"
                     android:layout_marginEnd="32dp"
+                    android:layout_marginBottom="32dp"
                     android:orientation="horizontal">
 
                     <LinearLayout
                         android:id="@+id/linearLayout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="start"
                         android:layout_marginBottom="2dp"
-                        android:layout_gravity="left"
                         android:background="@drawable/btn_background"
                         android:backgroundTint="@color/light_gray"
                         android:elevation="1dp"
@@ -192,12 +184,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="2dp"
-                        android:background="@drawable/btn_background"
-                        android:paddingTop="8dp"
-                        android:paddingBottom="8dp"
-                        android:text="Add to cart"
+                        android:backgroundTint="@color/maroon"
+                        android:paddingTop="14dp"
+                        android:paddingBottom="14dp"
+                        android:text="@string/add_to_cart"
                         android:textAllCaps="false"
+                        android:textColor="@color/white"
                         android:textSize="16sp"
+                        app:cornerRadius="16dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -205,5 +199,6 @@
 
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

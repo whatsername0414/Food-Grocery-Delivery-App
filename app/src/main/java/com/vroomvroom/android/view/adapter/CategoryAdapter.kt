@@ -37,7 +37,7 @@ class CategoryDiffUtil: DiffUtil.ItemCallback<HomeDataQuery.GetCategory>() {
 class CategoryAdapter: ListAdapter<HomeDataQuery.GetCategory, CategoryViewHolder>(CategoryDiffUtil()) {
 
     var onCategoryClicked: ((HomeDataQuery.GetCategory?) -> Unit)? = null
-    var categoryName: String? = null
+    private var categoryName: String? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
         val binding: ItemCategoryBinding = DataBindingUtil.inflate(

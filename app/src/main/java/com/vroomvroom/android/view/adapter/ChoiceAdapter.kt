@@ -1,11 +1,9 @@
 package com.vroomvroom.android.view.adapter
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.vroomvroom.android.MerchantQuery
@@ -16,10 +14,9 @@ class ChoiceAdapter(private var choice: List<MerchantQuery.Choice?>) : RecyclerV
 
     class ChoiceViewHolder(val binding: ItemChoiceBinding): RecyclerView.ViewHolder(binding.root)
 
+    private var selectedPosition = -1
     var optionType: String? = null
     var onChoiceClicked: ((MerchantQuery.Choice) -> Unit)? = null
-    var hasPreviousChecked = false
-    var selectedPosition = -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChoiceViewHolder {
         val binding: ItemChoiceBinding = DataBindingUtil.inflate(

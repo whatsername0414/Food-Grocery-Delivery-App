@@ -15,7 +15,6 @@ class HomeAdapter(private val context: Context, private val groupList: MutableLi
 
     val categoryAdapter by lazy { CategoryAdapter() }
     val merchantAdapter by lazy { MerchantAdapter() }
-    lateinit var merchantRv: RecyclerView
 
     class HomeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val groupTitle: TextView = itemView.findViewById(R.id.group_title)
@@ -46,8 +45,6 @@ class HomeAdapter(private val context: Context, private val groupList: MutableLi
             holder.childRecyclerView.adapter = categoryAdapter
         } else {
             holder.childRecyclerView.adapter = merchantAdapter
-            merchantRv = holder.childRecyclerView
-
         }
     }
 

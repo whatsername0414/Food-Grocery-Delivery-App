@@ -24,9 +24,9 @@ import com.vmadalin.easypermissions.EasyPermissions
 import com.vmadalin.easypermissions.dialogs.SettingsDialog
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentLocationBinding
-import com.vroomvroom.android.view.ui.Utils.hasLocationPermission
-import com.vroomvroom.android.view.ui.Utils.createLocationRequest
-import com.vroomvroom.android.view.ui.Utils.requestLocationPermission
+import com.vroomvroom.android.utils.Utils.hasLocationPermission
+import com.vroomvroom.android.utils.Utils.createLocationRequest
+import com.vroomvroom.android.utils.Utils.requestLocationPermission
 import com.vroomvroom.android.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi

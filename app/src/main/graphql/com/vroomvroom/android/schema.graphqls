@@ -33,6 +33,7 @@ type Merchant {
   products: [ProductByCategory]!
   rating: Float!
   ratingCount: Int!
+  location: [String!]!
   opening: String!
   closing: String!
   isOpen: Boolean!

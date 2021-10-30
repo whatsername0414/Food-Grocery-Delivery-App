@@ -4,12 +4,44 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bottom_sheet_bg.xml" value="0.2203125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/btn_background.xml" value="0.2890625" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/btn_background_white.xml" value="0.2169230769230769" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_add.xml" value="0.2203125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_facebook.xml" value="0.2169230769230769" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_left_arrow.xml" value="0.2203125" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_minimize.xml" value="0.2203125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_minus.xml" value="0.2203125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_right_arrow.xml" value="0.2203125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_right_arrow_maroon.xml" value="0.21574074074074073" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_star.xml" value="0.2203125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/light_gray.xml" value="0.2203125" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/pre_order_btn.xml" value="0.17222222222222222" />
-        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_merchant.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/activity_home.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/activity_main.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_auth_bottom_sheet.xml" value="0.25" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_cart_bottom_sheet.xml" value="0.25" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_checkout.xml" value="0.25" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_home.xml" value="0.12" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_location.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_location_bottom_sheet.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_login.xml" value="0.22" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_maps.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_merchant.xml" value="0.25" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_merchant_details_bottom_sheet.xml" value="0.2" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_password_reset.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_payment_method.xml" value="0.25" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_product_bottom_sheet.xml" value="0.2" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_register.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_cart.xml" value="0.25" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_category.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_checkout.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_choice.xml" value="0.22" />
-        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_merchant.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_home.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_merchant.xml" value="0.22" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_product.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_product_section.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/layout_bottom_sheet_cart.xml" value="0.2" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/layout_bottom_sheet_location.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/layout_bottom_sheet_product.xml" value="0.22" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/VroomVroom4/app/src/main/res/drawable/app_bar_bg.xml" value="0.2203125" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/VroomVroom4/app/src/main/res/drawable/auth_btn_background.xml" value="0.2203125" />

@@ -1,28 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bottom_sheet_bg"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    app:behavior_hideable="true"
-    app:behavior_peekHeight="0dp"
-    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+    tools:context=".view.ui.main.LocationBottomSheetFragment">
 
-
-    <ImageView
-        android:id="@+id/imageView9"
+    <View
+        android:id="@+id/view"
         android:layout_width="48dp"
-        android:layout_height="4dp"
+        android:layout_height="6dp"
         android:layout_gravity="center"
-        android:layout_marginTop="6dp"
-        app:srcCompat="@drawable/light_gray" />
+        android:layout_marginTop="16dp"
+        android:background="@drawable/light_gray" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="#fcd00b"
+        android:backgroundTint="@color/yellow"
         app:cardElevation="0dp"
         android:layout_marginTop="24dp"
         android:layout_marginStart="16dp"
@@ -53,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:text="Current Location"
+                android:text="@string/current_location"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
                 android:textStyle="bold" />
 
@@ -62,7 +59,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:text="Tomas Cabiles St" />
+                tools:text="Tomas Cabiles St" />
 
             <TextView
                 android:id="@+id/bsCity"
@@ -70,7 +67,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginBottom="8dp"
-                android:text="Tabaco City" />
+                tools:text="Tabaco City" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
@@ -81,7 +78,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
-        android:text="Add a new address"
+        android:text="@string/add_a_new_address"
         android:textStyle="bold"
         android:textAllCaps="false"
         android:textColor="@color/maroon"

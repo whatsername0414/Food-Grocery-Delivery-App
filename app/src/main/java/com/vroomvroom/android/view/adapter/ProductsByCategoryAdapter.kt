@@ -4,13 +4,13 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.vroomvroom.android.MerchantQuery
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.ItemProductSectionBinding
+import com.vroomvroom.android.utils.OnProductClickListener
 
 class ProductsDiffUtil: DiffUtil.ItemCallback<MerchantQuery.Product>() {
     override fun areItemsTheSame(
@@ -28,9 +28,7 @@ class ProductsDiffUtil: DiffUtil.ItemCallback<MerchantQuery.Product>() {
     }
 }
 
-class ProductsByCategoryAdapter: ListAdapter<MerchantQuery.Product, ProductsByCategoryViewHolder>(ProductsDiffUtil()) {
-
-    var product = MutableLiveData<MerchantQuery.Product_by_category?>(null)
+class ProductsByCategoryAdapter(private val listenerProduct: OnProductClickListener): ListAdapter<MerchantQuery.Product, ProductsByCategoryViewHolder>(ProductsDiffUtil()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductsByCategoryViewHolder {
         val binding: ItemProductSectionBinding = DataBindingUtil.inflate(
@@ -44,15 +42,8 @@ class ProductsByCategoryAdapter: ListAdapter<MerchantQuery.Product, ProductsByCa
 
     override fun onBindViewHolder(holder: ProductsByCategoryViewHolder, @SuppressLint("RecyclerView") position: Int) {
         holder.binding.products = getItem(position)
-        val productAdapter = ProductAdapter(getItem(position).product_by_category)
+        val productAdapter = ProductAdapter(getItem(position).product_by_category, listenerProduct)
         holder.binding.productSectionRv.adapter = productAdapter
-
-        productAdapter.onProductClicked = { productByCategory ->
-            product.postValue(null)
-            productByCategory?.let {
-                product.postValue(productByCategory)
-            }
-        }
     }
 }
 

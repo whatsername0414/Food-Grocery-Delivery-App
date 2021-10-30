@@ -2,7 +2,6 @@ package com.vroomvroom.android.view.ui.main
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.location.Geocoder
 import android.location.Location
 import android.location.LocationManager
 import android.net.ConnectivityManager
@@ -14,11 +13,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
@@ -35,26 +33,24 @@ import com.google.android.libraries.places.widget.listener.PlaceSelectionListene
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.textfield.TextInputEditText
 import com.vmadalin.easypermissions.EasyPermissions
 import com.vmadalin.easypermissions.dialogs.SettingsDialog
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentMapsBinding
-import com.vroomvroom.android.view.ui.Utils.hasLocationPermission
-import com.vroomvroom.android.view.ui.Utils.hideSoftKeyboard
-import com.vroomvroom.android.view.ui.Utils.createLocationRequest
-import com.vroomvroom.android.view.ui.Utils.requestLocationPermission
-import com.vroomvroom.android.view.ui.Utils.setSafeOnClickListener
+import com.vroomvroom.android.utils.Utils.createLocationRequest
+import com.vroomvroom.android.utils.Utils.customGeoCoder
+import com.vroomvroom.android.utils.Utils.hasLocationPermission
+import com.vroomvroom.android.utils.Utils.requestLocationPermission
+import com.vroomvroom.android.utils.Utils.setSafeOnClickListener
 import com.vroomvroom.android.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import java.io.IOException
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
-    private val viewModel by viewModels<MainViewModel>()
+    private val viewModel by activityViewModels<MainViewModel>()
     private var isConnected: Boolean = false
     private var newLatLng: LatLng? = null
     private var mapFragment: SupportMapFragment? = null
@@ -82,7 +78,6 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             childFragmentManager.findFragmentById(R.id.autocomplete_fragment)
                     as AutocompleteSupportFragment
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
-        setupIU(binding.root)
         return binding.root
     }
 
@@ -135,25 +130,16 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
             map?.setOnCameraIdleListener {
                 newLatLng = map?.cameraPosition?.target
-                val geoCoder = Geocoder(requireContext())
-                if (newLatLng != null) {
-                    try {
-                        val currentLocation = geoCoder.getFromLocation(
-                            newLatLng!!.latitude,
-                            newLatLng!!.longitude,
-                            1
-                        )
-                        toStringCoordinate = "${newLatLng!!.latitude}, ${newLatLng!!.longitude}"
-                        if (currentLocation.isNotEmpty()) {
-                            val location = currentLocation.first()
-                            currentCity = location.locality
-                            autocompleteFragment?.setText(location.getAddressLine(0))
-                            binding.cameraMoveSpinner.visibility = View.GONE
-                        }
-                    } catch (e: IOException) {
-                        Toast.makeText(requireContext(), "Unstable Network", Toast.LENGTH_SHORT).show()
-                        e.printStackTrace()
-                    }
+                newLatLng?.let { latLng ->
+                    val address = customGeoCoder(latLng, requireContext())
+                    viewModel.address.postValue(address)
+                    currentCity = address?.locality
+                    autocompleteFragment?.setText(address?.getAddressLine(0))
+                    binding.cameraMoveSpinner.visibility = View.GONE
+
+                }
+                newLatLng?.let { latLng ->
+                    toStringCoordinate = "${latLng.latitude}, ${latLng.longitude}"
                 }
             }
 
@@ -195,6 +181,7 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         binding.cvAutoComplete.visibility = View.VISIBLE
         binding.btnConfirmLocation.setOnClickListener {
             if (toStringCoordinate != null && toStringCoordinate != "0.0, 0.0") {
+                val prevDestination = navController.previousBackStackEntry?.destination?.id
                 if (currentCity !in deliveryRange) {
                     MaterialAlertDialogBuilder(requireContext())
                         .setTitle(resources.getString(R.string.maps_alert_dialog_title))
@@ -204,12 +191,16 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                         }
                         .setPositiveButton(resources.getString(R.string.maps_alert_dialog_proceed)) { _, _ ->
                             viewModel.saveLocation(toStringCoordinate!!)
-                            navController.popBackStack()
+                            if (prevDestination == R.id.locationFragment) {
+                                navController.navigate(R.id.action_mapsFragment_to_homeFragment)
+                            } else navController.popBackStack()
                         }
                         .show()
                 } else {
                     viewModel.saveLocation(toStringCoordinate!!)
-                    navController.popBackStack()
+                    if (prevDestination == R.id.locationFragment) {
+                        navController.navigate(R.id.action_mapsFragment_to_homeFragment)
+                    } else navController.popBackStack()
                 }
             } else {
                 MaterialAlertDialogBuilder(requireContext())
@@ -237,27 +228,6 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             }
         }
 
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    private fun setupIU(view: View) {
-        if (view !is TextInputEditText) {
-            view.setOnTouchListener { _, _ ->
-                requireActivity().hideSoftKeyboard()
-                false
-            }
-        }
-        if (view is TextInputEditText) {
-            view.setOnTouchListener { _, _ ->
-                false
-            }
-        }
-        if (view is ViewGroup) {
-            for (i in 0 until view.childCount) {
-                val innerView = view.getChildAt(i)
-                setupIU(innerView)
-            }
-        }
     }
 
     override fun onRequestPermissionsResult(

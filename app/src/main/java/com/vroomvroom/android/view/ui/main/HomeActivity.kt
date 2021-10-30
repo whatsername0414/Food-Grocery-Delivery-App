@@ -1,30 +1,39 @@
 package com.vroomvroom.android.view.ui.main
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.asLiveData
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.gms.tasks.Task
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.ActivityHomeBinding
-import com.vroomvroom.android.repository.UserPreferences
+import com.vroomvroom.android.viewmodel.AuthViewModel
+import com.vroomvroom.android.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @AndroidEntryPoint
+@ExperimentalCoroutinesApi
 class HomeActivity : AppCompatActivity() {
+
+    private val mainViewModel by viewModels<MainViewModel>()
+    private val authViewModel by viewModels<AuthViewModel>()
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var navController: NavController
 
+    override fun onStart() {
+        super.onStart()
+        authViewModel.getCurrentUser()
+        authViewModel.getIdToken()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val userPreferences = UserPreferences(this)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
@@ -37,7 +46,7 @@ class HomeActivity : AppCompatActivity() {
         val currentFragment = navController.currentDestination?.id
         val locationFragment = R.id.locationFragment
 
-        userPreferences.location.asLiveData().observe(this, {
+        mainViewModel.location.observe(this, {
             if (it == null) {
                 if (currentFragment == locationFragment) {
                     navController.navigate(locationFragment)

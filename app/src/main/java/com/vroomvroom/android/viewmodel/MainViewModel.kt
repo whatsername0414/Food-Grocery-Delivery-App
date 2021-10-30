@@ -1,17 +1,23 @@
 package com.vroomvroom.android.viewmodel
 
+import android.content.Intent
+import android.location.Address
 import android.location.Location
 import android.util.Log
 import androidx.lifecycle.*
-import com.apollographql.apollo.api.Response
-import com.apollographql.apollo.exception.ApolloException
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.firebase.auth.FirebaseUser
 import com.vroomvroom.android.HomeDataQuery
 import com.vroomvroom.android.MerchantQuery
 import com.vroomvroom.android.db.CartItem
 import com.vroomvroom.android.db.CartItemChoice
-import com.vroomvroom.android.repository.UserPreferences
+import com.vroomvroom.android.model.MerchantModel
 import com.vroomvroom.android.repository.local.RoomRepository
+import com.vroomvroom.android.repository.local.UserPreferences
 import com.vroomvroom.android.repository.remote.GraphQLRepository
+import com.vroomvroom.android.repository.services.FirebaseAuthRepository
+import com.vroomvroom.android.utils.IdTokenCallback
+import com.vroomvroom.android.utils.TaskListener
 import com.vroomvroom.android.view.state.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -26,51 +32,82 @@ class MainViewModel @Inject constructor(
     private val roomRepository: RoomRepository,
     private val preferences: UserPreferences
 ): ViewModel() {
-    private val _homeData by lazy { MutableLiveData<ViewState<Response<HomeDataQuery.Data>>>() }
-    private val _merchant by lazy { MutableLiveData<ViewState<Response<MerchantQuery.Data>>>() }
+    private val _homeData by lazy { MutableLiveData<ViewState<HomeDataQuery.Data>>() }
+    private val _merchant by lazy { MutableLiveData<ViewState<MerchantQuery.Data>>() }
 
-    val cartItem = roomRepository.getAllCartItem()
     val currentLocation by lazy { MutableLiveData<Location>() }
-    var isLocationBottomSheetActive = MutableLiveData(false)
+    val address by lazy { MutableLiveData<Address>() }
+    val paymentMethod by lazy { MutableLiveData("Cash") }
     var optionMap: MutableMap<String, CartItemChoice> = mutableMapOf()
-    var currentMerchant: String? = null
+    var currentMerchant: MutableMap<String, MerchantModel> = mutableMapOf()
+    val cartItem = roomRepository.getAllCartItem()
 
-    val homeData: LiveData<ViewState<Response<HomeDataQuery.Data>>>
+    val homeData: LiveData<ViewState<HomeDataQuery.Data>>
         get() = _homeData
-    val merchant: LiveData<ViewState<Response<MerchantQuery.Data>>>
+    val merchant: LiveData<ViewState<MerchantQuery.Data>>
         get() = _merchant
 
-    fun queryHomeData() = viewModelScope.launch {
-        _homeData.postValue(ViewState.Loading())
-        try {
+    fun queryHomeData() {
+        _homeData.postValue(ViewState.Loading)
+        viewModelScope.launch {
             val response = graphQLRepository.queryHomeData()
-            _homeData.postValue(ViewState.Success(response))
-        } catch (e: ApolloException) {
-            _homeData.postValue(ViewState.Error("Error fetching restaurant"))
+            response.let { data ->
+                when (data) {
+                    is ViewState.Success -> {
+                        _homeData.postValue(data)
+                    }
+                    is ViewState.Error -> {
+                        _homeData.postValue(data)
+                    }
+                    else -> {
+                        _homeData.postValue(data)
+                    }
+                }
+            }
         }
     }
 
-    fun queryMerchantByCategory(category: String) = viewModelScope.launch {
-        _homeData.postValue(ViewState.Loading())
-        try {
-            val response = graphQLRepository.queryMerchantByCategory(category)
-            _homeData.postValue(ViewState.Success(response))
-        } catch (e: ApolloException) {
-            _homeData.postValue(ViewState.Error("Error fetching restaurant"))
+    fun queryMerchantsByCategory(category: String){
+        _homeData.postValue(ViewState.Loading)
+        viewModelScope.launch {
+            val response = graphQLRepository.queryMerchantsByCategory(category)
+            response.let { data ->
+                when (data) {
+                    is ViewState.Success -> {
+                        _homeData.postValue(data)
+                    }
+                    is ViewState.Error -> {
+                        _homeData.postValue(data)
+                    }
+                    else -> {
+                        _homeData.postValue(data)
+                    }
+                }
+            }
         }
     }
 
-    fun queryMerchant(merchantId: String) = viewModelScope.launch {
-        _merchant.postValue(ViewState.Loading())
-        try {
+    fun queryMerchant(merchantId: String){
+        _merchant.postValue(ViewState.Loading)
+        viewModelScope.launch {
             val response = graphQLRepository.queryMerchant(merchantId)
-            _merchant.postValue(ViewState.Success(response))
-        } catch (e: ApolloException) {
-            _merchant.postValue(ViewState.Error("Error fetching merchant"))
+            response.let { data ->
+                when (data) {
+                    is ViewState.Success -> {
+                        _merchant.postValue(data)
+                    }
+                    is ViewState.Error -> {
+                        _merchant.postValue(data)
+                    }
+                    else -> {
+                        _merchant.postValue(data)
+                    }
+                }
+            }
         }
     }
 
-    fun insertCartItem(cartItem: CartItem) = viewModelScope.launch {
+    fun insertCartItem(cartItem: CartItem) = viewModelScope.launch(Dispatchers.IO) {
         try {
             val roomResponse = roomRepository.insertCartItem(cartItem)
             if (optionMap.isNotEmpty()) {
@@ -87,6 +124,18 @@ class MainViewModel @Inject constructor(
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    fun updateCartItem(cartItem: CartItem) = viewModelScope.launch(Dispatchers.IO) {
+        roomRepository.updateCartItem(cartItem)
+    }
+
+    fun deleteCartItem(cartItem: CartItem) = viewModelScope.launch(Dispatchers.IO) {
+        roomRepository.deleteCartItem(cartItem)
+    }
+
+    fun deleteCartItemChoice(cartItemChoice: CartItemChoice) = viewModelScope.launch(Dispatchers.IO) {
+        roomRepository.deleteCartItemChoice(cartItemChoice)
     }
 
     fun saveLocation(newLocation: String) = viewModelScope.launch(Dispatchers.IO) {

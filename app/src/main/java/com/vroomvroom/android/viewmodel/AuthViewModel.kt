@@ -1,72 +1,104 @@
 package com.vroomvroom.android.viewmodel
 
+import android.content.Intent
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.apollographql.apollo.api.Response
-import com.apollographql.apollo.exception.ApolloException
-import com.vroomvroom.android.LoginMutation
-import com.vroomvroom.android.RegisterMutation
-import com.vroomvroom.android.repository.UserPreferences
-import com.vroomvroom.android.repository.remote.GraphQLRepository
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.firebase.auth.FirebaseUser
+import com.vroomvroom.android.repository.services.FirebaseAuthRepository
+import com.vroomvroom.android.utils.CurrentUserCallback
+import com.vroomvroom.android.utils.IdTokenCallback
+import com.vroomvroom.android.utils.PasswordResetCallback
+import com.vroomvroom.android.utils.TaskListener
 import com.vroomvroom.android.view.state.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@ExperimentalCoroutinesApi
 @HiltViewModel
+@ExperimentalCoroutinesApi
 class AuthViewModel @Inject constructor(
-    private val repository: GraphQLRepository,
-    private val preferences: UserPreferences
-): ViewModel() {
-    private val _loginToken by lazy { MutableLiveData<ViewState<Response<LoginMutation.Data>>>() }
-    private val _registerToken by lazy { MutableLiveData<ViewState<Response<RegisterMutation.Data>>>() }
+    private val firebaseAuthRepository: FirebaseAuthRepository,
+) : ViewModel(), IdTokenCallback, TaskListener, CurrentUserCallback, PasswordResetCallback {
 
-    val loginToken: LiveData<ViewState<Response<LoginMutation.Data>>>
-        get() = _loginToken
+    val idToken by lazy { MutableLiveData<ViewState<String>>() }
+    val currentUser by lazy { MutableLiveData<ViewState<FirebaseUser>>() }
+    val newLoggedInUser by lazy { MutableLiveData<ViewState<FirebaseUser>>() }
+    val isPasswordResetEmailSent by lazy { MutableLiveData<ViewState<String>>() }
 
-    val registerToken: LiveData<ViewState<Response<RegisterMutation.Data>>>
-        get() = _registerToken
+    val signInIntent = firebaseAuthRepository.signInIntent()
 
-    fun mutationLogin(username: String, password: String) = viewModelScope.launch {
-        _loginToken.postValue(ViewState.Loading())
-        try {
-            val response = repository.mutationLogin(username, password)
-            val authErrors = response.errors?.get(0)?.message
-            if (authErrors == null) {
-                _loginToken.postValue(ViewState.Success(response))
-                preferences.saveToken(response.data?.login?.token.toString())
-            } else {
-                _loginToken.postValue(ViewState.Auth(authErrors))
+    fun getIdToken() {
+        firebaseAuthRepository.getIdToken(this)
+    }
+    fun getCurrentUser() {
+        firebaseAuthRepository.getCurrentUser(this)
+    }
+    fun taskGoogleSignIn(data: Intent?) {
+        firebaseAuthRepository.taskGoogleSignIn(data, this)
+    }
+    fun facebookLogIn(fragment: BottomSheetDialogFragment) {
+        firebaseAuthRepository.facebookLogin(fragment, this)
+    }
+    fun logInWithEmailAndPassword(emailAddress: String, password: String) {
+        firebaseAuthRepository.logInWithEmailAndPassword(emailAddress, password, this)
+    }
+    fun registerWithEmailAndPassword(emailAddress: String, password: String) {
+        firebaseAuthRepository.registerWithEmailAndPassword(emailAddress, password, this)
+    }
+    fun resetPasswordWithEmail(emailAddress: String) {
+        firebaseAuthRepository.resetPasswordWithEmail(emailAddress, this)
+    }
+    fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        firebaseAuthRepository.onActivityResult(requestCode, resultCode, data)
+    }
+
+    override fun idToken(result: ViewState<String>) {
+        when(result) {
+            is ViewState.Success -> {
+                idToken.postValue(result)
             }
-        } catch (exception: ApolloException) {
-            Log.e("AuthViewModel", "ApolloException", exception)
-            _loginToken.postValue(ViewState.Error("Error fetching user"))
+            is ViewState.Error -> {
+                idToken.postValue(result)
+            }
+            else -> Log.d("AuthViewModel", result.toString())
+        }
+
+    }
+
+    override fun getCurrentUser(result: ViewState<FirebaseUser>) {
+        when(result) {
+            is ViewState.Success -> {
+                currentUser.postValue(result)
+            }
+            is ViewState.Error -> {
+                currentUser.postValue(result)
+            }
+            else -> Log.d("AuthViewModel", result.toString())
+        }
+    }
+    override fun newLoggedInUser(result: ViewState<FirebaseUser>) {
+        when(result) {
+            is ViewState.Success -> {
+                newLoggedInUser.postValue(result)
+            }
+            is ViewState.Error -> {
+                newLoggedInUser.postValue(result)
+            }
+            else -> Log.d("AuthViewModel", result.toString())
         }
     }
 
-    fun mutationRegister(
-        email: String,
-        password: String,
-        confirmPassword: String) = viewModelScope.launch {
-            _registerToken.postValue(ViewState.Loading())
-        try {
-            Log.d("AuthViewModel", email)
-            val response = repository.mutationRegister(email, password, confirmPassword)
-            val authErrors = response.errors?.get(0)?.message
-            if (authErrors == null) {
-                _registerToken.postValue(ViewState.Success(response))
-                preferences.saveToken(response.data?.register?.token.toString())
-            } else {
-                _registerToken.postValue(ViewState.Auth(authErrors))
+    override fun resetPassword(result: ViewState<String>) {
+        when(result) {
+            is ViewState.Success -> {
+                isPasswordResetEmailSent.postValue(result)
             }
-        } catch (exception: ApolloException) {
-            Log.e("AuthViewModel", "ApolloException", exception)
-            _registerToken.postValue(ViewState.Error("Error fetching new user"))
+            is ViewState.Error -> {
+                isPasswordResetEmailSent.postValue(result)
+            }
+            else -> Log.d("AuthViewModel", result.toString())
         }
     }
 }

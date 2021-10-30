@@ -10,4 +10,43 @@
     <string name="maps_alert_dialog_understood">Understood</string>
     <string name="maps_alert_dialog_proceed">Proceed Anyway</string>
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyDCtiSPULjYWEZ5Ly9bB1G3WRQrg6ubeDI</string>
+    <string name="facebook_app_id">593283722014887</string>
+    <string name="fb_login_protocol_scheme">fb593283722014887</string>
+    <string name="special_instructions">Special Instructions</string>
+    <string name="delivery_address">Delivery address</string>
+    <string name="check_out">Go to checkout</string>
+    <string name="delivery_fee">Delivery Fee</string>
+    <string name="subtotal">Subtotal</string>
+    <string name="change_address">Change address</string>
+    <string name="delivery">Delivery</string>
+    <string name="cart">Cart</string>
+    <string name="retry">Retry</string>
+    <string name="we_had_some_trouble_connecting_nbut_should_have_you_eat_shortly">We had some trouble connecting,\nbut should have you eat shortly</string>
+    <string name="sorry_for_the_delay">Sorry for the delay</string>
+    <string name="add_to_cart">Add to cart</string>
+    <string name="add_items">Add items</string>
+    <string name="log_in_or_sign_up">Log in or Sign up</string>
+    <string name="continue_with_google">Continue with Google</string>
+    <string name="continue_with_facebook">Continue with Facebook</string>
+    <string name="continue_with_email">Continue with email</string>
+    <string name="add_a_new_address">Add a new address</string>
+    <string name="current_location">Current Location</string>
+    <string name="update_address">Update address</string>
+    <string name="payment_method">Payment method</string>
+    <string name="add_a_payment_method">Add a payment method</string>
+    <string name="checkout">Checkout</string>
+    <string name="terms_and_policy">By continuing, you agree to our &lt;a href=\"https://vroomvroom.store/en/content/termsandconditions\"&gt;Terms and Conditions&lt;/a&gt; and &lt;a href=\"https://vroomvroom.store/en/page/admin/privacypolicy\"&gt;Privacy Policy&lt;/a&gt;.</string>
+    <string name="already_have_an_account_login">Already have an account? Login</string>
+    <string name="register">Register</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="login">Login</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="don_t_have_an_account_signup">Don\'t have an account? Signup</string>
+    <string name="enter_email">Reset email</string>
+    <string name="reset">Reset</string>
+    <string name="cash">Cash</string>
+    <string name="payment_methods">Choose method</string>
+    <string name="gcash">GCash</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.vroomvroom.android.repository
+package com.vroomvroom.android.repository.local
 
 import android.content.Context
 import android.util.Log
@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.vroomvroom.android.utils.Constants.PREFERENCES_STORE_NAME
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -14,11 +15,11 @@ import kotlinx.coroutines.flow.map
 import java.io.IOException
 import javax.inject.Inject
 
-private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "user_preferences")
+private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = PREFERENCES_STORE_NAME)
 
-class UserPreferences @Inject constructor (@ApplicationContext context: Context) {
+class UserPreferences @Inject constructor (@ApplicationContext app: Context) {
 
-    private val appContext = context.applicationContext
+    private val appContext = app.applicationContext
 
     val token: Flow<String?>
         get() = appContext.dataStore.data.map { preferences ->

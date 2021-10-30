@@ -1,20 +1,15 @@
 package com.vroomvroom.android.repository.local
 
+import androidx.lifecycle.LiveData
 import com.vroomvroom.android.db.CartItem
 import com.vroomvroom.android.db.CartItemChoice
-import com.vroomvroom.android.db.CartItemDAO
-import javax.inject.Inject
+import com.vroomvroom.android.db.CartItemWithChoice
 
-class RoomRepository @Inject constructor(
-    private val cartItemDAO: CartItemDAO
-)  {
-    suspend fun insertCartItem(cartItem: CartItem): Long {
-        return cartItemDAO.insertCartItem(cartItem)
-    }
-
-    suspend fun insertCartItemChoice(cartItemChoice: CartItemChoice) = cartItemDAO.insertChoice(cartItemChoice)
-
-    suspend fun deleteCartItem(cartItem: CartItem) = cartItemDAO.deleteCartItem(cartItem)
-
-    fun getAllCartItem() = cartItemDAO.getAllCartItem()
+interface RoomRepository {
+    suspend fun insertCartItem(cartItem: CartItem): Long
+    suspend fun insertCartItemChoice(cartItemChoice: CartItemChoice)
+    suspend fun updateCartItem(cartItem: CartItem)
+    suspend fun deleteCartItem(cartItem: CartItem)
+    suspend fun deleteCartItemChoice(cartItemChoice: CartItemChoice)
+    fun getAllCartItem(): LiveData<List<CartItemWithChoice>>
 }

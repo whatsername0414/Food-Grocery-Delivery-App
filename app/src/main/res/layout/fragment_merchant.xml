@@ -11,11 +11,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
-        android:elevation="4dp"
+        android:elevation="@dimen/design_appbar_elevation"
         android:backgroundTint="@color/black"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:background="@drawable/app_bar_bg"
-        android:theme="@style/ThemeOverlay.AppCompat.Light">
+        android:theme="@style/ThemeOverlay.MaterialComponents.ActionBar">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/ctl_merchant"
@@ -90,7 +90,7 @@
                         android:id="@+id/merchant_rating"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="4.8 (12 rating)"
+                        tools:text="4.8 (12 rating)"
                         android:textSize="12sp"
                         android:textColor="@color/white" />
                 </LinearLayout>
@@ -98,7 +98,7 @@
                     android:id="@+id/closing_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Open Until 7:30 PM"
+                    tools:text="Open Until 7:30 PM"
                     android:textColor="@color/white"
                     android:textSize="12sp"/>
             </LinearLayout>
@@ -147,7 +147,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sorry for the delay"
+            android:text="@string/sorry_for_the_delay"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textSize="18sp"
             android:visibility="gone"
@@ -156,7 +156,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="We had some trouble connecting,\nbut should have you eat shortly"
+            android:text="@string/we_had_some_trouble_connecting_nbut_should_have_you_eat_shortly"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
@@ -164,17 +164,9 @@
             android:id="@+id/merchantRetryButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="retry" />
+            android:text="@string/retry" />
 
     </LinearLayout>
-
-    <View
-        android:id="@+id/viewBg"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/black"
-        android:clickable="false"
-        android:alpha="0"/>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cartCardVIew"
@@ -191,28 +183,33 @@
             android:background="@color/maroon"
             android:gravity="center_vertical">
 
-            <TextView
+            <LinearLayout
+                android:id="@+id/toggleCart"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="8dp"
-                android:padding="18dp"
-                android:text="Cart"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textColor="@color/white"
-                android:textSize="18sp" />
+                android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/cartFabDetail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toStartOf="@+id/minimizeCartCardView"
-                android:paddingTop="18dp"
-                android:paddingBottom="18dp"
-                android:text="Item 2 (₱650.00)"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textColor="@color/white"
-                android:textSize="18sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:padding="18dp"
+                    android:text="@string/cart"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/cartFabDetail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="56dp"
+                    android:paddingTop="18dp"
+                    android:paddingBottom="18dp"
+                    tools:text="Item 2 (₱650.00)"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+            </LinearLayout>
 
             <ImageView
                 android:id="@+id/minimizeCartCardView"
@@ -220,7 +217,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:padding="18dp"
-                android:src="@drawable/ic_right_arrow"/>
+                android:src="@drawable/ic_right_arrow" />
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 
@@ -229,20 +226,11 @@
         android:layout_width="wrap_content"
         android:layout_height="60dp"
         android:src="@drawable/ic_left_arrow"
-        android:layout_gravity="bottom|right"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="-4dp"
         android:layout_marginBottom="32dp"
         android:background="@drawable/left_curve_bg"
-        android:alpha="0"
-        android:paddingStart="4dp"/>
-
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/bottom_sheet_coordinator"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
-        <include
-            android:id="@+id/product_bottom_sheet"
-            layout="@layout/layout_bottom_sheet_product" />
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+        android:paddingStart="6dp"
+        android:paddingEnd="0dp"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

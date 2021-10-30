@@ -11,12 +11,14 @@ import coil.load
 import com.vroomvroom.android.MerchantQuery
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.ItemProductBinding
+import com.vroomvroom.android.utils.OnProductClickListener
 
-class ProductAdapter(private var product: List<MerchantQuery.Product_by_category?>) : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>(){
+class ProductAdapter(
+    private val product: List<MerchantQuery.Product_by_category?>,
+    private val listenerProduct: OnProductClickListener
+    ) : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>(){
 
     class ProductViewHolder(val binding: ItemProductBinding): RecyclerView.ViewHolder(binding.root)
-
-    var onProductClicked: ((MerchantQuery.Product_by_category?) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
         val binding: ItemProductBinding = DataBindingUtil.inflate(
@@ -36,7 +38,7 @@ class ProductAdapter(private var product: List<MerchantQuery.Product_by_category
         } else holder.binding.productDescription.visibility = View.GONE
 
         holder.binding.root.setOnClickListener {
-            onProductClicked?.invoke(product)
+            listenerProduct.onClick(product)
         }
     }
 
