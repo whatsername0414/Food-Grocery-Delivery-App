@@ -1,5 +1,6 @@
 package com.vroomvroom.android.view.ui.main
 
+import android.content.IntentFilter
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
@@ -8,6 +9,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.ActivityHomeBinding
 import com.vroomvroom.android.viewmodel.AuthViewModel
@@ -28,7 +30,10 @@ class HomeActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         authViewModel.getCurrentUser()
+        authViewModel.saveIdToken()
         authViewModel.getIdToken()
+        val intentFilter = IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION)
+        registerReceiver(authViewModel.broadcastReceiver, intentFilter)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,5 +67,10 @@ class HomeActivity : AppCompatActivity() {
                 else -> bottomNavigationView.visibility = View.GONE
             }
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        unregisterReceiver(authViewModel.broadcastReceiver)
     }
 }

@@ -6,11 +6,11 @@ import android.graphics.Canvas
 import android.location.Address
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -24,11 +24,12 @@ import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.snackbar.Snackbar
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentCheckoutBinding
-import com.vroomvroom.android.view.adapter.CheckoutAdapter
 import com.vroomvroom.android.utils.Constants
 import com.vroomvroom.android.utils.Utils
+import com.vroomvroom.android.view.adapter.CheckoutAdapter
 import com.vroomvroom.android.view.state.ViewState
 import com.vroomvroom.android.viewmodel.AuthViewModel
 import com.vroomvroom.android.viewmodel.MainViewModel
@@ -72,18 +73,11 @@ class CheckoutFragment : Fragment(), OnMapReadyCallback {
         binding.checkoutRv.adapter = checkoutAdapter
 
         //private functions
+        observeUserRecord()
         observeCurrentUser()
         observeRoomCartItemLiveData()
         observeLocation()
         observePaymentMethod()
-
-        authViewModel.idToken.observe(viewLifecycleOwner, { result ->
-            when (result) {
-                is ViewState.Success -> Log.d("CheckoutFragment", result.result)
-                is ViewState.Error -> Log.d("CheckoutFragment", result.exception.message.toString())
-                else -> Log.d("CheckoutFragment", result.toString())
-            }
-        })
 
         binding.btnAddAddress.setOnClickListener {
             navController.navigate(R.id.action_checkoutFragment_to_mapsFragment)
@@ -94,11 +88,35 @@ class CheckoutFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
+    private fun observeUserRecord() {
+        authViewModel.userRecord.observe(viewLifecycleOwner, { response ->
+            when (response) {
+                is ViewState.Loading -> Unit
+                is ViewState.Success -> Unit
+                is ViewState.Error -> {
+                    Snackbar.make(binding.root, R.string.snackbar_label, Snackbar.LENGTH_INDEFINITE)
+                        .setAction(R.string.retry) {
+                            authViewModel.register()
+                        }.show()
+                }
+            }
+        })
+    }
+
     private fun observeCurrentUser() {
         authViewModel.currentUser.observe(viewLifecycleOwner, { response ->
             when (response) {
                 is ViewState.Success -> {
-                    binding.btnPlaceOrder.isEnabled = true
+                    authViewModel.saveIdToken()
+                    authViewModel.register()
+                    binding.btnPlaceOrder.setOnClickListener {
+                        Log.d("CheckoutFragment", "phone number: " + response.result.phoneNumber)
+                        if (response.result.phoneNumber.isNullOrBlank()) {
+                            navController.navigate(R.id.action_checkoutFragment_to_phoneVerificationFragment)
+                        } else {
+                            binding.btnPlaceOrder.isEnabled = true
+                        }
+                    }
                 }
                 is ViewState.Error -> {
                     navController.navigate(R.id.action_checkoutFragment_to_authBottomSheetFragment)

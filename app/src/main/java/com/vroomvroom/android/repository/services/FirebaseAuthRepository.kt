@@ -1,23 +1,24 @@
 package com.vroomvroom.android.repository.services
 
 import android.content.Intent
+import androidx.fragment.app.FragmentActivity
 import com.facebook.AccessToken
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.vroomvroom.android.utils.CurrentUserCallback
-import com.vroomvroom.android.utils.IdTokenCallback
-import com.vroomvroom.android.utils.PasswordResetCallback
-import com.vroomvroom.android.utils.TaskListener
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.PhoneAuthProvider
+import com.vroomvroom.android.view.state.ViewState
 
 interface FirebaseAuthRepository {
-    fun getCurrentUser(currentUserCallback: CurrentUserCallback)
-    fun getIdToken(idTokenCallback: IdTokenCallback)
+    fun getCurrentUser(onAuth: (ViewState<FirebaseUser>)->Unit)
+    fun getIdToken(onResult: (String?)->Unit)
     fun signInIntent(): Intent
-    fun taskGoogleSignIn(data: Intent?, taskListener: TaskListener)
-    fun firebaseAuthWithGoogle(idToken: String, taskListener: TaskListener)
-    fun facebookLogin(fragment: BottomSheetDialogFragment, TaskListener: TaskListener)
-    fun handleFacebookAccessToken(token: AccessToken, TaskListener: TaskListener)
-    fun logInWithEmailAndPassword(emailAddress: String, password: String, TaskListener: TaskListener)
-    fun registerWithEmailAndPassword(emailAddress: String, password: String, TaskListener: TaskListener)
-    fun resetPasswordWithEmail(emailAddress: String, PasswordResetCallback: PasswordResetCallback)
+    fun taskGoogleSignIn(data: Intent?, onResult: (ViewState<FirebaseUser>) -> Unit)
+    fun firebaseAuthWithGoogle(idToken: String, onResult: (ViewState<FirebaseUser>) -> Unit)
+    fun facebookLogin(fragment: BottomSheetDialogFragment, onResult: (ViewState<FirebaseUser>) -> Unit)
+    fun handleFacebookAccessToken(token: AccessToken, onResult: (ViewState<FirebaseUser>) -> Unit)
+    fun logInWithEmailAndPassword(emailAddress: String, password: String, onResult: (ViewState<FirebaseUser>) -> Unit)
+    fun registerWithEmailAndPassword(emailAddress: String, password: String, onResult: (ViewState<FirebaseUser>) -> Unit)
+    fun resetPasswordWithEmail(emailAddress: String, onSent: (ViewState<String>) -> Unit)
     fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
+    fun smsRetrieverClient()
 }

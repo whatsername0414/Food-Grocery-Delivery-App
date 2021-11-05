@@ -4,16 +4,14 @@ import android.util.Log
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.coroutines.await
 import com.apollographql.apollo.exception.ApolloException
-import com.vroomvroom.android.HomeDataQuery
-import com.vroomvroom.android.LoginMutation
-import com.vroomvroom.android.MerchantQuery
-import com.vroomvroom.android.RegisterMutation
+import com.vroomvroom.android.*
 import com.vroomvroom.android.view.state.ViewState
 import javax.inject.Inject
 
 class GraphQLRepositoryImpl @Inject constructor(
     private val graphQLServices: ApolloClient
 ) : GraphQLBaseRepository(), GraphQLRepository {
+
     override suspend fun queryHomeData(): ViewState<HomeDataQuery.Data>? {
         var result: ViewState<HomeDataQuery.Data>? = null
         try {
@@ -56,10 +54,10 @@ class GraphQLRepositoryImpl @Inject constructor(
         return result
     }
 
-    override suspend fun mutationLogin(email: String, password: String): ViewState<LoginMutation.Data>? {
-        var result: ViewState<LoginMutation.Data>? = null
+    override suspend fun mutationRegister(): ViewState<RegisterMutation.Data>? {
+        var result: ViewState<RegisterMutation.Data>? = null
         try {
-            val response = graphQLServices.mutate(LoginMutation(email, password)).await()
+            val response = graphQLServices.mutate(RegisterMutation()).await()
             response.let {
                 it.data?.let { data -> result = handleSuccess(data) }
             }
@@ -70,18 +68,24 @@ class GraphQLRepositoryImpl @Inject constructor(
         return result
     }
 
-    override suspend fun mutationRegister(
-        email: String,
-        password: String,
-        confirmPassword: String
-    ): ViewState<RegisterMutation.Data>? {
-        var result: ViewState<RegisterMutation.Data>? = null
+    override suspend fun mutationVerifyMobileNumber(number: String): ViewState<VerifyMobileNumberMutation.Data>? {
+        var result: ViewState<VerifyMobileNumberMutation.Data>? = null
         try {
-            val response = graphQLServices.mutate(RegisterMutation(
-                email = email,
-                password = password,
-                confirmPassword = confirmPassword))
-                .await()
+            val response = graphQLServices.mutate(VerifyMobileNumberMutation(number)).await()
+            response.let {
+                it.data?.let { data -> result = handleSuccess(data) }
+            }
+        } catch (ae: ApolloException) {
+            Log.e("GraphQLRepositoryImpl", "Error: ${ae.message}")
+            return handleException(GENERAL_ERROR_CODE)
+        }
+        return result
+    }
+
+    override suspend fun mutationOtpVerification(otp: String): ViewState<OtpVerificationMutation.Data>? {
+        var result: ViewState<OtpVerificationMutation.Data>? = null
+        try {
+            val response = graphQLServices.mutate(OtpVerificationMutation(otp)).await()
             response.let {
                 it.data?.let { data -> result = handleSuccess(data) }
             }

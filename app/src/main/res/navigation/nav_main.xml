@@ -162,6 +162,11 @@
             app:destination="@id/paymentMethodFragment"
             app:enterAnim="@anim/custom_slide_in_left"
             app:popExitAnim="@anim/custom_slide_out_left" />
+        <action
+            android:id="@+id/action_checkoutFragment_to_phoneVerificationFragment"
+            app:destination="@id/phoneVerificationFragment"
+            app:enterAnim="@anim/custom_slide_in_left"
+            app:popExitAnim="@anim/custom_slide_out_left" />
     </fragment>
     <dialog
         android:id="@+id/authBottomSheetFragment"
@@ -210,5 +215,28 @@
         android:name="com.vroomvroom.android.view.ui.main.PaymentMethodFragment"
         android:label="Payment"
         tools:layout="@layout/fragment_payment_method" />
+    <fragment
+        android:id="@+id/phoneVerificationFragment"
+        android:name="com.vroomvroom.android.view.ui.main.auth.PhoneVerificationFragment"
+        android:label="Verify Phone"
+        tools:layout="@layout/fragment_phone_verification" >
+        <action
+            android:id="@+id/action_phoneVerificationFragment_to_codeVerificationFragment"
+            app:destination="@id/codeVerificationFragment"
+            app:enterAnim="@anim/custom_slide_in_left"
+            app:popExitAnim="@anim/custom_slide_out_left" />
+    </fragment>
+    <fragment
+        android:id="@+id/codeVerificationFragment"
+        android:name="com.vroomvroom.android.view.ui.main.auth.CodeVerificationFragment"
+        android:label="Verify OTP"
+        tools:layout="@layout/fragment_code_verification" >
+        <action
+            android:id="@+id/action_codeVerificationFragment_to_checkoutFragment"
+            app:destination="@id/checkoutFragment"
+            app:enterAnim="@anim/custom_slide_in_left"
+            app:popUpTo="@id/codeVerificationFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 
 </navigation>

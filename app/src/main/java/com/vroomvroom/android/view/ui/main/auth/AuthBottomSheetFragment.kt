@@ -48,7 +48,9 @@ class AuthBottomSheetFragment : BottomSheetDialogFragment() {
 
         observeNewLoggedInUser()
 
-        val getSignInWithGoogle = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        val getSignInWithGoogle = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 viewModel.taskGoogleSignIn(result.data)
             }

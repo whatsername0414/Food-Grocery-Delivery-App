@@ -1,9 +1,6 @@
 package com.vroomvroom.android.repository.remote
 
-import com.vroomvroom.android.HomeDataQuery
-import com.vroomvroom.android.LoginMutation
-import com.vroomvroom.android.MerchantQuery
-import com.vroomvroom.android.RegisterMutation
+import com.vroomvroom.android.*
 import com.vroomvroom.android.view.state.ViewState
 
 interface GraphQLRepository {
@@ -14,7 +11,9 @@ interface GraphQLRepository {
 
     suspend fun queryMerchant(merchantId: String): ViewState<MerchantQuery.Data>?
 
-    suspend fun mutationLogin(email:String, password:String): ViewState<LoginMutation.Data>?
+    suspend fun mutationRegister(): ViewState<RegisterMutation.Data>?
 
-    suspend fun mutationRegister(email:String, password:String, confirmPassword:String): ViewState<RegisterMutation.Data>?
+    suspend fun mutationVerifyMobileNumber(number:String): ViewState<VerifyMobileNumberMutation.Data>?
+
+    suspend fun mutationOtpVerification(otp: String): ViewState<OtpVerificationMutation.Data>?
 }

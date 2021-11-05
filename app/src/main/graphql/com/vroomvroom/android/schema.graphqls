@@ -7,24 +7,29 @@ type Product {
   option: [ProductOption]
   likes: Int
 }
+
 type ProductOption {
   name: String!
   choice: [OptionChoice]!
 }
+
 type OptionChoice {
   name: String!
   additional_price: Int
 }
+
 type ProductByCategory {
   id: ID!
   name: String!
   product_by_category: [Product]!
 }
+
 type Category {
   id: ID!
   name: String!
   img_url: String!
 }
+
 type Merchant {
   id: ID!
   name: String!
@@ -38,22 +43,23 @@ type Merchant {
   closing: String!
   isOpen: Boolean!
 }
+
 type User {
   id: ID!
-  full_name: String!
+  name: String!
   email: String!
-  deliveryInfo: [DeliveryInfo]!
-  token: String!
-  status: String!
+  deliveryInfo: DeliveryInfo
   createdAt: String!
 }
+
 type DeliveryInfo {
   id: ID!
-  coordinates: [Float]
+  coordinates: [Float]!
   address: String!
   city: String!
   phoneNumber: String!
 }
+
 type Order {
   id: ID!
   customer: ID!
@@ -63,16 +69,19 @@ type Order {
   status: String!
   createdAt: String!
 }
+
 type OrderProductDetail {
   menuId: ID!
   quantity: Int!
   total_price: Int!
 }
+
 type Payment {
   id: ID!
   method: String!
   createdAt: String!
 }
+
 input MerchantInput {
   name: String!
   img_url: String!
@@ -82,6 +91,7 @@ input MerchantInput {
   opening: String!
   closing: String!
 }
+
 input ProductInput {
   name: String!
   product_img_url: String!
@@ -89,6 +99,7 @@ input ProductInput {
   price: Int!
   description: String
 }
+
 input PlaceOrderInput {
   landmarks: String!
   address: String!
@@ -100,47 +111,51 @@ input PlaceOrderInput {
   total_price: Int!
   status: String!
 }
+
+input MobileNumberInput {
+  number: String
+}
+
+input OtpVerificationInput {
+  otp: String
+}
+
 input DeliveryInfoInput {
   coordinates: [Float]
   address: String!
   city: String!
   phoneNumber: String!
 }
+
 input RegisterInput {
   email: String!
   password: String!
   confirmPassword: String!
 }
+
 type Query {
   getMerchants(category: String): [Merchant]
   getMerchant(merchantId: String): Merchant
   getOrders: [Order]
   getCategories: [Category]
 }
-type Mutation {
-  register(registerInput: RegisterInput): User!
-  login(email: String!, password: String): User!
 
+type Mutation {
+  register: User!
+  login(email: String!, password: String): User!
+  mobileNUmber(number: String!): String!
+  otpVerification(otp: String!): User!
   createMerchant(merchantInput: MerchantInput): Merchant!
   deleteMerchant(merchantId: ID!): String!
-
   deliveryInfo(deliveryInfoInput: DeliveryInfoInput): User!
   deleteDeliveryInfo(deliveryInfoId: ID!): String!
-
   createCategory(name: String!, img_url: String!): Category!
   deleteCategory(categoryId: ID!): String!
-
   placeOrder(placeOrderInput: PlaceOrderInput): Order!
-
   likeProduct(productName: String!): String!
   rateMerchant(merchantId: ID!, rate: Int!): Merchant!
 }
+
 type Subscription {
   newOrder: Order!
-}
-
-schema {
-  query: Query
-  mutation: Mutation
-  subscription: Subscription
 }

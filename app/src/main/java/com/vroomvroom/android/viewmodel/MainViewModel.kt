@@ -1,12 +1,8 @@
 package com.vroomvroom.android.viewmodel
 
-import android.content.Intent
 import android.location.Address
 import android.location.Location
-import android.util.Log
 import androidx.lifecycle.*
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.firebase.auth.FirebaseUser
 import com.vroomvroom.android.HomeDataQuery
 import com.vroomvroom.android.MerchantQuery
 import com.vroomvroom.android.db.CartItem
@@ -15,9 +11,6 @@ import com.vroomvroom.android.model.MerchantModel
 import com.vroomvroom.android.repository.local.RoomRepository
 import com.vroomvroom.android.repository.local.UserPreferences
 import com.vroomvroom.android.repository.remote.GraphQLRepository
-import com.vroomvroom.android.repository.services.FirebaseAuthRepository
-import com.vroomvroom.android.utils.IdTokenCallback
-import com.vroomvroom.android.utils.TaskListener
 import com.vroomvroom.android.view.state.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

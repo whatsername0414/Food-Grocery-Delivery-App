@@ -132,7 +132,7 @@
             android:layout_marginEnd="32dp"
             android:text="@string/forgot_password"
             android:textAlignment="center"
-            android:textColor="#0da2ff" />
+            android:textColor="@color/teal_700" />
 
         <TextView
             android:id="@+id/txtSignUp"
@@ -143,7 +143,7 @@
             android:layout_marginEnd="32dp"
             android:text="@string/don_t_have_an_account_signup"
             android:textAlignment="center"
-            android:textColor="#0da2ff"
+            android:textColor="@color/teal_700"
             android:textSize="16sp" />
 
     </LinearLayout>

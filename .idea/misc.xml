@@ -21,6 +21,7 @@
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_auth_bottom_sheet.xml" value="0.25" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_cart_bottom_sheet.xml" value="0.25" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_checkout.xml" value="0.25" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_code_verification.xml" value="0.22" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_home.xml" value="0.12" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_location.xml" value="0.1" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_location_bottom_sheet.xml" value="0.20416666666666666" />
@@ -30,6 +31,7 @@
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_merchant_details_bottom_sheet.xml" value="0.2" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_password_reset.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_payment_method.xml" value="0.25" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_phone_verification.xml" value="0.22" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_product_bottom_sheet.xml" value="0.2" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_register.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_cart.xml" value="0.25" />

@@ -1,15 +1,22 @@
-mutation Login($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
-        token
+mutation Register {
+    register {
+        id
+        name
+        email
     }
 }
 
-mutation Register($email: String!, $password: String!, $confirmPassword: String!) {
-    register(registerInput: {
-        email: $email
-        password: $password
-        confirmPassword: $confirmPassword
-    }) {
-        token
+mutation VerifyMobileNumber($number: String!) {
+    mobileNUmber(number: $number)
+}
+
+mutation OtpVerification($otp: String!) {
+    otpVerification(otp: $otp) {
+        id
+        name
+        email
+        deliveryInfo {
+            phoneNumber
+        }
     }
 }

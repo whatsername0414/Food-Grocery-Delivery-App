@@ -8,6 +8,7 @@ abstract class FirebaseAuthBaseRepository {
         private const val WRONG_CREDENTIAL = "Invalid password"
         private const val USER_NOT_FOUND = "User not found"
         private const val USER_CONFLICT = "User already exists"
+        private const val INVALID_REQUEST = "Invalid request"
         private const val SOMETHING_WRONG = "Something went wrong"
 
         fun <T : Any> handleSuccess(data: T): ViewState<T> {
@@ -21,6 +22,7 @@ abstract class FirebaseAuthBaseRepository {
 
         private fun getErrorMessage(code: Int): String {
             return when (code) {
+                400 -> INVALID_REQUEST
                 401 -> AUTHENTICATION_FAILED
                 403 -> WRONG_CREDENTIAL
                 404 -> USER_NOT_FOUND

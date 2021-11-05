@@ -21,6 +21,7 @@
     <string name="delivery">Delivery</string>
     <string name="cart">Cart</string>
     <string name="retry">Retry</string>
+    <string name="snackbar_label">Unable to save your information.</string>
     <string name="we_had_some_trouble_connecting_nbut_should_have_you_eat_shortly">We had some trouble connecting,\nbut should have you eat shortly</string>
     <string name="sorry_for_the_delay">Sorry for the delay</string>
     <string name="add_to_cart">Add to cart</string>
@@ -49,4 +50,15 @@
     <string name="cash">Cash</string>
     <string name="payment_methods">Choose method</string>
     <string name="gcash">GCash</string>
+    <string name="verification">Verify Your Number</string>
+    <string name="we_will_send_you_an_otp_on_this_mobile_number">We will send you an OTP on this mobile number</string>
+    <string name="_63">+63</string>
+    <string name="_9xxxxxxxx">9xxxxxxxxx</string>
+    <string name="enter_mobile_number">Enter mobile number</string>
+    <string name="generate_otp">Generate OTP</string>
+    <string name="enter_the_otp_sent_to">We have sent you an OTP for\nphone number verification</string>
+    <string name="_041499">041499</string>
+    <string name="didn_t_receive_the_otp_resend">Didn\'t receive the OTP? Resend</string>
+    <string name="verify">Verify OTP</string>
+    <string name="enter_otp">Enter OTP</string>
 </resources>

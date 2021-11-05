@@ -7,5 +7,5 @@ object Constants {
     const val LOCATION_SETTINGS_RESULT = 1
     const val REQUEST_CHECK_SETTINGS = 0x1
     const val MAPVIEW_BUNDLE_KEY = "MapViewBundleKey"
-    const val RC_SIGN_IN = 1903
+    const val REQUEST_USER_CONSENT = 200
 }
