@@ -11,7 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentCartBottomSheetBinding
-import com.vroomvroom.android.db.CartItemWithChoice
+import com.vroomvroom.android.domain.db.CartItemWithChoice
 import com.vroomvroom.android.view.adapter.CartAdapter
 import com.vroomvroom.android.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -51,6 +51,10 @@ class CartBottomSheetFragment : BottomSheetDialogFragment() {
             deleteCartItemWithChoice(cartItemWithChoice)
         }
 
+        binding.btnStartShopping.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
         binding.btnAddItems.setOnClickListener {
             val previousDestination = findNavController().previousBackStackEntry?.destination?.id
             if (currentMerchantId.isNullOrBlank()) {
@@ -77,17 +81,19 @@ class CartBottomSheetFragment : BottomSheetDialogFragment() {
             var subTotal = 0
             if (items.isEmpty()) {
                 cartAdapter.submitList(emptyList())
-                binding.btnCheckOut.isEnabled = false
-                binding.subtotalTv.visibility = View.GONE
+                binding.cartLayout.visibility = View.GONE
+                binding.emptyCartLayout.visibility = View.VISIBLE
                 currentMerchantId = null
             } else {
                 cartAdapter.submitList(items)
                 items.forEach { item ->
-                    subTotal += item.cartItem.price
+                    subTotal += item.cartItemEntity.price
                 }
-                currentMerchantId = items.first().cartItem.merchant_id
-                binding.merchantName.text = items.first().cartItem.merchant
+                currentMerchantId = items.first().cartItemEntity.merchant.merchant_id
+                binding.merchantName.text = items.first().cartItemEntity.merchant.merchant_name
                 binding.subtotalTv.text = "₱$subTotal.00"
+                binding.cartLayout.visibility = View.VISIBLE
+                binding.emptyCartLayout.visibility = View.GONE
             }
         })
     }
@@ -95,15 +101,15 @@ class CartBottomSheetFragment : BottomSheetDialogFragment() {
     private fun deleteCartItemWithChoice(cartItemWithChoice: CartItemWithChoice) {
         AlertDialog.Builder(requireContext())
             .setPositiveButton("Yes") { _, _ ->
-                viewModel.deleteCartItem(cartItemWithChoice.cartItem)
-                cartItemWithChoice.choices?.forEach { cartItemChoice ->
+                viewModel.deleteCartItem(cartItemWithChoice.cartItemEntity)
+                cartItemWithChoice.choiceEntities?.forEach { cartItemChoice ->
                     viewModel.deleteCartItemChoice(cartItemChoice)
                 }
             }
             .setNegativeButton("Cancel") { _, _ -> }
             .setTitle("Confirm Delete")
             .setMessage("Are you sure you want to remove " +
-                "${cartItemWithChoice.cartItem.name} from the cart?")
+                "${cartItemWithChoice.cartItemEntity.name} from the cart?")
             .create().show()
     }
 }

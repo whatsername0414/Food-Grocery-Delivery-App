@@ -13,7 +13,7 @@ import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.ActivityHomeBinding
 import com.vroomvroom.android.viewmodel.AuthViewModel
-import com.vroomvroom.android.viewmodel.MainViewModel
+import com.vroomvroom.android.viewmodel.LocationViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -21,7 +21,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 @ExperimentalCoroutinesApi
 class HomeActivity : AppCompatActivity() {
 
-    private val mainViewModel by viewModels<MainViewModel>()
     private val authViewModel by viewModels<AuthViewModel>()
 
     private lateinit var binding: ActivityHomeBinding
@@ -29,7 +28,6 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        authViewModel.getCurrentUser()
         authViewModel.saveIdToken()
         authViewModel.getIdToken()
         val intentFilter = IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION)
@@ -47,17 +45,6 @@ class HomeActivity : AppCompatActivity() {
         val navHostFragment = supportFragmentManager.findFragmentById(binding.navHostFragment.id) as NavHostFragment
         navController = navHostFragment.findNavController()
         bottomNavigationView.setupWithNavController(navController)
-
-        val currentFragment = navController.currentDestination?.id
-        val locationFragment = R.id.locationFragment
-
-        mainViewModel.location.observe(this, {
-            if (it == null) {
-                if (currentFragment == locationFragment) {
-                    navController.navigate(locationFragment)
-                } else navController.navigate(R.id.action_homeFragment_to_locationFragment)
-            }
-        })
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {

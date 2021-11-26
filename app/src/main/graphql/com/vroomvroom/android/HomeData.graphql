@@ -1,10 +1,13 @@
-query HomeData($category: String!) {
+query Category {
     getCategories {
         id
         name
         img_url
     }
-    getMerchants(category: $category) {
+}
+
+query Merchants($category: String!) {
+    getMerchantsByCategory(category: $category) {
         id
         name
         img_url

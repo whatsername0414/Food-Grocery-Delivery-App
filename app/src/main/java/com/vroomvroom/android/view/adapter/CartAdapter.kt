@@ -12,29 +12,30 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.ItemCartBinding
-import com.vroomvroom.android.db.CartItem
-import com.vroomvroom.android.db.CartItemWithChoice
+import com.vroomvroom.android.domain.db.CartItemEntity
+import com.vroomvroom.android.domain.db.CartItemWithChoice
+import com.vroomvroom.android.domain.db.MerchantEntity
 
 class CartDiffUtil: DiffUtil.ItemCallback<CartItemWithChoice>() {
     override fun areItemsTheSame(
         oldItem: CartItemWithChoice,
         newItem: CartItemWithChoice
     ): Boolean {
-        return oldItem.cartItem.cartItemId == newItem.cartItem.cartItemId
+        return oldItem.cartItemEntity.cartItemId == newItem.cartItemEntity.cartItemId
     }
 
     override fun areContentsTheSame(
         oldItem: CartItemWithChoice,
         newItem: CartItemWithChoice
     ): Boolean {
-        return oldItem.cartItem == newItem.cartItem
+        return oldItem.cartItemEntity == newItem.cartItemEntity
     }
 
 }
 
 class CartAdapter: ListAdapter<CartItemWithChoice, CartViewHolder>(CartDiffUtil()) {
 
-    var onCartItemClicked: ((CartItem) -> Unit)? = null
+    var onCartItemClicked: ((CartItemEntity) -> Unit)? = null
     var onDeleteCartItemClick: ((CartItemWithChoice) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
@@ -51,18 +52,21 @@ class CartAdapter: ListAdapter<CartItemWithChoice, CartViewHolder>(CartDiffUtil(
         val cartItemWithChoice = getItem(position)
         holder.binding.cartItemWithChoice = cartItemWithChoice
         val choiceList = StringBuilder()
-        cartItemWithChoice?.choices?.forEach { choice ->
+        cartItemWithChoice?.choiceEntities?.forEach { choice ->
             choiceList.append("• ${choice.name}\n")
         }
 
         holder.binding.productDescription.text = choiceList
 
-        val cartItem = getItem(position).cartItem
-        val increaseQuantityCartItem = CartItem(
+        val cartItem = getItem(position).cartItemEntity
+        val merchant = MerchantEntity(
+            merchant_id = cartItem.merchant.merchant_id,
+            merchant_name = cartItem.merchant.merchant_name
+        )
+        val increaseQuantityCartItem = CartItemEntity(
             cartItemId = cartItem.cartItemId,
             remote_id = cartItem.remote_id,
-            merchant_id = cartItem.merchant_id,
-            merchant = cartItem.merchant,
+            merchant = merchant,
             name = cartItem.name,
             product_img_url = cartItem.product_img_url,
             price = cartItem.price + (cartItem.price / cartItem.quantity),
@@ -73,11 +77,10 @@ class CartAdapter: ListAdapter<CartItemWithChoice, CartViewHolder>(CartDiffUtil(
             onCartItemClicked?.invoke(increaseQuantityCartItem)
         }
 
-        val decreaseQuantityCartItem = CartItem(
+        val decreaseQuantityCartItem = CartItemEntity(
             cartItemId = cartItem.cartItemId,
             remote_id = cartItem.remote_id,
-            merchant_id = cartItem.merchant_id,
-            merchant = cartItem.merchant,
+            merchant = merchant,
             name = cartItem.name,
             product_img_url = cartItem.product_img_url,
             price = cartItem.price - (cartItem.price / cartItem.quantity),

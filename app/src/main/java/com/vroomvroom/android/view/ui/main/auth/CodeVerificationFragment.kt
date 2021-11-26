@@ -17,6 +17,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentCodeVerificationBinding
+import com.vroomvroom.android.domain.db.UserEntity
 import com.vroomvroom.android.view.state.ViewState
 import com.vroomvroom.android.viewmodel.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -48,7 +49,7 @@ class CodeVerificationFragment : Fragment() {
         binding.otpVerificationToolbar.setupWithNavController(navController, appBarConfiguration)
 
         observeMessageIntent()
-        observeUpdatedUser()
+        observeOtpVerificationResult()
         binding.btnVerifyOtp.setOnClickListener {
             val otp = binding.otpEditTxt.text.toString()
             if (otp.isNotBlank()) {
@@ -81,14 +82,17 @@ class CodeVerificationFragment : Fragment() {
         })
     }
 
-    private fun observeUpdatedUser() {
-        viewModel.updatedUser.observe(viewLifecycleOwner, { response ->
+    private fun observeOtpVerificationResult() {
+        viewModel.otpVerificationResult.observe(viewLifecycleOwner, { response ->
             when (response) {
                 is ViewState.Loading -> {
                     binding.otpVerificationProgress.visibility = View.VISIBLE
                     binding.btnVerifyOtp.isEnabled = false
                 }
                 is ViewState.Success -> {
+                    val result = response.result.otpVerification
+                    val user = UserEntity(result.id, result.name, result.email, result.phone_number)
+                    viewModel.updateUserRecord(user)
                     navController.navigate(R.id.action_codeVerificationFragment_to_checkoutFragment)
                 }
                 is ViewState.Error -> {

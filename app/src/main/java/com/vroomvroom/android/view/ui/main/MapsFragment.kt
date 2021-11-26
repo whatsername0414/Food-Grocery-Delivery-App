@@ -2,13 +2,11 @@ package com.vroomvroom.android.view.ui.main
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.location.Location
-import android.location.LocationManager
+import android.location.Address
 import android.net.ConnectivityManager
 import android.net.Network
 import android.os.Build
 import android.os.Bundle
-import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -17,11 +15,11 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.gms.common.api.Status
-import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
@@ -38,11 +36,12 @@ import com.vmadalin.easypermissions.dialogs.SettingsDialog
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentMapsBinding
 import com.vroomvroom.android.utils.Utils.createLocationRequest
-import com.vroomvroom.android.utils.Utils.customGeoCoder
+import com.vroomvroom.android.utils.Utils.geoCoder
 import com.vroomvroom.android.utils.Utils.hasLocationPermission
 import com.vroomvroom.android.utils.Utils.requestLocationPermission
 import com.vroomvroom.android.utils.Utils.setSafeOnClickListener
-import com.vroomvroom.android.viewmodel.MainViewModel
+import com.vroomvroom.android.utils.Utils.userLocationBuilder
+import com.vroomvroom.android.viewmodel.LocationViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -50,22 +49,16 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
-    private val viewModel by activityViewModels<MainViewModel>()
+    private val viewModel by activityViewModels<LocationViewModel>()
     private var isConnected: Boolean = false
     private var newLatLng: LatLng? = null
     private var mapFragment: SupportMapFragment? = null
     private var autocompleteFragment: AutocompleteSupportFragment? = null
-    private var toStringCoordinate: String? =null
     private var map: GoogleMap? = null
-    private var currentCity: String? = null
-    private val deliveryRange: List<String> = arrayListOf("Bacacay", "Legazpi City",
-        "Ligao", "Malilipot", "Malinao", "Santo Domingo", "Tabaco City", "Tiwi")
+    private var address: Address? = null
 
     private lateinit var binding: FragmentMapsBinding
-    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    private lateinit var locationManager: LocationManager
-    private lateinit var locationRequest: LocationRequest
-    private lateinit var locationCallback: LocationCallback
+    private lateinit var navController: NavController
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -77,15 +70,19 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         autocompleteFragment =
             childFragmentManager.findFragmentById(R.id.autocomplete_fragment)
                     as AutocompleteSupportFragment
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
+        navController = findNavController()
         return binding.root
     }
 
-    @SuppressLint("MissingPermission")
+    @SuppressLint("MissingPermission", "ObsoleteSdkInt")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val apiKey = getString(R.string.google_maps_key)
+
+        val appBarConfiguration = AppBarConfiguration(navController.graph)
+
+        binding.mapsToolbar.setupWithNavController(navController, appBarConfiguration)
 
         autocompleteFragment?.setHint("Search your address")
         autocompleteFragment?.view
@@ -112,18 +109,6 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             })
         }
 
-        val navController = findNavController()
-        val appBarConfiguration = AppBarConfiguration(navController.graph)
-
-        binding.mapsToolbar.setupWithNavController(navController, appBarConfiguration)
-
-        locationManager = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        locationRequest = LocationRequest.create().apply {
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-            interval = 5000
-            fastestInterval = 2000
-        }
-
         mapFragment?.getMapAsync { googleMap ->
             map = googleMap
             map?.mapType = GoogleMap.MAP_TYPE_NORMAL
@@ -131,15 +116,9 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             map?.setOnCameraIdleListener {
                 newLatLng = map?.cameraPosition?.target
                 newLatLng?.let { latLng ->
-                    val address = customGeoCoder(latLng, requireContext())
-                    viewModel.address.postValue(address)
-                    currentCity = address?.locality
+                    address = geoCoder(requireContext(), latLng)
                     autocompleteFragment?.setText(address?.getAddressLine(0))
                     binding.cameraMoveSpinner.visibility = View.GONE
-
-                }
-                newLatLng?.let { latLng ->
-                    toStringCoordinate = "${latLng.latitude}, ${latLng.longitude}"
                 }
             }
 
@@ -148,21 +127,15 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                 binding.cameraMoveSpinner.visibility = View.VISIBLE
             }
 
-            viewModel.location.observe(viewLifecycleOwner, { location ->
-                if (location != null && mapFragment != null) {
-                    val coordinates = location.split(", ")
+            viewModel.userLocation.observe(viewLifecycleOwner, { userLocation ->
+                if (userLocation.isNullOrEmpty()) {
+                    observeCurrentLocation()
+                } else {
+                    val location = userLocation.first()
                     map?.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                        LatLng(coordinates[0].toDouble(), coordinates[1].toDouble()), 17f))
-                }
-            })
-
-            viewModel.currentLocation.observe(viewLifecycleOwner) { location ->
-                if (location != null) {
-                    fusedLocationProviderClient.removeLocationUpdates(locationCallback)
-                    map?.animateCamera(CameraUpdateFactory.newLatLngZoom(
                         LatLng(location.latitude, location.longitude), 17f))
                 }
-            }
+            })
         }
 
         autocompleteFragment?.setOnPlaceSelectedListener(object : PlaceSelectionListener {
@@ -180,35 +153,23 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         binding.cameraMoveSpinner.visibility = View.GONE
         binding.cvAutoComplete.visibility = View.VISIBLE
         binding.btnConfirmLocation.setOnClickListener {
-            if (toStringCoordinate != null && toStringCoordinate != "0.0, 0.0") {
+            if (newLatLng != null && newLatLng?.latitude != 0.0 && newLatLng?.longitude != 0.0 ) {
                 val prevDestination = navController.previousBackStackEntry?.destination?.id
-                if (currentCity !in deliveryRange) {
-                    MaterialAlertDialogBuilder(requireContext())
-                        .setTitle(resources.getString(R.string.maps_alert_dialog_title))
-                        .setMessage(resources.getString(R.string.maps_alert_dialog_message))
-                        .setNeutralButton(resources.getString(R.string.maps_alert_dialog_cancel)) { _, _ ->
-                            // Ignore
-                        }
-                        .setPositiveButton(resources.getString(R.string.maps_alert_dialog_proceed)) { _, _ ->
-                            viewModel.saveLocation(toStringCoordinate!!)
-                            if (prevDestination == R.id.locationFragment) {
-                                navController.navigate(R.id.action_mapsFragment_to_homeFragment)
-                            } else navController.popBackStack()
-                        }
-                        .show()
+                if (address?.locality !in viewModel.deliveryRange) {
+                    showDialog(prevDestination)
                 } else {
-                    viewModel.saveLocation(toStringCoordinate!!)
+                    newLatLng?.let { latLng ->
+                        viewModel.insertLocation(userLocationBuilder(address, latLng))
+                    }
                     if (prevDestination == R.id.locationFragment) {
                         navController.navigate(R.id.action_mapsFragment_to_homeFragment)
                     } else navController.popBackStack()
                 }
             } else {
                 MaterialAlertDialogBuilder(requireContext())
-                    .setTitle(resources.getString(R.string.maps_alert_dialog_title))
-                    .setMessage(resources.getString(R.string.maps_alert_dialog_message_invalid))
-                    .setNegativeButton(resources.getString(R.string.maps_alert_dialog_understood)) { _, _ ->
-                        // Ignore
-                    }
+                    .setTitle(getString(R.string.maps_alert_dialog_title))
+                    .setMessage(getString(R.string.maps_alert_dialog_message_invalid))
+                    .setNegativeButton(getString(R.string.maps_alert_dialog_understood)) { _, _ -> }
                     .show()
             }
         }
@@ -216,7 +177,7 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         binding.myCurrentLocation.setSafeOnClickListener {
             if (isConnected) {
                 if (hasLocationPermission(requireContext())) {
-                    setLocation()
+                    viewModel.requestLocationUpdates()
                 } else {
                     createLocationRequest(requireActivity(), this )
                 }
@@ -227,7 +188,32 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                     .show()
             }
         }
+    }
 
+    private fun showDialog(prevDestination: Int?) {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(getString(R.string.maps_alert_dialog_title))
+            .setMessage(getString(R.string.maps_alert_dialog_message))
+            .setNeutralButton(getString(R.string.maps_alert_dialog_cancel)) { _, _ -> }
+            .setPositiveButton(getString(R.string.maps_alert_dialog_proceed)) { _, _ ->
+                newLatLng?.let { latLng ->
+                    viewModel.insertLocation(userLocationBuilder(address, latLng))
+                }
+                if (prevDestination == R.id.locationFragment) {
+                    navController.navigate(R.id.action_mapsFragment_to_homeFragment)
+                } else navController.popBackStack()
+            }
+            .show()
+    }
+
+    private fun observeCurrentLocation() {
+        viewModel.currentLocation.observe(viewLifecycleOwner) { location ->
+            if (location != null) {
+                viewModel.removeLocationUpdates()
+                map?.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                    LatLng(location.latitude, location.longitude), 17f))
+            }
+        }
     }
 
     override fun onRequestPermissionsResult(
@@ -247,21 +233,7 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     }
 
     override fun onPermissionsGranted(requestCode: Int, perms: List<String>) {
-        setLocation()
-    }
-
-    @SuppressLint("MissingPermission")
-    private fun setLocation() {
-        locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult) {
-                super.onLocationResult(locationResult)
-                val location: Location? = locationResult.lastLocation
-                if (location != null) {
-                    viewModel.currentLocation.postValue(location)
-                }
-            }
-        }
-        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
+        viewModel.requestLocationUpdates()
     }
 
     override fun onDestroyView() {

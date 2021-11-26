@@ -3,10 +3,10 @@ query Merchant($merchantId: String!) {
         id
         name
         img_url
-        products {
+        product_sections {
             id
             name
-            product_by_category {
+            products {
                 id
                 name
                 product_img_url

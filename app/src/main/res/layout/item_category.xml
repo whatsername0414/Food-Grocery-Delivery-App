@@ -5,7 +5,7 @@
     <data>
         <variable
             name="category"
-            type="com.vroomvroom.android.HomeDataQuery.GetCategory" />
+            type="com.vroomvroom.android.CategoryQuery.GetCategory" />
     </data>
 
     <androidx.cardview.widget.CardView

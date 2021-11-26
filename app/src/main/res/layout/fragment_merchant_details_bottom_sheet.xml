@@ -6,7 +6,7 @@
     <data>
         <variable
             name="merchantDetails"
-            type="com.vroomvroom.android.model.MerchantModel" />
+            type="com.vroomvroom.android.domain.model.merchant.Merchant" />
     </data>
 
     <LinearLayout
@@ -29,6 +29,7 @@
             android:layout_marginTop="24dp"
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
+            android:background="@color/white"
             app:cardElevation="0dp"
             app:cardCornerRadius="8dp">
 

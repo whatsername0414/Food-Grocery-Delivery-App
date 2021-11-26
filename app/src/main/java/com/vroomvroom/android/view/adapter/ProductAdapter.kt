@@ -14,7 +14,7 @@ import com.vroomvroom.android.databinding.ItemProductBinding
 import com.vroomvroom.android.utils.OnProductClickListener
 
 class ProductAdapter(
-    private val product: List<MerchantQuery.Product_by_category?>,
+    private val product: List<MerchantQuery.Product?>,
     private val listenerProduct: OnProductClickListener
     ) : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>(){
 

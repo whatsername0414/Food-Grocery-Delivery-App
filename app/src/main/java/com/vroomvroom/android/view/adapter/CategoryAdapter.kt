@@ -13,30 +13,30 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.vroomvroom.android.HomeDataQuery
+import com.vroomvroom.android.CategoryQuery
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.ItemCategoryBinding
 
-class CategoryDiffUtil: DiffUtil.ItemCallback<HomeDataQuery.GetCategory>() {
+class CategoryDiffUtil: DiffUtil.ItemCallback<CategoryQuery.GetCategory>() {
     override fun areItemsTheSame(
-        oldItem: HomeDataQuery.GetCategory,
-        newItem: HomeDataQuery.GetCategory
+        oldItem: CategoryQuery.GetCategory,
+        newItem: CategoryQuery.GetCategory
     ): Boolean {
         return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(
-        oldItem: HomeDataQuery.GetCategory,
-        newItem: HomeDataQuery.GetCategory
+        oldItem: CategoryQuery.GetCategory,
+        newItem: CategoryQuery.GetCategory
     ): Boolean {
         return oldItem == newItem
     }
 
 }
 
-class CategoryAdapter: ListAdapter<HomeDataQuery.GetCategory, CategoryViewHolder>(CategoryDiffUtil()) {
+class CategoryAdapter: ListAdapter<CategoryQuery.GetCategory, CategoryViewHolder>(CategoryDiffUtil()) {
 
-    var onCategoryClicked: ((HomeDataQuery.GetCategory?) -> Unit)? = null
+    var onCategoryClicked: ((CategoryQuery.GetCategory?) -> Unit)? = null
     private var categoryName: String? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
@@ -50,10 +50,10 @@ class CategoryAdapter: ListAdapter<HomeDataQuery.GetCategory, CategoryViewHolder
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    override fun onBindViewHolder(holder: CategoryViewHolder, @SuppressLint("RecyclerView") position: Int) {
-        holder.binding.category = getItem(position)
-        val imgBg = holder.binding.root.findViewById<ConstraintLayout>(R.id.cl_bg)
+    override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         val category = getItem(position)
+        holder.binding.category = category
+        val imgBg = holder.binding.root.findViewById<ConstraintLayout>(R.id.cl_bg)
         holder.binding.root.setOnClickListener {
 
             if (categoryName != category.name) {

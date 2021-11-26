@@ -1,4 +1,4 @@
-package com.vroomvroom.android
+package com.vroomvroom.android.utils
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -6,7 +6,6 @@ import android.content.Intent
 import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.Status
-import com.vroomvroom.android.utils.SmsBroadcastReceiverListener
 import com.vroomvroom.android.view.state.ViewState
 import javax.inject.Inject
 

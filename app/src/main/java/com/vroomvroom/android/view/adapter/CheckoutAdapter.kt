@@ -12,21 +12,21 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.ItemCheckoutBinding
-import com.vroomvroom.android.db.CartItemWithChoice
+import com.vroomvroom.android.domain.db.CartItemWithChoice
 
 class CheckoutDiffUtil: DiffUtil.ItemCallback<CartItemWithChoice>() {
     override fun areItemsTheSame(
         oldItem: CartItemWithChoice,
         newItem: CartItemWithChoice
     ): Boolean {
-        return oldItem.cartItem.cartItemId == newItem.cartItem.cartItemId
+        return oldItem.cartItemEntity.cartItemId == newItem.cartItemEntity.cartItemId
     }
 
     override fun areContentsTheSame(
         oldItem: CartItemWithChoice,
         newItem: CartItemWithChoice
     ): Boolean {
-        return oldItem.cartItem == newItem.cartItem
+        return oldItem.cartItemEntity == newItem.cartItemEntity
     }
 
 }
@@ -45,9 +45,9 @@ class CheckoutAdapter: ListAdapter<CartItemWithChoice, CheckoutViewHolder>(Check
 
     override fun onBindViewHolder(holder: CheckoutViewHolder, @SuppressLint("RecyclerView") position: Int) {
         val cartItemWithChoice = getItem(position)
-        holder.binding.cartItem = cartItemWithChoice.cartItem
+        holder.binding.cartItem = cartItemWithChoice.cartItemEntity
         val choiceList = StringBuilder()
-        cartItemWithChoice?.choices?.forEach { choice ->
+        cartItemWithChoice?.choiceEntities?.forEach { choice ->
             choiceList.append("• ${choice.name}\n")
         }
         holder.binding.checkoutProductDescription.text = choiceList

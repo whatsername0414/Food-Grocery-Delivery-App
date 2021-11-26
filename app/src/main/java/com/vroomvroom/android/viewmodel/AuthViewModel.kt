@@ -5,16 +5,17 @@ import android.util.Log
 import androidx.lifecycle.*
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.auth.FirebaseUser
-import com.vroomvroom.android.OtpVerificationMutation
-import com.vroomvroom.android.RegisterMutation
+import com.vroomvroom.android.*
+import com.vroomvroom.android.domain.db.UserEntity
+import com.vroomvroom.android.repository.local.RoomRepository
 import com.vroomvroom.android.repository.services.FirebaseAuthRepository
-import com.vroomvroom.android.SmsBroadcastReceiver
-import com.vroomvroom.android.VerifyMobileNumberMutation
 import com.vroomvroom.android.repository.local.UserPreferences
 import com.vroomvroom.android.repository.remote.GraphQLRepository
+import com.vroomvroom.android.utils.SmsBroadcastReceiver
 import com.vroomvroom.android.utils.SmsBroadcastReceiverListener
 import com.vroomvroom.android.view.state.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -23,6 +24,7 @@ import javax.inject.Inject
 @HiltViewModel
 @ExperimentalCoroutinesApi
 class AuthViewModel @Inject constructor(
+    private val roomRepository: RoomRepository,
     private val graphQLRepository: GraphQLRepository,
     private val firebaseAuthRepository: FirebaseAuthRepository,
     private val smsBroadcastReceiver: SmsBroadcastReceiver,
@@ -33,15 +35,17 @@ class AuthViewModel @Inject constructor(
     val otpGenerateConfirmation: LiveData<ViewState<VerifyMobileNumberMutation.Data>>
         get() = _otpGenerateConfirmation
 
-    private val _userRecord by lazy { MutableLiveData<ViewState<RegisterMutation.Data>>() }
-    val userRecord: LiveData<ViewState<RegisterMutation.Data>>
-        get() = _userRecord
+    private val _otpVerificationResult by lazy { MutableLiveData<ViewState<OtpVerificationMutation.Data>>() }
+    val otpVerificationResult: LiveData<ViewState<OtpVerificationMutation.Data>>
+        get() = _otpVerificationResult
 
-    private val _updatedUser by lazy { MutableLiveData<ViewState<OtpVerificationMutation.Data>>() }
-    val updatedUser: LiveData<ViewState<OtpVerificationMutation.Data>>
-        get() = _updatedUser
+    private val _user by lazy { MutableLiveData<ViewState<RegisterMutation.Data>>() }
+    val user: LiveData<ViewState<RegisterMutation.Data>>
+        get() = _user
 
-    val currentUser by lazy { MutableLiveData<ViewState<FirebaseUser>>() }
+    val token = preferences.token.asLiveData()
+
+    val userRecord = roomRepository.getUser()
     val newLoggedInUser by lazy { MutableLiveData<ViewState<FirebaseUser>>() }
     val isPasswordResetEmailSent by lazy { MutableLiveData<ViewState<String>>() }
     val messageIntent by lazy { MutableLiveData<ViewState<Intent>>() }
@@ -53,37 +57,25 @@ class AuthViewModel @Inject constructor(
         _otpGenerateConfirmation.postValue(ViewState.Loading)
         viewModelScope.launch {
             val response = graphQLRepository.mutationVerifyMobileNumber(number)
-            response.let { data ->
+            response?.let { data ->
                 when (data) {
-                    is ViewState.Success -> {
-                        _otpGenerateConfirmation.postValue(data)
-                    }
-                    is ViewState.Error -> {
-                        _otpGenerateConfirmation.postValue(data)
-                    }
-                    else -> {
-                        _otpGenerateConfirmation.postValue(data)
-                    }
+                    is ViewState.Success -> _otpGenerateConfirmation.postValue(data)
+                    is ViewState.Error -> _otpGenerateConfirmation.postValue(data)
+                    else -> _otpGenerateConfirmation.postValue(data)
                 }
             }
         }
     }
 
     fun mutationOtpVerification(otp: String) {
-        _updatedUser.postValue(ViewState.Loading)
+        _otpVerificationResult.postValue(ViewState.Loading)
         viewModelScope.launch {
             val response = graphQLRepository.mutationOtpVerification(otp)
-            response.let { data ->
+            response?.let { data ->
                 when (data) {
-                    is ViewState.Success -> {
-                        _updatedUser.postValue(data)
-                    }
-                    is ViewState.Error -> {
-                        _updatedUser.postValue(data)
-                    }
-                    else -> {
-                        _updatedUser.postValue(data)
-                    }
+                    is ViewState.Success -> _otpVerificationResult.postValue(data)
+                    is ViewState.Error -> _otpVerificationResult.postValue(data)
+                    else -> _otpVerificationResult.postValue(data)
                 }
             }
         }
@@ -92,6 +84,7 @@ class AuthViewModel @Inject constructor(
     fun saveIdToken() {
         firebaseAuthRepository.getIdToken { result ->
             result?.let { token ->
+                Log.d("AuthViewModel", token)
                 viewModelScope.launch {
                     preferences.saveToken(token)
                 }
@@ -105,43 +98,32 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    fun getCurrentUser() {
-        firebaseAuthRepository.getCurrentUser { result ->
-            when (result) {
-                is ViewState.Success -> {
-                    currentUser.postValue(result)
-                }
-                is ViewState.Error -> {
-                    currentUser.postValue(result)
-                }
-                else -> Log.d("AuthViewModel", result.toString())
-            }
-        }
-    }
-
     fun register() {
-        _userRecord.postValue(ViewState.Loading)
-        firebaseAuthRepository.getIdToken { result->
-            if (result != null) {
-                viewModelScope.launch {
-                    val response = graphQLRepository.mutationRegister()
-                    response?.let { data ->
-                        when (data) {
-                            is ViewState.Success -> {
-                                _userRecord.postValue(data)
-                            }
-                            is ViewState.Error -> {
-                                _userRecord.postValue(data)
-                            }
-                            else -> {
-                                _userRecord.postValue(data)
-                            }
-                        }
+        _user.postValue(ViewState.Loading)
+        viewModelScope.launch {
+            val response = graphQLRepository.mutationRegister()
+            response?.let { data ->
+                when (data) {
+                    is ViewState.Success -> {
+                        _user.postValue(data)
+                    }
+                    is ViewState.Error -> {
+                        _user.postValue(data)
+                    }
+                    else -> {
+                        _user.postValue(data)
                     }
                 }
             }
         }
+    }
 
+    fun insertUserRecord(userEntity: UserEntity) = viewModelScope.launch(Dispatchers.IO) {
+        roomRepository.insertUser(userEntity)
+    }
+
+    fun updateUserRecord(userEntity: UserEntity) = viewModelScope.launch(Dispatchers.IO) {
+        roomRepository.updateUser(userEntity)
     }
 
     fun taskGoogleSignIn(data: Intent?) {
@@ -149,12 +131,13 @@ class AuthViewModel @Inject constructor(
             when (result) {
                 is ViewState.Success -> {
                     newLoggedInUser.postValue(result)
-
                 }
                 is ViewState.Error -> {
                     newLoggedInUser.postValue(result)
                 }
-                else -> Log.d("AuthViewModel", result.toString())
+                else -> {
+                    newLoggedInUser.postValue(result)
+                }
             }
         }
     }
@@ -167,7 +150,9 @@ class AuthViewModel @Inject constructor(
                 is ViewState.Error -> {
                     newLoggedInUser.postValue(result)
                 }
-                else -> Log.d("AuthViewModel", result.toString())
+                else -> {
+                    newLoggedInUser.postValue(result)
+                }
             }
         }
     }
@@ -181,7 +166,9 @@ class AuthViewModel @Inject constructor(
                 is ViewState.Error -> {
                     newLoggedInUser.postValue(result)
                 }
-                else -> Log.d("AuthViewModel", result.toString())
+                else -> {
+                    newLoggedInUser.postValue(result)
+                }
             }
         }
     }
@@ -195,7 +182,9 @@ class AuthViewModel @Inject constructor(
                 is ViewState.Error -> {
                     newLoggedInUser.postValue(result)
                 }
-                else -> Log.d("AuthViewModel", result.toString())
+                else -> {
+                    newLoggedInUser.postValue(result)
+                }
             }
         }
     }
@@ -209,7 +198,9 @@ class AuthViewModel @Inject constructor(
                 is ViewState.Error -> {
                     isPasswordResetEmailSent.postValue(result)
                 }
-                else -> Log.d("AuthViewModel", result.toString())
+                else -> {
+                    isPasswordResetEmailSent.postValue(result)
+                }
             }
         }
     }
@@ -223,9 +214,15 @@ class AuthViewModel @Inject constructor(
         smsBroadcastReceiver.smsBroadcastReceiverListener = object : SmsBroadcastReceiverListener {
             override fun onIntent(intent: ViewState<Intent>) {
                 when (intent) {
-                    is ViewState.Success -> messageIntent.postValue(intent)
-                    is ViewState.Error -> messageIntent.postValue(intent)
-                    else -> Log.d("AuthViewModel", intent.toString())
+                    is ViewState.Success -> {
+                        messageIntent.postValue(intent)
+                    }
+                    is ViewState.Error -> {
+                        messageIntent.postValue(intent)
+                    }
+                    else -> {
+                        messageIntent.postValue(intent)
+                    }
                 }
             }
         }

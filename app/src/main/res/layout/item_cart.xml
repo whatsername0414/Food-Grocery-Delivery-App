@@ -6,7 +6,7 @@
     <data>
         <variable
             name="cartItemWithChoice"
-            type="com.vroomvroom.android.db.CartItemWithChoice" />
+            type="com.vroomvroom.android.domain.db.CartItemWithChoice" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -34,7 +34,7 @@
 
                 <ImageView
                     android:id="@+id/product_image"
-                    cartItemImageUrl="@{cartItemWithChoice.cartItem.product_img_url}"
+                    cartItemImageUrl="@{cartItemWithChoice.cartItemEntity.product_img_url}"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:layout_gravity="center"
@@ -61,7 +61,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="16dp"
-                        android:text="@{cartItemWithChoice.cartItem.name}"
+                        android:text="@{cartItemWithChoice.cartItemEntity.name}"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                         android:textColor="@color/black"
                         android:textSize="16sp"
@@ -81,7 +81,7 @@
                         android:id="@+id/product_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@{`₱` + cartItemWithChoice.cartItem.price + `.00`}"
+                        android:text="@{`₱` + cartItemWithChoice.cartItemEntity.price + `.00`}"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                         android:textColor="@color/black"
                         android:textSize="14sp"
@@ -115,7 +115,7 @@
                     android:id="@+id/quantity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{Integer.valueOf(cartItemWithChoice.cartItem.quantity).toString()}"
+                    android:text="@{Integer.valueOf(cartItemWithChoice.cartItemEntity.quantity).toString()}"
                     android:textColor="@color/black"
                     android:textSize="24sp"
                     android:layout_marginStart="8dp"

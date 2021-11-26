@@ -1,0 +1,31 @@
+mutation CreateOrder($orderInput: OrderInput!) {
+    createOrder(orderInput: $orderInput) {
+        id
+        payment {
+            method
+            createdAt
+        }
+        order_detail {
+            delivery_fee
+            total_price
+            merchant {
+                id
+                name
+            }
+            product {
+                id
+                name
+                product_img_url
+                instructions
+                price
+                quantity
+                option {
+                    name
+                    additional_price
+                    option_type
+                }
+            }
+        }
+        status
+    }
+}

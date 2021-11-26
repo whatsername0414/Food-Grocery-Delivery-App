@@ -5,7 +5,7 @@
     <data>
         <variable
             name="cartItem"
-            type="com.vroomvroom.android.db.CartItem" />
+            type="com.vroomvroom.android.domain.db.CartItemEntity" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

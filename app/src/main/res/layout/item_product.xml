@@ -5,7 +5,7 @@
     <data>
         <variable
             name="product"
-            type="com.vroomvroom.android.MerchantQuery.Product_by_category" />
+            type="com.vroomvroom.android.MerchantQuery.Product" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

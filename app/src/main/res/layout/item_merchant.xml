@@ -5,7 +5,7 @@
     <data>
         <variable
             name="merchant"
-            type="com.vroomvroom.android.HomeDataQuery.GetMerchant" />
+            type="com.vroomvroom.android.MerchantsQuery.GetMerchantsByCategory" />
     </data>
 
     <LinearLayout
@@ -77,7 +77,7 @@
                         android:layout_height="40dp"
                         android:layout_gravity="center"
                         android:layout_marginBottom="22dp"
-                        android:text="PREORDER"
+                        android:text="@string/preorder"
                         android:textSize="12sp"
                         android:background="@drawable/left_curve_bg"
                         android:drawableEnd="@drawable/ic_arrow_right"

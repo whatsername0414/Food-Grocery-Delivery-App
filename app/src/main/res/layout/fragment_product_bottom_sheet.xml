@@ -6,7 +6,7 @@
     <data>
         <variable
             name="product"
-            type="com.vroomvroom.android.model.ProductByCategoryModel" />
+            type="com.vroomvroom.android.domain.model.product.Product" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -168,7 +168,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="16dp"
                             android:layout_marginEnd="16dp"
-                            android:text="1"
+                            tools:text="1"
                             android:textColor="@color/black"
                             android:textSize="24sp" />
 

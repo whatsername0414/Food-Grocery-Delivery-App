@@ -1,6 +1,5 @@
 package com.vroomvroom.android.view.adapter
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -12,39 +11,39 @@ import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.ItemProductSectionBinding
 import com.vroomvroom.android.utils.OnProductClickListener
 
-class ProductsDiffUtil: DiffUtil.ItemCallback<MerchantQuery.Product>() {
+class ProductsDiffUtil: DiffUtil.ItemCallback<MerchantQuery.Product_section>() {
     override fun areItemsTheSame(
-        oldItem: MerchantQuery.Product,
-        newItem: MerchantQuery.Product
+        oldItem: MerchantQuery.Product_section,
+        newItem: MerchantQuery.Product_section
     ): Boolean {
         return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(
-        oldItem: MerchantQuery.Product,
-        newItem: MerchantQuery.Product
+        oldItem: MerchantQuery.Product_section,
+        newItem: MerchantQuery.Product_section
     ): Boolean {
         return oldItem == newItem
     }
 }
 
-class ProductsByCategoryAdapter(private val listenerProduct: OnProductClickListener): ListAdapter<MerchantQuery.Product, ProductsByCategoryViewHolder>(ProductsDiffUtil()) {
+class ProductsSectionAdapter(private val listenerProduct: OnProductClickListener): ListAdapter<MerchantQuery.Product_section, ProductsSectionViewHolder>(ProductsDiffUtil()) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductsByCategoryViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductsSectionViewHolder {
         val binding: ItemProductSectionBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
             R.layout.item_product_section,
             parent,
             false
         )
-        return ProductsByCategoryViewHolder(binding)
+        return ProductsSectionViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ProductsByCategoryViewHolder, @SuppressLint("RecyclerView") position: Int) {
-        holder.binding.products = getItem(position)
-        val productAdapter = ProductAdapter(getItem(position).product_by_category, listenerProduct)
+    override fun onBindViewHolder(holder: ProductsSectionViewHolder, position: Int) {
+        holder.binding.productSection = getItem(position)
+        val productAdapter = ProductAdapter(getItem(position).products, listenerProduct)
         holder.binding.productSectionRv.adapter = productAdapter
     }
 }
 
-class ProductsByCategoryViewHolder(val binding: ItemProductSectionBinding): RecyclerView.ViewHolder(binding.root)
+class ProductsSectionViewHolder(val binding: ItemProductSectionBinding): RecyclerView.ViewHolder(binding.root)

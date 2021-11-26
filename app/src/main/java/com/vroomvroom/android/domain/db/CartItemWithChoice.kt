@@ -1,14 +1,14 @@
-package com.vroomvroom.android.db
+package com.vroomvroom.android.domain.db
 
 import androidx.room.Embedded
 import androidx.room.Relation
 
 class CartItemWithChoice(
     @Embedded
-    val cartItem: CartItem,
+    val cartItemEntity: CartItemEntity,
     @Relation(
         parentColumn = "cartItemId",
         entityColumn = "cartItemId"
     )
-    val choices: List<CartItemChoice>?
+    val choiceEntities: List<CartItemChoiceEntity>?
 )

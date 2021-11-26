@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Html
 import android.text.method.LinkMovementMethod
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,8 +14,10 @@ import androidx.core.text.HtmlCompat.FROM_HTML_MODE_COMPACT
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.snackbar.Snackbar
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentAuthBottomSheetBinding
+import com.vroomvroom.android.domain.db.UserEntity
 import com.vroomvroom.android.view.state.ViewState
 import com.vroomvroom.android.viewmodel.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -46,6 +47,8 @@ class AuthBottomSheetFragment : BottomSheetDialogFragment() {
 
         binding.authProgress.visibility = View.GONE
 
+        observeToken()
+        observeRegisterUser()
         observeNewLoggedInUser()
 
         val getSignInWithGoogle = registerForActivityResult(
@@ -75,10 +78,50 @@ class AuthBottomSheetFragment : BottomSheetDialogFragment() {
         viewModel.onActivityResult(requestCode, resultCode, data)
     }
 
+    private fun observeToken() {
+        viewModel.token.observe(viewLifecycleOwner, { token ->
+            if (token != null) {
+                viewModel.register()
+            }
+        })
+    }
+
+    private fun observeRegisterUser() {
+        viewModel.user.observe(viewLifecycleOwner, { response ->
+            when (response) {
+                is ViewState.Loading -> {
+                    binding.authProgress.visibility = View.VISIBLE
+                }
+                is ViewState.Success -> {
+                    val result = response.result.register
+                    result?.let {
+                        val user = UserEntity(it.id, it.name, it.email, it.phone_number)
+                        viewModel.insertUserRecord(user)
+                    }
+                    findNavController().popBackStack()
+                }
+                is ViewState.Error -> {
+                    Snackbar.make(
+                        binding.root,
+                        R.string.snackbar_label,
+                        Snackbar.LENGTH_LONG
+                    )
+                        .setAction(R.string.retry) {
+                            viewModel.register()
+                        }.show()
+                }
+            }
+        })
+    }
+
     private fun observeNewLoggedInUser() {
         viewModel.newLoggedInUser.observe(viewLifecycleOwner, { result ->
             when (result) {
-                is ViewState.Success -> findNavController().popBackStack()
+                is ViewState.Loading -> {
+                }
+                is ViewState.Success -> {
+                    viewModel.saveIdToken()
+                }
                 is ViewState.Error -> {
                     binding.authProgress.visibility = View.GONE
                     val error = result.exception.message
@@ -88,7 +131,6 @@ class AuthBottomSheetFragment : BottomSheetDialogFragment() {
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-                else -> Log.d("AuthBottomSheetFragment", result.toString())
             }
         })
     }

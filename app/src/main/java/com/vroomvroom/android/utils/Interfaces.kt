@@ -6,7 +6,7 @@ import com.vroomvroom.android.view.state.ViewState
 
 
 interface OnProductClickListener {
-    fun onClick(product: MerchantQuery.Product_by_category?)
+    fun onClick(product: MerchantQuery.Product?)
 }
 
 interface SmsBroadcastReceiverListener {

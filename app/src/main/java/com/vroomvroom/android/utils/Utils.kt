@@ -6,9 +6,10 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.location.Address
 import android.location.Geocoder
-import android.location.Location
 import android.os.SystemClock
 import android.text.TextUtils
 import android.util.Patterns
@@ -20,10 +21,17 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.tasks.Task
 import com.google.android.material.textfield.TextInputEditText
 import com.vmadalin.easypermissions.EasyPermissions
+import com.vroomvroom.android.R
+import com.vroomvroom.android.domain.db.UserLocationEntity
 import java.io.IOException
 
 class SafeClickListener(
@@ -131,25 +139,16 @@ object Utils {
         }
     }
 
-    fun initLocation(location: Any): LatLng? {
-        val coordinates = when (location) {
-            is String -> {
-                val stringCoordinates = location.split(", ")
-                LatLng(stringCoordinates[0].toDouble(), stringCoordinates[1].toDouble())
-            }
-            is Location -> {
-                LatLng(location.latitude, location.longitude)
-            }
-            else -> null
-        }
-
-        coordinates?.let { latLng ->
-            return latLng
-        }
-        return null
+    fun userLocationBuilder(address: Address?, latLng: LatLng): UserLocationEntity {
+        return UserLocationEntity(
+            address = address?.thoroughfare,
+            city = address?.locality,
+            latitude = latLng.latitude,
+            longitude = latLng.longitude
+        )
     }
 
-    fun customGeoCoder(coordinates: LatLng, context: Context): Address? {
+    fun geoCoder(context: Context, coordinates: LatLng): Address? {
         val geoCoder = Geocoder(context)
         try {
             val addresses = geoCoder.getFromLocation(
@@ -167,10 +166,26 @@ object Utils {
         return null
     }
 
+    fun GoogleMap?.setMap(app: Context, coordinates: LatLng) {
+        this?.mapType = GoogleMap.MAP_TYPE_NORMAL
+        this?.uiSettings?.setAllGesturesEnabled(false)
+        this?.addMarker(MarkerOptions().position(coordinates).icon(bitmapDescriptorFromVector(app, R.drawable.ic_location)))
+        this?.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinates, 15.8f))
+    }
+
     fun View.setSafeOnClickListener(onSafeClick: (View) -> Unit) {
         val safeClickListener = SafeClickListener {
             onSafeClick(it)
         }
         setOnClickListener(safeClickListener)
+    }
+
+    private fun bitmapDescriptorFromVector(app: Context, vectorResId: Int): BitmapDescriptor? {
+        return ContextCompat.getDrawable(app, vectorResId)?.run {
+            setBounds(0, 0, intrinsicWidth, intrinsicHeight)
+            val bitmap = Bitmap.createBitmap(intrinsicWidth, intrinsicHeight, Bitmap.Config.ARGB_8888)
+            draw(Canvas(bitmap))
+            BitmapDescriptorFactory.fromBitmap(bitmap)
+        }
     }
 }

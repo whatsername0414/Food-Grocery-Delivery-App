@@ -1,27 +1,20 @@
 package com.vroomvroom.android.view.ui.main
 
 import android.annotation.SuppressLint
-import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.navArgs
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.model.BitmapDescriptor
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentMerchantDetailsBottomSheetBinding
 import com.vroomvroom.android.utils.Constants
-import com.vroomvroom.android.utils.Utils.customGeoCoder
+import com.vroomvroom.android.utils.Utils.geoCoder
+import com.vroomvroom.android.utils.Utils.setMap
 
 class MerchantDetailsBottomSheetFragment : BottomSheetDialogFragment(), OnMapReadyCallback {
 
@@ -39,8 +32,8 @@ class MerchantDetailsBottomSheetFragment : BottomSheetDialogFragment(), OnMapRea
         binding = FragmentMerchantDetailsBottomSheetBinding.inflate(inflater)
         mapView = binding.userLocationMapView
         merchantLocation = LatLng(
-            args.merchantDetails.location[0].toDouble(),
-            args.merchantDetails.location[1].toDouble()
+            args.merchant.location[0].toDouble(),
+            args.merchant.location[1].toDouble()
         )
         initGoogleMap(savedInstanceState)
         return binding.root
@@ -49,8 +42,8 @@ class MerchantDetailsBottomSheetFragment : BottomSheetDialogFragment(), OnMapRea
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.merchantDetails = args.merchantDetails
-        val address = customGeoCoder(merchantLocation, requireContext())
+        binding.merchantDetails = args.merchant
+        val address = geoCoder(requireContext(), merchantLocation)
         address?.let {
             binding.locationDetailBottomSheet.text = "${it.thoroughfare}, ${it.locality}"
         }
@@ -58,10 +51,7 @@ class MerchantDetailsBottomSheetFragment : BottomSheetDialogFragment(), OnMapRea
 
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
-        map?.mapType = GoogleMap.MAP_TYPE_NORMAL
-        map?.uiSettings?.setAllGesturesEnabled(false)
-        map?.addMarker(MarkerOptions().position(merchantLocation).icon(bitmapDescriptorFromVector(R.drawable.ic_location)))
-        map?.moveCamera(CameraUpdateFactory.newLatLngZoom(merchantLocation, 15.8f))
+        map.setMap(requireContext(), merchantLocation)
     }
 
     private fun initGoogleMap(savedInstanceState: Bundle?) {
@@ -71,15 +61,6 @@ class MerchantDetailsBottomSheetFragment : BottomSheetDialogFragment(), OnMapRea
         }
         mapView?.onCreate(mapViewBundle)
         mapView?.getMapAsync(this)
-    }
-
-    private fun bitmapDescriptorFromVector(vectorResId: Int): BitmapDescriptor? {
-        return ContextCompat.getDrawable(requireContext(), vectorResId)?.run {
-            setBounds(0, 0, intrinsicWidth, intrinsicHeight)
-            val bitmap = Bitmap.createBitmap(intrinsicWidth, intrinsicHeight, Bitmap.Config.ARGB_8888)
-            draw(Canvas(bitmap))
-            BitmapDescriptorFactory.fromBitmap(bitmap)
-        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

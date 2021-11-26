@@ -13,14 +13,7 @@
             android:id="@+id/action_homeFragment_to_locationFragment"
             app:destination="@id/locationFragment"
             app:enterAnim="@android:anim/slide_in_left"
-            app:popEnterAnim="@anim/nav_default_enter_anim"
-            app:popUpTo="@id/homeFragment"
-            app:popUpToInclusive="true" />
-        <action
-            android:id="@+id/action_homeFragment_to_mapsFragment"
-            app:destination="@id/mapsFragment"
-            app:enterAnim="@anim/custom_slide_in_left"
-            app:popExitAnim="@anim/custom_slide_out_left"/>
+            app:popExitAnim="@anim/custom_slide_out_left" />
         <action
             android:id="@+id/action_homeFragment_to_merchantFragment"
             app:destination="@id/merchantFragment"
@@ -40,8 +33,8 @@
         tools:layout="@layout/fragment_search" />
     <fragment
         android:id="@+id/orderFragment"
-        android:name="com.vroomvroom.android.view.ui.main.OrderFragment"
-        android:label="fragment_order"
+        android:name="com.vroomvroom.android.view.ui.order.OrderFragment"
+        android:label="Orders"
         tools:layout="@layout/fragment_order" />
     <fragment
         android:id="@+id/profileFragment"
@@ -53,12 +46,6 @@
         android:name="com.vroomvroom.android.view.ui.main.LocationFragment"
         android:label="fragment_location"
         tools:layout="@layout/fragment_location" >
-        <action
-            app:popUpToInclusive="true"
-            app:popUpTo="@id/locationFragment"
-            android:id="@+id/action_locationFragment_to_homeFragment"
-            app:destination="@id/homeFragment"
-            app:enterAnim="@android:anim/fade_in"/>
         <action
             android:id="@+id/action_locationFragment_to_mapsFragment"
             app:destination="@id/mapsFragment"
@@ -73,7 +60,7 @@
         <action
             android:id="@+id/action_mapsFragment_to_homeFragment"
             app:destination="@id/homeFragment"
-            app:enterAnim="@android:anim/slide_in_left"
+            app:enterAnim="@anim/custom_slide_in_left"
             app:popUpTo="@id/mapsFragment"
             app:popUpToInclusive="true" />
     </fragment>
@@ -105,7 +92,9 @@
         tools:layout="@layout/fragment_location_bottom_sheet" >
         <action
             android:id="@+id/action_locationBottomSheetFragment_to_mapsFragment"
-            app:destination="@id/mapsFragment" />
+            app:destination="@id/mapsFragment"
+            app:enterAnim="@anim/custom_slide_in_left"
+            app:popExitAnim="@anim/custom_slide_out_left" />
     </dialog>
     <dialog
         android:id="@+id/cartBottomSheetFragment"
@@ -132,8 +121,8 @@
         android:label="ProductBottomSheetFragment"
         tools:layout="@layout/fragment_product_bottom_sheet">
         <argument
-            android:name="ProductByCategory"
-            app:argType="com.vroomvroom.android.model.ProductByCategoryModel" />
+            android:name="Product"
+            app:argType="com.vroomvroom.android.domain.model.product.Product" />
     </dialog>
     <dialog
         android:id="@+id/merchantDetailsBottomSheetFragment"
@@ -141,8 +130,8 @@
         android:label="fragment_merchant_details_bottom_sheet"
         tools:layout="@layout/fragment_merchant_details_bottom_sheet" >
         <argument
-            android:name="merchantDetails"
-            app:argType="com.vroomvroom.android.model.MerchantModel" />
+            android:name="merchant"
+            app:argType="com.vroomvroom.android.domain.model.merchant.Merchant" />
     </dialog>
     <fragment
         android:id="@+id/checkoutFragment"

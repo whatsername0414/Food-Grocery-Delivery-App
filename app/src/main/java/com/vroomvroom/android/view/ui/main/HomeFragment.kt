@@ -1,22 +1,21 @@
 package com.vroomvroom.android.view.ui.main
 
 import android.annotation.SuppressLint
-import android.location.Address
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.commit
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentHomeBinding
-import com.vroomvroom.android.view.adapter.HomeAdapter
+import com.vroomvroom.android.domain.db.UserLocationEntity
+import com.vroomvroom.android.view.adapter.CategoryAdapter
+import com.vroomvroom.android.view.adapter.MerchantAdapter
 import com.vroomvroom.android.view.state.ViewState
-import com.vroomvroom.android.utils.Utils.customGeoCoder
-import com.vroomvroom.android.utils.Utils.initLocation
+import com.vroomvroom.android.viewmodel.LocationViewModel
 import com.vroomvroom.android.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -25,10 +24,10 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class HomeFragment: Fragment() {
 
-    private val viewModel by activityViewModels<MainViewModel>()
-    private val groupList: MutableList<String> = mutableListOf()
-    private val homeAdapter by lazy { HomeAdapter(requireContext(), groupList) }
-
+    private val mainViewModel by activityViewModels<MainViewModel>()
+    private val locationViewModel by viewModels<LocationViewModel>()
+    private val categoryAdapter by lazy { CategoryAdapter() }
+    private val merchantAdapter by lazy { MerchantAdapter() }
 
     private lateinit var binding: FragmentHomeBinding
 
@@ -41,45 +40,24 @@ class HomeFragment: Fragment() {
         return binding.root
     }
 
-    @SuppressLint("NotifyDataSetChanged", "SetTextI18n")
+    @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val supportFragManager = activity?.supportFragmentManager
-        supportFragManager?.commit {
-            setReorderingAllowed(true)
-        }
-
         binding.homeConnectionFailedNotice.visibility = View.GONE
+        binding.fetchProgress.visibility = View.GONE
 
-        groupList.clear()
-        groupList.add("Main\nCategory")
-        groupList.add("Merchants")
+        mainViewModel.queryCategory()
+        mainViewModel.queryMerchants()
 
-        viewModel.queryHomeData()
-        observeLiveData()
+        observeUserLocation()
+        observeCategory()
+        observeMerchants()
+        observeMerchantsByCategory()
         observeRoomCartItem()
 
-        binding.homeRv.layoutManager = LinearLayoutManager(requireContext())
-        binding.homeRv.adapter = homeAdapter
-
-        viewModel.location.observe(viewLifecycleOwner, {
-            it?.let { location ->
-                val coordinates = initLocation(location)
-                val address = coordinates?.let { latLong ->
-                    customGeoCoder(latLong, requireContext())
-                }
-                updateViewOnAddressReady(address)
-            }
-        })
-
-        viewModel.currentLocation.observe(viewLifecycleOwner, { location ->
-            val coordinates = initLocation(location)
-            val address = coordinates?.let { latLong ->
-                customGeoCoder(latLong, requireContext())
-            }
-            updateViewOnAddressReady(address)
-        })
+        binding.categoryRv.adapter = categoryAdapter
+        binding.merchantRv.adapter = merchantAdapter
 
         binding.locationCv.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_locationBottomSheetFragment)
@@ -89,108 +67,118 @@ class HomeFragment: Fragment() {
             findNavController().navigate(R.id.action_homeFragment_to_cartBottomSheetFragment)
         }
 
-        homeAdapter.categoryAdapter.onCategoryClicked = { category ->
-            category.let {
-                if (category?.name != null) {
-                    viewModel.queryMerchantsByCategory(category.name)
-                } else {
-                    viewModel.queryMerchantsByCategory("")
-                }
-                observeMerchantsLiveData()
+        categoryAdapter.onCategoryClicked = { category ->
+            if (category?.name != null) {
+                mainViewModel.queryMerchantsByCategory(category.name)
+            } else {
+                mainViewModel.queryMerchantsByCategory("")
             }
         }
 
-        homeAdapter.merchantAdapter.onMerchantClicked = { merchant ->
-            binding.fetchProgress.visibility = View.VISIBLE
-            merchant.let {
-                if (merchant.id.isNotBlank()) {
-                    findNavController().navigate(
-                        HomeFragmentDirections.actionHomeFragmentToMerchantFragment(merchant.id)
-                    )
-                }
+        merchantAdapter.onMerchantClicked = { merchant ->
+            if (merchant.id.isNotBlank()) {
+                findNavController().navigate(
+                    HomeFragmentDirections.actionHomeFragmentToMerchantFragment(merchant.id)
+                )
             }
         }
 
         binding.homeRetryButton.setOnClickListener {
-            viewModel.queryHomeData()
-            observeLiveData()
+            mainViewModel.queryCategory()
+            mainViewModel.queryMerchants()
         }
     }
 
-    private fun updateViewOnAddressReady(address: Address?) {
-        viewModel.address.postValue(address)
+    private fun updateLocationTextView(locationEntity: UserLocationEntity) {
         binding.addressTv.text =
-            address?.thoroughfare ?: "Street not provided"
+            locationEntity.address ?: getString(R.string.street_not_provided)
         binding.cityTv.text =
-            address?.locality ?: "City not provided"
+            locationEntity.city ?: getString(R.string.city_not_provided)
     }
 
-    private fun observeLiveData() {
-        viewModel.homeData.observe(viewLifecycleOwner) { response ->
+    private fun observeUserLocation() {
+        locationViewModel.userLocation.observe(viewLifecycleOwner, { userLocation ->
+            if (userLocation.isNullOrEmpty()) {
+                findNavController().navigate(R.id.action_homeFragment_to_locationFragment)
+            } else {
+                val location = userLocation.first()
+                updateLocationTextView(location)
+            }
+        })
+    }
+
+    private fun observeCategory() {
+        mainViewModel.category.observe(viewLifecycleOwner) { response ->
             when(response) {
                 is ViewState.Loading -> {
                     binding.homeConnectionFailedNotice.visibility = View.GONE
-                    binding.homeRv.visibility = View.GONE
-                    binding.fetchProgress.visibility = View.VISIBLE
+                    binding.title.visibility = View.GONE
+                    binding.categoryRv.visibility = View.GONE
+                    binding.categoryShimmerLayout.visibility = View.VISIBLE
+                    binding.categoryShimmerLayout.startShimmer()
                 }
                 is ViewState.Success -> {
-                    if (response.result.getCategories == null && response.result.getMerchants == null) {
-                        homeAdapter.categoryAdapter.submitList(emptyList())
-                        homeAdapter.merchantAdapter.submitList(emptyList())
-                        binding.fetchProgress.visibility = View.GONE
-                        binding.homeRv.visibility = View.GONE
-                        binding.homeRv.visibility = View.GONE
-                        binding.homeConnectionFailedNotice.visibility = View.VISIBLE
-                    } else {
-                        binding.homeRv.visibility = View.VISIBLE
-                        binding.homeRv.visibility = View.VISIBLE
-                        binding.homeConnectionFailedNotice.visibility = View.GONE
-                    }
                     val category = response.result.getCategories
-                    val merchant = response.result.getMerchants
-                    homeAdapter.categoryAdapter.submitList(category)
-                    homeAdapter.merchantAdapter.submitList(merchant)
-                    binding.fetchProgress.visibility = View.GONE
+                    categoryAdapter.submitList(category)
+                    binding.categoryShimmerLayout.stopShimmer()
+                    binding.categoryShimmerLayout.visibility = View.GONE
+                    binding.title.visibility = View.VISIBLE
+                    binding.categoryRv.visibility = View.VISIBLE
                 }
                 is ViewState.Error -> {
-                    homeAdapter.categoryAdapter.submitList(emptyList())
-                    homeAdapter.merchantAdapter.submitList(emptyList())
-                    binding.fetchProgress.visibility = View.GONE
-                    binding.homeRv.visibility = View.GONE
-                    binding.homeRv.visibility = View.GONE
+                    categoryAdapter.submitList(emptyList())
+                    binding.categoryShimmerLayout.stopShimmer()
+                    binding.categoryShimmerLayout.visibility = View.GONE
+                    binding.categoryRv.visibility = View.GONE
+                    binding.title.visibility = View.GONE
                     binding.homeConnectionFailedNotice.visibility = View.VISIBLE
                 }
             }
         }
     }
 
-    private fun observeMerchantsLiveData() {
-        viewModel.homeData.observe(viewLifecycleOwner) { response ->
+    private fun observeMerchants() {
+        mainViewModel.merchants.observe(viewLifecycleOwner) { response ->
             when(response) {
                 is ViewState.Loading -> {
-                    binding.homeRv.visibility = View.VISIBLE
-                    binding.homeRv.visibility = View.VISIBLE
+                    binding.homeConnectionFailedNotice.visibility = View.GONE
+                    binding.merchantRv.visibility = View.GONE
+                    binding.merchantsShimmerLayout.visibility = View.VISIBLE
+                    binding.merchantsShimmerLayout.startShimmer()
+                }
+                is ViewState.Success -> {
+                    val merchant = response.result.getMerchantsByCategory
+                    merchantAdapter.submitList(merchant)
+                    binding.merchantsShimmerLayout.visibility = View.GONE
+                    binding.merchantsShimmerLayout.stopShimmer()
+                    binding.merchantRv.visibility = View.VISIBLE
+                }
+                is ViewState.Error -> {
+                    merchantAdapter.submitList(emptyList())
+                    binding.merchantRv.visibility = View.GONE
+                    binding.merchantsShimmerLayout.visibility = View.GONE
+                    binding.merchantsShimmerLayout.stopShimmer()
+                    binding.homeConnectionFailedNotice.visibility = View.VISIBLE
+                }
+            }
+        }
+    }
+
+    private fun observeMerchantsByCategory() {
+        mainViewModel.merchantByCategory.observe(viewLifecycleOwner) { response ->
+            when(response) {
+                is ViewState.Loading -> {
                     binding.fetchProgress.visibility = View.VISIBLE
                 }
                 is ViewState.Success -> {
-                    if (response.result.getMerchants == null) {
-                        homeAdapter.merchantAdapter.submitList(emptyList())
-                        binding.fetchProgress.visibility = View.GONE
-                        binding.homeRv.visibility = View.GONE
-                        binding.homeConnectionFailedNotice.visibility = View.VISIBLE
-                    } else {
-                        binding.homeConnectionFailedNotice.visibility = View.GONE
-                    }
-                    val merchant = response.result.getMerchants
-                    homeAdapter.merchantAdapter.submitList(merchant)
+                    val merchant = response.result.getMerchantsByCategory
+                    merchantAdapter.submitList(merchant)
                     binding.fetchProgress.visibility = View.GONE
                 }
                 is ViewState.Error -> {
-                    homeAdapter.categoryAdapter.submitList(emptyList())
-                    homeAdapter.merchantAdapter.submitList(emptyList())
+                    merchantAdapter.submitList(emptyList())
                     binding.fetchProgress.visibility = View.GONE
-                    binding.homeRv.visibility = View.GONE
-                    binding.homeRv.visibility = View.GONE
+                    binding.merchantRv.visibility = View.GONE
                     binding.homeConnectionFailedNotice.visibility = View.VISIBLE
                 }
             }
@@ -199,7 +187,7 @@ class HomeFragment: Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun observeRoomCartItem() {
-        viewModel.cartItem.observe(viewLifecycleOwner, { items ->
+        mainViewModel.cartItem.observe(viewLifecycleOwner, { items ->
             if (items.isEmpty()) {
                 binding.cardCartCounter.visibility = View.GONE
             } else {

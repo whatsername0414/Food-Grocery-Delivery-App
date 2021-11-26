@@ -7,18 +7,11 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.room.Room
 import com.apollographql.apollo.ApolloClient
-import com.facebook.CallbackManager
-import com.facebook.login.LoginManager
-import com.google.android.gms.auth.api.phone.SmsRetriever
-import com.google.android.gms.auth.api.phone.SmsRetrieverClient
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.firebase.auth.FirebaseAuth
-import com.vroomvroom.android.R
-import com.vroomvroom.android.db.CartItemDatabase
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.vroomvroom.android.domain.db.Database
 import com.vroomvroom.android.repository.local.UserPreferences
-import com.vroomvroom.android.utils.Constants.CART_ITEM_DATABASE_NAME
+import com.vroomvroom.android.utils.Constants.CART_ITEM_TABLE
 import com.vroomvroom.android.utils.Constants.PREFERENCES_STORE_NAME
 import dagger.Module
 import dagger.Provides
@@ -34,6 +27,12 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object RepoModule {
+
+    @Singleton
+    @Provides
+    fun provideFusedLocationProviderClient(
+        @ApplicationContext app: Context
+    ): FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(app)
 
     @Singleton
     @Provides
@@ -63,7 +62,7 @@ object RepoModule {
     @Provides
     fun provideApolloClient(okHttpClient: OkHttpClient): ApolloClient {
         return ApolloClient.builder()
-            .serverUrl("http://192.168.1.10:5000/")
+            .serverUrl("http://192.168.1.2:5000/")
             .okHttpClient(okHttpClient)
             .build()
     }
@@ -74,42 +73,15 @@ object RepoModule {
         @ApplicationContext app: Context
     ) = Room.databaseBuilder(
         app,
-        CartItemDatabase::class.java,
-        CART_ITEM_DATABASE_NAME
+        Database::class.java,
+        CART_ITEM_TABLE
     ).build()
 
     @Singleton
     @Provides
-    fun provideCartItemDao(db: CartItemDatabase) = db.getCartItemDao()
+    fun provideCartItemDao(db: Database) = db.cartItemDao()
 
     @Singleton
     @Provides
-    fun provideGoogleSignInOptions(@ApplicationContext app: Context): GoogleSignInOptions = GoogleSignInOptions
-        .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-        .requestIdToken(app.getString(R.string.default_web_client_id))
-        .requestEmail()
-        .build()
-
-    @Singleton
-    @Provides
-    fun provideGoogleSignInClient(
-        @ApplicationContext app: Context,
-        gso: GoogleSignInOptions
-    ): GoogleSignInClient = GoogleSignIn.getClient(app, gso)
-
-    @Singleton
-    @Provides
-    fun provideFirebaseAuth() = FirebaseAuth.getInstance()
-
-    @Singleton
-    @Provides
-    fun provideLoginManager(): LoginManager = LoginManager.getInstance()
-
-    @Singleton
-    @Provides
-    fun provideCallbackManager(): CallbackManager = CallbackManager.Factory.create()
-
-    @Singleton
-    @Provides
-    fun provideClient(@ApplicationContext app: Context): SmsRetrieverClient = SmsRetriever.getClient(app)
+    fun provideUserDao(db: Database) = db.userDao()
 }

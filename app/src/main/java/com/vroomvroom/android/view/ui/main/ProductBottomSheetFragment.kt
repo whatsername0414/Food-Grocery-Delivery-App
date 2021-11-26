@@ -12,10 +12,15 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentProductBottomSheetBinding
-import com.vroomvroom.android.db.CartItem
-import com.vroomvroom.android.db.CartItemChoice
-import com.vroomvroom.android.model.Option
+import com.vroomvroom.android.domain.db.CartItemEntity
+import com.vroomvroom.android.domain.db.CartItemChoiceEntity
+import com.vroomvroom.android.domain.db.MerchantEntity
+import com.vroomvroom.android.domain.model.merchant.Merchant
+import com.vroomvroom.android.domain.model.product.Option
+import com.vroomvroom.android.domain.model.product.Product
 import com.vroomvroom.android.view.adapter.ChoiceAdapter
 import com.vroomvroom.android.utils.Utils.clearFocus
 import com.vroomvroom.android.viewmodel.MainViewModel
@@ -52,41 +57,31 @@ class ProductBottomSheetFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val product = navArgs.productByCategory
+        val product = navArgs.product
+        val currentMerchant = viewModel.currentMerchant["merchant"]!!
         binding.product = product
-        navArgs.productByCategory.option?.forEach { option ->
-            initializeOptionView(option)
+        navArgs.product.option?.forEach { option ->
+            initializeProductOption(option)
         }
 
-        if (navArgs.productByCategory.description.isNullOrBlank()) {
+        if (product.description.isNullOrBlank()) {
             binding.bottomSheetTextDescription.visibility = View.GONE
         } else binding.bottomSheetTextDescription.visibility = View.VISIBLE
-        if (navArgs.productByCategory.product_img_url.isNullOrBlank()) {
+        if (product.product_img_url.isNullOrBlank()) {
             binding.bottomSheetCardView.visibility = View.GONE
         } else binding.bottomSheetCardView.visibility = View.VISIBLE
 
-        binding.btnAddToCart.setOnClickListener {
-            var choicePrice = 0
-            viewModel.optionMap.forEach { (_, value) ->
-                if (value.additional_price != null)
-                    choicePrice += value.additional_price
+        viewModel.cartItem.observe(viewLifecycleOwner, { items ->
+            val isCartNotEmpty = items.isNotEmpty()
+            binding.btnAddToCart.setOnClickListener {
+                if (isCartNotEmpty && items.first().cartItemEntity.merchant.merchant_name != currentMerchant.name) {
+                    showDialog()
+                } else {
+                    viewModel.insertCartItem(cartItemBuilder(product, currentMerchant))
+                    findNavController().popBackStack()
+                }
             }
-            val cartItem = CartItem(
-                remote_id = product.id,
-                merchant_id = viewModel.currentMerchant["merchant"]!!.id,
-                merchant = viewModel.currentMerchant["merchant"]!!.name,
-                name = product.name,
-                product_img_url = product.product_img_url,
-                price = (product.price + choicePrice) * quantity,
-                quantity = quantity,
-                special_instructions =
-                if (binding.bottomSheetTextDescription.text.isNotEmpty())
-                    binding.bottomSheetTextDescription.text.toString()
-                else null
-            )
-            viewModel.insertCartItem(cartItem)
-            findNavController().popBackStack()
-        }
+        })
 
         binding.decreaseQuantity.setOnClickListener {
             if (quantity != 1) {
@@ -101,13 +96,54 @@ class ProductBottomSheetFragment : BottomSheetDialogFragment() {
         }
     }
 
-    private fun initializeOptionView(option: Option?) {
+    private fun showDialog() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(getString(R.string.clear_cart))
+            .setMessage(getString(R.string.clear_cart_message))
+            .setNeutralButton(getString(R.string.maps_alert_dialog_cancel)) { _, _ ->
+                findNavController().popBackStack()
+            }
+            .setPositiveButton(getString(R.string.proceed)) { _, _ ->
+                viewModel.deleteAllCartItem()
+                viewModel.deleteAllCartItemChoice()
+            }
+            .show()
+    }
+
+    private fun cartItemBuilder(
+        product: Product,
+        currentMerchant: Merchant
+    ): CartItemEntity {
+        var choicePrice = 0
+        viewModel.optionMap.forEach { (_, value) ->
+            value.additional_price?.let {
+                choicePrice += it
+            }
+        }
+        val merchant = MerchantEntity(
+            merchant_id = currentMerchant.id,
+            merchant_name = currentMerchant.name
+        )
+        return CartItemEntity(
+            remote_id = product.id,
+            merchant = merchant,
+            name = product.name,
+            product_img_url = product.product_img_url,
+            price = (product.price + choicePrice) * quantity,
+            quantity = quantity,
+            special_instructions =
+            if (binding.instructionInputEditText.text.isNullOrBlank()) null
+            else binding.instructionInputEditText.text.toString()
+        )
+    }
+
+    private fun initializeProductOption(option: Option?) {
         val titleTv = TextView(requireContext())
         val choiceRv = RecyclerView(requireContext())
-        option?.let { nullSafeOption ->
-            val choiceAdapter = ChoiceAdapter(nullSafeOption.choice)
-            choiceAdapter.optionType = nullSafeOption.name
-            titleTv.text = nullSafeOption.name
+        option?.let {
+            val choiceAdapter = ChoiceAdapter(it.choice)
+            choiceAdapter.optionType = it.name
+            titleTv.text = it.name
             titleTv.textSize = 16f
             choiceRv.layoutManager = LinearLayoutManager(requireContext())
             choiceRv.overScrollMode = RecyclerView.OVER_SCROLL_NEVER
@@ -117,7 +153,7 @@ class ProductBottomSheetFragment : BottomSheetDialogFragment() {
             choiceAdapter.onChoiceClicked = { choice ->
                 val optionType = choiceAdapter.optionType.toString()
                 viewModel.optionMap[optionType] =
-                    CartItemChoice(
+                    CartItemChoiceEntity(
                         name = choice.name,
                         additional_price = choice.additional_price,
                         optionType = optionType
