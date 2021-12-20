@@ -6,7 +6,7 @@
     <data>
         <variable
             name="cartItemWithChoice"
-            type="com.vroomvroom.android.domain.db.CartItemWithChoice" />
+            type="com.vroomvroom.android.domain.db.cart.CartItemWithChoice" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -32,22 +32,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <ImageView
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/product_image"
                     cartItemImageUrl="@{cartItemWithChoice.cartItemEntity.product_img_url}"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
                     android:layout_gravity="center"
-                    android:scaleType="fitCenter"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintEnd_toStartOf="@+id/guideline3"
+                    app:layout_constraintStart_toStartOf="@+id/guideline2"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintDimensionRatio="1:1"
+                    tools:src="@drawable/mcdo" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/constraintLayout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="24dp"
                     android:gravity="center_vertical"
                     android:orientation="vertical"
@@ -81,7 +84,6 @@
                         android:id="@+id/product_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@{`₱` + cartItemWithChoice.cartItemEntity.price + `.00`}"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                         android:textColor="@color/black"
                         android:textSize="14sp"
@@ -94,9 +96,10 @@
                     android:id="@+id/decreaseQuantity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="16dp"
                     android:backgroundTint="@color/light_gray"
                     app:cardCornerRadius="8dp"
-                    android:layout_marginBottom="16dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/product_image"
                     app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
@@ -115,14 +118,14 @@
                     android:id="@+id/quantity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
                     android:text="@{Integer.valueOf(cartItemWithChoice.cartItemEntity.quantity).toString()}"
                     android:textColor="@color/black"
                     android:textSize="24sp"
-                    android:layout_marginStart="8dp"
-                    tools:text="1"
                     app:layout_constraintBottom_toBottomOf="@+id/decreaseQuantity"
                     app:layout_constraintStart_toEndOf="@+id/decreaseQuantity"
-                    app:layout_constraintTop_toTopOf="@+id/decreaseQuantity" />
+                    app:layout_constraintTop_toTopOf="@+id/decreaseQuantity"
+                    tools:text="1" />
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/increaseQuantity"
@@ -164,11 +167,25 @@
                         android:layout_height="24dp"
                         android:layout_gravity="center"
                         android:layout_margin="4dp"
-                        android:src="@drawable/ic_delete"
+                        android:src="@drawable/ic_bin"
                         app:layout_constraintBottom_toBottomOf="@+id/decreaseQuantity"
                         app:layout_constraintStart_toEndOf="@+id/quantity"
                         app:layout_constraintTop_toTopOf="@+id/decreaseQuantity" />
                 </androidx.cardview.widget.CardView>
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent=".04" />
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent=".24" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

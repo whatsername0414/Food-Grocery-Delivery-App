@@ -7,7 +7,7 @@ class ProductMapper : DomainMapper<MerchantQuery.Product, Product> {
     override fun mapToDomainModel(model: MerchantQuery.Product): Product {
 
         return Product(
-            model.id,
+            model._id,
             model.name,
             model.product_img_url,
             model.price,
@@ -16,22 +16,20 @@ class ProductMapper : DomainMapper<MerchantQuery.Product, Product> {
         )
     }
 
-    private fun mapFromProductOption(option: MerchantQuery.Option?) : Option? {
-        option?.let {
-            return Option (
-                it.name,
-                it.choice
-            )
-        }
-        return null
-    }
-
-    private fun fromProductOptionList(options: List<MerchantQuery.Option?>?) : List<Option?>? {
+    private fun fromProductOptionList(options: List<MerchantQuery.Option>?) : List<Option>? {
         options?.let {
             return it.map { option ->
                 mapFromProductOption(option)
             }
         }
         return null
+    }
+
+    private fun mapFromProductOption(option: MerchantQuery.Option) : Option {
+        return Option (
+            option.name,
+            option.required,
+            option.choice
+        )
     }
 }

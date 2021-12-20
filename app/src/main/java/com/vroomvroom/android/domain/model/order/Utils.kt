@@ -1,26 +1,22 @@
 package com.vroomvroom.android.domain.model.order
 
-import com.vroomvroom.android.domain.db.CartItemChoiceEntity
-import com.vroomvroom.android.domain.db.CartItemWithChoice
+import com.vroomvroom.android.domain.db.cart.CartItemChoiceEntity
+import com.vroomvroom.android.domain.db.cart.CartItemWithChoice
 
 class OrderInputBuilder {
     fun builder(
         payment: Payment,
-        deliveryFee: Int,
-        totalPrice: Int,
+        deliveryFee: Double,
+        totalPrice: Double,
         merchantId: String,
-        merchantName: String,
         products: List<CartItemWithChoice>
-    ): CreateOrder {
-        return CreateOrder(
+    ): Order {
+        return Order(
             paymentInput(payment),
+            merchantId,
             OrderDetail(
                 deliveryFee,
                 totalPrice,
-                OrderDetailMerchant(
-                    merchantId,
-                    merchantName
-                ),
                 orderProductInputList(products)
             )
         )
@@ -41,6 +37,7 @@ class OrderInputBuilder {
 
     private fun orderProductInput(product: CartItemWithChoice) : OrderProduct {
         return OrderProduct(
+            product.cartItemEntity.product_id,
             product.cartItemEntity.name,
             product.cartItemEntity.product_img_url,
             product.cartItemEntity.price,

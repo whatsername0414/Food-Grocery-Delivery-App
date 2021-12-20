@@ -31,7 +31,7 @@
         android:usesCleartextTraffic="true">
 
         <activity
-            android:name=".view.ui.main.HomeActivity"
+            android:name=".view.ui.home.HomeActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity

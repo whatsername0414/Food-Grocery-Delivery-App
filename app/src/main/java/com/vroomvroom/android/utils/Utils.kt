@@ -3,6 +3,7 @@ package com.vroomvroom.android.utils
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
@@ -10,6 +11,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.location.Address
 import android.location.Geocoder
+import android.os.CountDownTimer
 import android.os.SystemClock
 import android.text.TextUtils
 import android.util.Patterns
@@ -31,7 +33,9 @@ import com.google.android.gms.tasks.Task
 import com.google.android.material.textfield.TextInputEditText
 import com.vmadalin.easypermissions.EasyPermissions
 import com.vroomvroom.android.R
-import com.vroomvroom.android.domain.db.UserLocationEntity
+import com.vroomvroom.android.domain.db.user.UserLocationEntity
+import com.vroomvroom.android.domain.model.merchant.MerchantData
+import com.vroomvroom.android.view.ui.home.adapter.MerchantAdapter
 import java.io.IOException
 
 class SafeClickListener(
@@ -105,6 +109,30 @@ object Utils {
         )
     }
 
+    private fun merchantModifier(
+        merchant: MerchantData,
+        isFavorite: Boolean
+    ) = MerchantData(
+        _id = merchant._id,
+        name = merchant.name,
+        img_url = merchant.img_url,
+        categories = merchant.categories,
+        rates = merchant.rates,
+        ratings = merchant.ratings,
+        favorite = isFavorite,
+        opening = merchant.opening,
+        isOpen = merchant.isOpen
+    )
+
+    fun MerchantAdapter.updateAdapter(
+        merchant: MerchantData,
+        isChecked: Boolean,
+    ) {
+        val position = this.oldList.indexOf(this.oldList.find { it?._id == merchant._id })
+        this.oldList[position] = merchantModifier(merchant, isChecked)
+        this.notifyItemChanged(position)
+    }
+
     fun createLocationRequest(activity: Activity, hostFragment: Fragment) {
         val locationRequest = LocationRequest.create().apply {
             interval = 10000
@@ -139,12 +167,18 @@ object Utils {
         }
     }
 
-    fun userLocationBuilder(address: Address?, latLng: LatLng): UserLocationEntity {
+    fun userLocationBuilder(
+        id: Int? = null,
+        address: Address?,
+        latLng: LatLng,
+    ): UserLocationEntity {
         return UserLocationEntity(
+            id = id,
             address = address?.thoroughfare,
             city = address?.locality,
             latitude = latLng.latitude,
-            longitude = latLng.longitude
+            longitude = latLng.longitude,
+            current_use = true
         )
     }
 
@@ -161,7 +195,6 @@ object Utils {
             }
         } catch (e: IOException) {
             Toast.makeText(context, "Unknown error occurred", Toast.LENGTH_SHORT).show()
-            e.printStackTrace()
         }
         return null
     }
@@ -180,6 +213,13 @@ object Utils {
         setOnClickListener(safeClickListener)
     }
 
+    fun timer(dialog: Dialog) = object : CountDownTimer(3000, 1000) {
+        override fun onTick(millisUntilFinished: Long) {}
+        override fun onFinish() {
+            dialog.dismiss()
+        }
+    }
+
     private fun bitmapDescriptorFromVector(app: Context, vectorResId: Int): BitmapDescriptor? {
         return ContextCompat.getDrawable(app, vectorResId)?.run {
             setBounds(0, 0, intrinsicWidth, intrinsicHeight)
@@ -187,5 +227,18 @@ object Utils {
             draw(Canvas(bitmap))
             BitmapDescriptorFactory.fromBitmap(bitmap)
         }
+    }
+
+    fun dateBuilder(dates: String): String {
+        val monthNames = listOf(
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        )
+        val splitDate = dates.split("-")
+        val splitTime = dates.split("T")[1].split(".")[0]
+        val month = splitDate[1].toInt()
+        val date = splitDate[2].split("T")[0]
+        val year = splitDate[0]
+        return "$date ${monthNames[month - 1]} $year $splitTime"
     }
 }

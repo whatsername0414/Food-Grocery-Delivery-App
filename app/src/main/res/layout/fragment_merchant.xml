@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".view.ui.main.MerchantFragment">
+    tools:context=".view.ui.home.MerchantFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/merchant_appBar"
@@ -116,7 +116,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/app_bar_bg"
             android:overScrollMode="never"
-            android:paddingStart="8dp"
+            app:tabIndicatorFullWidth="false"
             app:tabMode="scrollable"
             app:tabRippleColor="#fcbdbd"
             app:tabTextAppearance="@style/CustomTextAppearance" />

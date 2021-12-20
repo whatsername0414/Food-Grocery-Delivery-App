@@ -6,13 +6,18 @@ import com.apollographql.apollo.api.toInput
 import com.apollographql.apollo.coroutines.await
 import com.apollographql.apollo.exception.ApolloException
 import com.vroomvroom.android.*
-import com.vroomvroom.android.domain.db.UserLocationEntity
+import com.vroomvroom.android.domain.db.user.UserLocationEntity
+import com.vroomvroom.android.domain.model.merchant.FavoriteMerchantsMapper
+import com.vroomvroom.android.domain.model.merchant.Merchants
+import com.vroomvroom.android.domain.model.merchant.MerchantsMapper
 import com.vroomvroom.android.type.LocationInput
 import com.vroomvroom.android.type.OrderInput
 import com.vroomvroom.android.view.state.ViewState
 import javax.inject.Inject
 
 class GraphQLRepositoryImpl @Inject constructor(
+    private val favoriteMerchantsMapper: FavoriteMerchantsMapper,
+    private val merchantsMapper: MerchantsMapper,
     private val graphQLServices: ApolloClient
 ) : GraphQLBaseRepository(), GraphQLRepository {
 
@@ -28,11 +33,14 @@ class GraphQLRepositoryImpl @Inject constructor(
         return result
     }
 
-    override suspend fun queryMerchants(category: String): ViewState<MerchantsQuery.Data>? {
-        var result: ViewState<MerchantsQuery.Data>? = null
+    override suspend fun queryMerchants(category: String): ViewState<Merchants>? {
+        var result: ViewState<Merchants>? = null
         try {
             val response = graphQLServices.query(MerchantsQuery(category)).await()
-            response.data?.let { data -> result = handleSuccess(data) }
+            response.data?.let { data ->
+                val mapped = merchantsMapper.mapToDomainModel(data)
+                result = handleSuccess(mapped)
+            }
         } catch (ae: ApolloException) {
             Log.e("GraphQLRepositoryImpl", "Error: ${ae.message}")
             return handleException(GENERAL_ERROR_CODE)
@@ -52,10 +60,99 @@ class GraphQLRepositoryImpl @Inject constructor(
         return result
     }
 
+    override suspend fun queryFavoriteMerchant(): ViewState<Merchants>? {
+        var result: ViewState<Merchants>? = null
+        try {
+            val response = graphQLServices.query(FavoriteMerchantQuery()).await()
+            response.data?.let { data ->
+                val mapped = favoriteMerchantsMapper.mapToDomainModel(data)
+                result = handleSuccess(mapped)
+            }
+        } catch (ae: ApolloException) {
+            Log.e("GraphQLRepositoryImpl", "Error: ${ae.message}")
+            return handleException(GENERAL_ERROR_CODE)
+        }
+        return result
+    }
+
+    override suspend fun mutationFavorite(
+        merchantId: String,
+        direction: Int
+    ): ViewState<FavoriteMutation.Data>? {
+        var result: ViewState<FavoriteMutation.Data>? = null
+        try {
+            val response = graphQLServices.mutate(FavoriteMutation(merchantId, direction)).await()
+            response.data?.let { data -> result = handleSuccess(data) }
+        } catch (ae: ApolloException) {
+            Log.e("GraphQLRepositoryImpl", "Error: ${ae.message}")
+            return handleException(GENERAL_ERROR_CODE)
+        }
+        return result
+    }
+
+    override suspend fun queryOrders(): ViewState<OrdersQuery.Data>? {
+        var result: ViewState<OrdersQuery.Data>? = null
+        try {
+            val response = graphQLServices.query(OrdersQuery()).await()
+            response.data?.let { data -> result = handleSuccess(data) }
+        } catch (ae: ApolloException) {
+            Log.e("GraphQLRepositoryImpl", "Error: ${ae.message}")
+            return handleException(GENERAL_ERROR_CODE)
+        }
+        return result
+    }
+
+    override suspend fun queryOrdersByStatus(status: String): ViewState<OrdersByStatusQuery.Data>? {
+        var result: ViewState<OrdersByStatusQuery.Data>? = null
+        try {
+            val response = graphQLServices.query(OrdersByStatusQuery(status)).await()
+            response.data?.let { data -> result = handleSuccess(data) }
+        } catch (ae: ApolloException) {
+            Log.e("GraphQLRepositoryImpl", "Error: ${ae.message}")
+            return handleException(GENERAL_ERROR_CODE)
+        }
+        return result
+    }
+
+    override suspend fun queryOrder(orderId: String): ViewState<OrderQuery.Data>? {
+        var result: ViewState<OrderQuery.Data>? = null
+        try {
+            val response = graphQLServices.query(OrderQuery(orderId)).await()
+            response.data?.let { data -> result = handleSuccess(data) }
+        } catch (ae: ApolloException) {
+            Log.e("GraphQLRepositoryImpl", "Error: ${ae.message}")
+            return handleException(GENERAL_ERROR_CODE)
+        }
+        return result
+    }
+
+    override suspend fun queryOrdersStatus(): ViewState<OrdersStatusQuery.Data>? {
+        var result: ViewState<OrdersStatusQuery.Data>? = null
+        try {
+            val response = graphQLServices.query(OrdersStatusQuery()).await()
+            response.data?.let { data -> result = handleSuccess(data) }
+        } catch (ae: ApolloException) {
+            Log.e("GraphQLRepositoryImpl", "Error: ${ae.message}")
+            return handleException(GENERAL_ERROR_CODE)
+        }
+        return result
+    }
+
     override suspend fun mutationCreateOrder(orderInput: OrderInput): ViewState<CreateOrderMutation.Data>? {
         var result: ViewState<CreateOrderMutation.Data>? = null
         try {
             val response = graphQLServices.mutate(CreateOrderMutation(orderInput)).await()
+            response.data?.let { data -> result = handleSuccess(data) }
+        } catch (ae: ApolloException) {
+            return handleException(GENERAL_ERROR_CODE)
+        }
+        return result
+    }
+
+    override suspend fun mutationUpdateOrderNotified(orderId: String): ViewState<UpdateOrderNotifiedMutation.Data>? {
+        var result: ViewState<UpdateOrderNotifiedMutation.Data>? = null
+        try {
+            val response = graphQLServices.mutate(UpdateOrderNotifiedMutation(orderId)).await()
             response.data?.let { data -> result = handleSuccess(data) }
         } catch (ae: ApolloException) {
             Log.e("GraphQLRepositoryImpl", "Error: ${ae.message}")
@@ -93,6 +190,7 @@ class GraphQLRepositoryImpl @Inject constructor(
         val locationInput = LocationInput(
             address = locationEntity.address.toString().toInput(),
             city = locationEntity.city.toString().toInput(),
+            additional_information = locationEntity.addInfo.toString().toInput(),
             coordinates = arrayListOf(locationEntity.latitude, locationEntity.longitude)
         )
         try {

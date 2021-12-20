@@ -1,19 +1,20 @@
 query Merchant($merchantId: String!) {
     getMerchant(merchantId: $merchantId) {
-        id
+        _id
         name
         img_url
         product_sections {
-            id
+            _id
             name
             products {
-                id
+                _id
                 name
                 product_img_url
                 price
                 description
                 option {
                     name
+                    required
                     choice {
                         name
                         additional_price
@@ -21,11 +22,28 @@ query Merchant($merchantId: String!) {
                 }
             }
         }
-        ratingCount
-        rating
+        rates
+        ratings
+        favorite
         location
         isOpen
         opening
         closing
     }
+}
+query FavoriteMerchant {
+    getFavoriteMerchants{
+        _id
+        name
+        img_url
+        categories
+        rates
+        ratings
+        opening
+        isOpen
+    }
+}
+
+mutation Favorite($merchantId: ID!, $direction: Int!) {
+    updateFavorite(merchantId: $merchantId, direction: $direction)
 }
