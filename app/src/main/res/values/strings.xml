@@ -9,9 +9,6 @@
     <string name="maps_alert_dialog_cancel">Cancel</string>
     <string name="maps_alert_dialog_understood">Understood</string>
     <string name="maps_alert_dialog_proceed">Proceed Anyway</string>
-    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyDCtiSPULjYWEZ5Ly9bB1G3WRQrg6ubeDI</string>
-    <string name="facebook_app_id">593283722014887</string>
-    <string name="fb_login_protocol_scheme">fb593283722014887</string>
     <string name="special_instructions">Special Instructions</string>
     <string name="delivery_address">Delivery address</string>
     <string name="check_out">Go to checkout</string>
