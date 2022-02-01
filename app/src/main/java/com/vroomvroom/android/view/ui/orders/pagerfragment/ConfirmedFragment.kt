@@ -10,9 +10,9 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.vroomvroom.android.databinding.FragmentConfirmedBinding
 import com.vroomvroom.android.view.state.ViewState
+import com.vroomvroom.android.view.ui.activityviewmodel.ActivityViewModel
 import com.vroomvroom.android.view.ui.orders.OrdersFragmentDirections
 import com.vroomvroom.android.view.ui.orders.adapter.OrderAdapter
-import com.vroomvroom.android.view.ui.orders.viewmodel.OrdersActivityViewModel
 import com.vroomvroom.android.view.ui.orders.viewmodel.OrdersViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -22,7 +22,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 class ConfirmedFragment : Fragment() {
 
     private val viewModel by viewModels<OrdersViewModel>()
-    private val activityViewModel by activityViewModels<OrdersActivityViewModel>()
+    private val activityViewModel by activityViewModels<ActivityViewModel>()
     private val orderAdapter by lazy { OrderAdapter() }
 
     private lateinit var binding: FragmentConfirmedBinding

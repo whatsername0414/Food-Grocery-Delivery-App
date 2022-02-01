@@ -123,7 +123,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:layout_marginEnd="32dp"
-                        android:text="@{order.customer.location.address ?? `Not Provided`}"
+                        android:text="@{order.delivery_address.address ?? `Not Provided`}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/imageView11"
                         app:layout_constraintTop_toBottomOf="@+id/textView25"
@@ -135,7 +135,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:layout_marginBottom="8dp"
-                        android:text="@{order.customer.location.city ?? `Not Provided`}"
+                        android:text="@{order.delivery_address.city ?? `Not Provided`}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/imageView11"
                         app:layout_constraintTop_toBottomOf="@+id/textView19"
@@ -147,7 +147,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="8dp"
-                        android:text="@{order.customer.phone_number}"
+                        android:text="@{order.customer.phone.number}"
                         app:layout_constraintStart_toEndOf="@+id/textView25"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:text="+639319481202" />
@@ -215,6 +215,23 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view3"
                 tools:listitem="@layout/item_order_product" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_modify_order"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="16dp"
+                android:background="@android:color/transparent"
+                android:padding="4dp"
+                android:textAlignment="textEnd"
+                android:textAllCaps="false"
+                android:textColor="@color/teal_700"
+                app:layout_constraintBottom_toTopOf="@+id/view3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/orderMerchantLayout"
+                app:layout_constraintTop_toBottomOf="@+id/cardView6"
+                tools:text="Change address" />
 
             <View
                 android:id="@+id/view4"

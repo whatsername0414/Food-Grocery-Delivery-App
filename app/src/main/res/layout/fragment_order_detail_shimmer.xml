@@ -142,6 +142,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardView6" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/gray"
+        android:text="@string/retry"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@color/gray"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/view3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardView6"
+        tools:text="₱344.00" />
+
     <View
         android:id="@+id/view3"
         android:layout_width="match_parent"
@@ -155,6 +169,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView18" />
 
     <LinearLayout
+        android:id="@+id/linearLayout7"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
@@ -166,11 +181,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view3">
-
         <include layout="@layout/item_order_product_shimmer" />
-
         <include layout="@layout/item_order_product_shimmer" />
-
         <include layout="@layout/item_order_product_shimmer" />
     </LinearLayout>
 

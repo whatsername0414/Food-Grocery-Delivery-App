@@ -19,6 +19,7 @@
             android:layout_height="32dp"
             android:layout_marginEnd="16dp"
             android:text="@{choice.name}"
+            android:theme="@style/RadioButtonStyle"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/additionalPriceTv"
             app:layout_constraintStart_toStartOf="parent"

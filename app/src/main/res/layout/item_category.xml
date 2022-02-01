@@ -12,14 +12,14 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="6dp">
+        android:layout_margin="2dp">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/categoryCardView"
             android:layout_width="72dp"
             android:layout_height="120dp"
-            android:layout_margin="2dp"
-            android:elevation="8dp"
+            android:layout_margin="4dp"
+            app:cardElevation="4dp"
             app:cardCornerRadius="100dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -27,7 +27,6 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_bg"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -35,10 +34,10 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <View
-                    android:id="@+id/view9"
+                    android:id="@+id/image_bg"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:background="@drawable/gray"
+                    android:background="@drawable/light_gray"
                     app:layout_constraintBottom_toTopOf="@+id/guideline5"
                     app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -60,8 +59,8 @@
                     tools:src="@drawable/logo"/>
 
                 <TextView
-                    android:id="@+id/txt_catName"
-                    android:layout_width="match_parent"
+                    android:id="@+id/nameTv"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
@@ -69,10 +68,12 @@
                     android:text="@{category.name}"
                     android:textAlignment="center"
                     android:textSize="12sp"
+                    android:textColor="@color/black"
+                    tools:text="Restaurant"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/view9" />
+                    app:layout_constraintTop_toTopOf="@+id/guideline5" />
 
                 <androidx.constraintlayout.widget.Guideline
                     android:id="@+id/guideline4"

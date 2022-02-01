@@ -1,6 +1,7 @@
 package com.vroomvroom.android.domain.db.user
 
 import android.os.Parcelable
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.vroomvroom.android.utils.Constants.LOCATION_TABLE
@@ -13,7 +14,13 @@ data class UserEntity(
     val id: String,
     val name: String? = null,
     val email: String,
-    val phone_number: String? = null
+    @Embedded
+    val phone: Phone
+)
+
+data class Phone(
+    val number: String? = null,
+    val verified: Boolean = false
 )
 
 @Parcelize

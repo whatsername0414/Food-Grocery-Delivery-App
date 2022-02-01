@@ -1,10 +1,10 @@
 package com.vroomvroom.android.view.ui.location
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -12,6 +12,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentAddressBottomSheetBinding
 import com.vroomvroom.android.domain.db.user.UserLocationEntity
+import com.vroomvroom.android.view.ui.activityviewmodel.ActivityViewModel
 import com.vroomvroom.android.view.ui.location.viewmodel.LocationViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -21,6 +22,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 class AddressBottomSheetFragment : BottomSheetDialogFragment() {
 
     private val viewModel by viewModels<LocationViewModel>()
+    private val activityViewModel by activityViewModels<ActivityViewModel>()
     private val args: AddressBottomSheetFragmentArgs by navArgs()
 
     private lateinit var binding: FragmentAddressBottomSheetBinding
@@ -37,7 +39,6 @@ class AddressBottomSheetFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.localityInputEditText.setText(args.location.city)
-        Log.d("Args", args.toString())
         val args = args
         binding.btnSave.setOnClickListener {
             val street = binding.streetInputEditText.text
@@ -50,15 +51,24 @@ class AddressBottomSheetFragment : BottomSheetDialogFragment() {
                         city = city.toString(),
                         addInfo = if (!addInfo.isNullOrBlank()) addInfo.toString() else null,
                         latitude = args.location.latitude,
-                        longitude = args.location.longitude
+                        longitude = args.location.longitude,
+                        current_use = true
                         ))
-                    findNavController().navigate(R.id.action_addressBottomSheetFragment_to_homeFragment)
+                    navigate()
                 } else {
                     binding.localityInputLayout.helperText = "required"
                 }
             } else {
                 binding.streetInputLayout.helperText = "required"
             }
+        }
+    }
+
+    private fun navigate() {
+        if (activityViewModel.prevDestination == R.id.addressesFragment) {
+            findNavController().navigate(R.id.action_addressBottomSheetFragment_to_addressesFragment)
+        } else {
+            findNavController().navigate(R.id.action_addressBottomSheetFragment_to_homeFragment)
         }
     }
 }

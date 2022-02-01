@@ -4,11 +4,12 @@ import com.apollographql.apollo.api.toInput
 import com.vroomvroom.android.domain.mapper.DomainMapper
 import com.vroomvroom.android.type.*
 
-class OrderInputMapper : DomainMapper<Order, OrderInput> {
+class OrderInputMapper: DomainMapper<Order, OrderInput> {
     override fun mapToDomainModel(model: Order): OrderInput {
         return OrderInput(
             mapToPaymentInput(model.payment),
             model.merchant,
+            mapToLocationInput(model.deliveryAddress),
             OrderDetailInput(
                 model.orderDetail.deliveryFee,
                 model.orderDetail.totalPrice,
@@ -21,6 +22,15 @@ class OrderInputMapper : DomainMapper<Order, OrderInput> {
         return PaymentInput(
             payment.reference.toInput(),
             payment.method
+        )
+    }
+
+    private fun mapToLocationInput(deliveryAddress: DeliveryAddress): LocationInput {
+        return LocationInput(
+            deliveryAddress.address.toInput(),
+            deliveryAddress.city.toInput(),
+            deliveryAddress.addInfo.toInput(),
+            deliveryAddress.coordinates
         )
     }
 

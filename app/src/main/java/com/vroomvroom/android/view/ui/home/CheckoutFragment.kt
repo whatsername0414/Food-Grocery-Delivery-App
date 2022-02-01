@@ -26,7 +26,7 @@ import com.vroomvroom.android.utils.Utils.setMap
 import com.vroomvroom.android.view.state.ViewState
 import com.vroomvroom.android.view.ui.auth.viewmodel.AuthViewModel
 import com.vroomvroom.android.view.ui.home.adapter.CheckoutAdapter
-import com.vroomvroom.android.view.ui.home.viewmodel.ActivityViewModel
+import com.vroomvroom.android.view.ui.activityviewmodel.ActivityViewModel
 import com.vroomvroom.android.view.ui.home.viewmodel.CheckoutViewModel
 import com.vroomvroom.android.view.ui.location.viewmodel.LocationViewModel
 import com.vroomvroom.android.view.ui.home.viewmodel.HomeViewModel
@@ -82,8 +82,11 @@ class CheckoutFragment : Fragment(), OnMapReadyCallback {
         observePaymentMethod()
         observeOrderLiveData()
 
-        binding.btnAddAddress.setOnClickListener {
-            navController.navigate(R.id.action_checkoutFragment_to_addressesFragment)
+        binding.btnEditAddress.setOnClickListener {
+            navController.navigate(
+                CheckoutFragmentDirections
+                    .actionCheckoutFragmentToAddressesFragment(null)
+            )
         }
 
         binding.editPaymentMethod.setOnClickListener {
@@ -100,7 +103,7 @@ class CheckoutFragment : Fragment(), OnMapReadyCallback {
                         navController.navigate(R.id.action_checkoutFragment_to_authBottomSheetFragment)
                     }
                 }
-                user.first().phone_number.isNullOrBlank() -> {
+                user.first().phone.number.isNullOrBlank() -> {
                     binding.customBtnPlaceOrderTv.text = getString(R.string.add_mobile_number)
                     binding.customBtnPlaceOrder.setOnClickListener {
                         navController.navigate(R.id.action_checkoutFragment_to_phoneVerificationFragment)
@@ -117,8 +120,10 @@ class CheckoutFragment : Fragment(), OnMapReadyCallback {
     private fun observeRoomCartItemLiveData() {
         mainViewModel.cartItem.observe(viewLifecycleOwner, { items ->
             checkoutAdapter.submitList(items)
-            items.forEach { item ->
-                checkoutViewModel.subtotal += item.cartItemEntity.price
+            if (!checkoutViewModel.isComputed) {
+                items.forEach { item ->
+                    checkoutViewModel.subtotal += item.cartItemEntity.price
+                }.also { checkoutViewModel.isComputed = true }
             }
             binding.checkoutMerchant.text = items.first().cartItemEntity.merchant.merchant_name
             binding.checkoutSubTotalTv.text = "₱${"%.2f".format(checkoutViewModel.subtotal)}"
@@ -141,7 +146,7 @@ class CheckoutFragment : Fragment(), OnMapReadyCallback {
                 binding.customBtnPlaceOrderTv.text = getString(R.string.confirm_address)
                 binding.customBtnPlaceOrder.setOnClickListener {
                     locationEntity?.let {
-                        checkoutViewModel.mutationUpdateUserLocation(it)
+                        checkoutViewModel.isLocationConfirmed.postValue(true)
                     }
                 }
             } else {
@@ -195,6 +200,7 @@ class CheckoutFragment : Fragment(), OnMapReadyCallback {
             49.00,
             checkoutViewModel.subtotal,
             merchant.merchant_id,
+            locationEntity!!,
             cartItems
         )
     }

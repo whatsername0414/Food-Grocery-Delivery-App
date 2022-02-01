@@ -1,6 +1,7 @@
 package com.vroomvroom.android.view.ui.location.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
@@ -26,7 +27,9 @@ class AddressDiffUtil: DiffUtil.ItemCallback<UserLocationEntity>() {
     }
 }
 
-class AddressAdapter: ListAdapter<UserLocationEntity, AddressViewHolder>(AddressDiffUtil()) {
+class AddressAdapter(
+    private val fragmentName: String = "Default"
+): ListAdapter<UserLocationEntity, AddressViewHolder>(AddressDiffUtil()) {
 
     var onAddressClicked: ((UserLocationEntity) -> Unit)? = null
     var onDeleteClicked: ((UserLocationEntity) -> Unit)? = null
@@ -45,14 +48,20 @@ class AddressAdapter: ListAdapter<UserLocationEntity, AddressViewHolder>(Address
         val address = getItem(position)
         holder.binding.address = address
 
+        if (fragmentName == "BottomSheetFragment") {
+            holder.binding.delete.visibility = View.INVISIBLE
+        }
         holder.binding.root.setOnClickListener {
             onAddressClicked?.invoke(address)
+        }
+
+        if (itemCount == 1) {
+            holder.binding.delete.visibility = View.GONE
         }
 
         holder.binding.delete.setOnClickListener {
             onDeleteClicked?.invoke(address)
         }
-
     }
 }
 

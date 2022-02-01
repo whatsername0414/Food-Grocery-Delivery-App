@@ -30,7 +30,7 @@ import com.vroomvroom.android.utils.OnProductClickListener
 import com.vroomvroom.android.view.ui.home.adapter.CartAdapter
 import com.vroomvroom.android.view.ui.home.adapter.ProductsSectionAdapter
 import com.vroomvroom.android.view.state.ViewState
-import com.vroomvroom.android.view.ui.home.viewmodel.ActivityViewModel
+import com.vroomvroom.android.view.ui.activityviewmodel.ActivityViewModel
 import com.vroomvroom.android.view.ui.home.viewmodel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -47,6 +47,7 @@ class MerchantFragment : Fragment(), OnProductClickListener {
     private val productsSectionAdapter by lazy { ProductsSectionAdapter(this) }
     private val cartAdapter by lazy { CartAdapter() }
     private val args: MerchantFragmentArgs by navArgs()
+
     private lateinit var binding: FragmentMerchantBinding
     private lateinit var linearLayoutManager: LinearLayoutManager
 
@@ -82,11 +83,7 @@ class MerchantFragment : Fragment(), OnProductClickListener {
             findNavController().popBackStack()
         }
         binding.btnInfo.setOnClickListener {
-            activityViewModel.currentMerchant["merchant"]?.let { merchant ->
-                findNavController().navigate(
-                    MerchantFragmentDirections.
-                    actionMerchantFragmentToMerchantDetailsBottomSheetFragment(merchant))
-            }
+            findNavController().navigate(R.id.action_merchantFragment_to_merchantInfoFragment)
         }
         binding.merchantRetryButton.setOnClickListener {
             viewModel.queryMerchant(args.id)
@@ -128,12 +125,9 @@ class MerchantFragment : Fragment(), OnProductClickListener {
                 }
                 is ViewState.Success -> {
                     val merchant = response.result.getMerchant
-                    merchant.let {
-                        val merchantEntity = merchantMapper.mapToDomainModel(it)
-                        activityViewModel.currentMerchant["merchant"] = merchantEntity
-                        productsSectionAdapter.submitList(it.product_sections)
-                        initializeTabItem(it.product_sections)
-                    }
+                    activityViewModel.merchant = merchant
+                    productsSectionAdapter.submitList(merchant.product_sections)
+                    initializeTabItem(merchant.product_sections)
                     dataBinder(merchant)
                     binding.merchantShimmerLayout.visibility = View.GONE
                     binding.merchantShimmerLayout.stopShimmer()
@@ -173,6 +167,7 @@ class MerchantFragment : Fragment(), OnProductClickListener {
     @SuppressLint("SetTextI18n")
     private fun dataBinder(merchant: MerchantQuery.GetMerchant?) {
         binding.ctlMerchant.title = merchant?.name
+        binding.ratingBar.rating = merchant?.ratings?.toFloat() ?: 0f
         binding.closingTv.text = "Open until ${merchant?.closing} PM"
         binding.merchantRating.text = if (merchant?.rates != null) "${merchant.ratings} (${merchant.rates} ${if (merchant.rates == 1) "rating" else "ratings"})" else "0.0"
         binding.merchantImg.load(merchant?.img_url)

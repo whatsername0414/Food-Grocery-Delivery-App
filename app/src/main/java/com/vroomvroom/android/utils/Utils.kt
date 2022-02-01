@@ -21,6 +21,8 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.NavDirections
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -58,6 +60,12 @@ object Utils {
         Intent(this, activity).also {
             it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(it)
+        }
+    }
+
+    fun NavController.safeNavigate(direction: NavDirections) {
+        currentDestination?.getAction(direction.actionId)?.run {
+            navigate(direction)
         }
     }
 
@@ -229,7 +237,7 @@ object Utils {
         }
     }
 
-    fun dateBuilder(dates: String): String {
+    fun dateBuilder(dates: String, format: Int = 0): String {
         val monthNames = listOf(
             "Jan", "Feb", "Mar", "Apr", "May", "Jun",
             "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
@@ -239,6 +247,10 @@ object Utils {
         val month = splitDate[1].toInt()
         val date = splitDate[2].split("T")[0]
         val year = splitDate[0]
+        when (format) {
+            1 -> return "${monthNames[month - 1]} $date, $year"
+
+        }
         return "$date ${monthNames[month - 1]} $year $splitTime"
     }
 }

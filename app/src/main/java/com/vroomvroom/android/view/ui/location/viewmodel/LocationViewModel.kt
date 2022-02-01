@@ -29,6 +29,8 @@ class LocationViewModel @Inject constructor(
     val deliveryRange: List<String> = arrayListOf("Bacacay", "Legazpi City",
         "Ligao", "Malilipot", "Malinao", "Santo Domingo", "Tabaco City", "Tiwi")
 
+    var clickedAddress: UserLocationEntity? = null
+
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
             super.onLocationResult(locationResult)
@@ -58,20 +60,20 @@ class LocationViewModel @Inject constructor(
     }
 
     fun insertLocation(userLocationEntity: UserLocationEntity) {
+        updateLocations()
         viewModelScope.launch {
-            val id = roomRepository.insertLocation(userLocationEntity)
-            updateLocations(id.toInt())
+            roomRepository.insertLocation(userLocationEntity)
         }
     }
     fun updateLocation(userLocationEntity: UserLocationEntity) {
+        updateLocations()
         viewModelScope.launch {
             roomRepository.updateLocation(userLocationEntity)
         }
-        updateLocations(userLocationEntity.id!!)
     }
-    private fun updateLocations(id: Int) {
+    private fun updateLocations() {
         viewModelScope.launch {
-            roomRepository.updateLocations(id)
+            roomRepository.updateLocations()
         }
     }
     fun deleteLocation(userLocationEntity: UserLocationEntity) {

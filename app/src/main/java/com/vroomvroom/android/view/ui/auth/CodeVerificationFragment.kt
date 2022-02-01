@@ -17,6 +17,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentCodeVerificationBinding
+import com.vroomvroom.android.domain.db.user.Phone
 import com.vroomvroom.android.domain.db.user.UserEntity
 import com.vroomvroom.android.view.state.ViewState
 import com.vroomvroom.android.view.ui.auth.viewmodel.AuthViewModel
@@ -91,7 +92,7 @@ class CodeVerificationFragment : Fragment() {
                 }
                 is ViewState.Success -> {
                     val result = response.result.otpVerification
-                    val user = UserEntity(result.id, result.name, result.email, result.phone_number)
+                    val user = UserEntity(result.id, result.name, result.email, Phone(result.phone?.number, result.phone?.verified!!))
                     viewModel.updateUserRecord(user)
                     navController.navigate(R.id.action_codeVerificationFragment_to_checkoutFragment)
                 }

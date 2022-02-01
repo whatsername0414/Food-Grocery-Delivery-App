@@ -14,7 +14,7 @@
         android:title="@string/orders"
         android:icon="@drawable/ic_receipt" />
     <item
-        android:id="@+id/profileFragment"
-        android:title="@string/profile"
+        android:id="@+id/accountFragment"
+        android:title="@string/account"
         android:icon="@drawable/ic_person" />
 </menu>

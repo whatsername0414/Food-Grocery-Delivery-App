@@ -18,7 +18,7 @@ import com.vroomvroom.android.domain.model.merchant.MerchantData
 import com.vroomvroom.android.utils.Utils.updateAdapter
 import com.vroomvroom.android.view.state.ViewState
 import com.vroomvroom.android.view.ui.home.adapter.MerchantAdapter
-import com.vroomvroom.android.view.ui.home.viewmodel.ActivityViewModel
+import com.vroomvroom.android.view.ui.activityviewmodel.ActivityViewModel
 import com.vroomvroom.android.view.ui.home.viewmodel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -47,7 +47,7 @@ class FavoriteFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val appBarConfiguration = AppBarConfiguration(navController.graph)
-        binding.favoriteToolbar.setupWithNavController(navController, appBarConfiguration)
+        binding.toolbar.setupWithNavController(navController, appBarConfiguration)
 
         binding.favoriteRv.adapter = merchantAdapter
 

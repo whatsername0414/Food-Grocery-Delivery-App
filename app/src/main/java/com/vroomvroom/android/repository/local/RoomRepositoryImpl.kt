@@ -16,13 +16,15 @@ class RoomRepositoryImpl @Inject constructor(
     //User
     override suspend fun insertUser(userEntity: UserEntity) = userDao.insertUser(userEntity)
     override suspend fun updateUser(userEntity: UserEntity) = userDao.updateUser(userEntity)
+    override suspend fun updateUserName(id: String, name: String) = userDao.updateUserName(id, name)
+
     override suspend fun deleteUser(userEntity: UserEntity) = userDao.deleteUser(userEntity)
     override fun getUser() = userDao.getUser()
 
     //UserLocation
     override suspend fun insertLocation(userLocationEntity: UserLocationEntity) = userDao.insertLocation(userLocationEntity)
     override suspend fun updateLocation(userLocationEntity: UserLocationEntity) = userDao.updateLocation(userLocationEntity)
-    override suspend fun updateLocations(id: Int) = userDao.updateLocations(id)
+    override suspend fun updateLocations() = userDao.updateLocations()
     override suspend fun deleteLocation(userLocationEntity: UserLocationEntity) = userDao.deleteLocation(userLocationEntity)
     override fun getUserLocation(): LiveData<List<UserLocationEntity>> = userDao.getLocation()
 

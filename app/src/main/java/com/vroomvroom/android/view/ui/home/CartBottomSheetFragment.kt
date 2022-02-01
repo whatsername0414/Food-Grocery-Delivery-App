@@ -24,7 +24,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 class CartBottomSheetFragment : BottomSheetDialogFragment() {
 
     private lateinit var binding: FragmentCartBottomSheetBinding
-    private lateinit var currentMerchantId: String
+
     private val cartAdapter by lazy { CartAdapter() }
     private val alertDialog by lazy { ClosedAlertDialog(requireActivity()) }
     private val viewModel by viewModels<HomeViewModel>()
@@ -64,12 +64,12 @@ class CartBottomSheetFragment : BottomSheetDialogFragment() {
             if (previousDestination == R.id.homeFragment) {
                 findNavController().navigate(
                     CartBottomSheetFragmentDirections
-                        .actionCartBottomSheetFragmentToMerchantFragment(currentMerchantId))
+                        .actionCartBottomSheetFragmentToMerchantFragment(viewModel.currentMerchantId))
             } else findNavController().popBackStack()
         }
 
         binding.btnCheckOut.setOnClickListener {
-            findNavController().navigate(R.id.action_cartBottomSheetFragment_to_checkoutFragment)
+            viewModel.queryMerchant(viewModel.currentMerchantId)
         }
     }
 
@@ -78,6 +78,7 @@ class CartBottomSheetFragment : BottomSheetDialogFragment() {
             when(response) {
                 is ViewState.Loading -> {
                     binding.cartProgress.visibility = View.VISIBLE
+                    binding.btnCheckOut.isEnabled = false
                 }
                 is ViewState.Success -> {
                     binding.cartProgress.visibility = View.GONE
@@ -95,6 +96,7 @@ class CartBottomSheetFragment : BottomSheetDialogFragment() {
                         Toast.LENGTH_LONG
                     ).show()
                     binding.cartProgress.visibility = View.GONE
+                    binding.btnCheckOut.isEnabled = true
                 }
             }
         })
@@ -113,7 +115,7 @@ class CartBottomSheetFragment : BottomSheetDialogFragment() {
                 items.forEach { item ->
                     subTotal += item.cartItemEntity.price
                 }
-                currentMerchantId = items.first().cartItemEntity.merchant.merchant_id
+                viewModel.currentMerchantId = items.first().cartItemEntity.merchant.merchant_id
                 binding.merchantName.text = items.first().cartItemEntity.merchant.merchant_name
                 binding.subtotalTv.text = "₱${"%.2f".format(subTotal)}"
                 binding.cartLayout.visibility = View.VISIBLE

@@ -3,18 +3,26 @@ package com.vroomvroom.android.domain.model.order
 data class Order (
 	val payment : Payment,
 	val merchant: String,
+	val deliveryAddress: DeliveryAddress,
 	val orderDetail: OrderDetail,
+)
+
+data class Payment (
+	val method : String,
+	val reference : String?,
+)
+
+data class DeliveryAddress (
+	val address: String,
+	val city: String,
+	val addInfo: String? = null,
+	val coordinates: List<Double>
 )
 
 data class OrderDetail (
 	val deliveryFee : Double,
 	val totalPrice : Double,
 	val product : List<OrderProduct>,
-)
-
-data class Payment (
-	val method : String,
-	val reference : String?,
 )
 
 data class OrderProduct (

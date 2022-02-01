@@ -2,6 +2,7 @@ package com.vroomvroom.android.domain.model.order
 
 import com.vroomvroom.android.domain.db.cart.CartItemChoiceEntity
 import com.vroomvroom.android.domain.db.cart.CartItemWithChoice
+import com.vroomvroom.android.domain.db.user.UserLocationEntity
 
 class OrderInputBuilder {
     fun builder(
@@ -9,11 +10,13 @@ class OrderInputBuilder {
         deliveryFee: Double,
         totalPrice: Double,
         merchantId: String,
+        userLocationEntity: UserLocationEntity,
         products: List<CartItemWithChoice>
     ): Order {
         return Order(
             paymentInput(payment),
             merchantId,
+            locationInput(userLocationEntity),
             OrderDetail(
                 deliveryFee,
                 totalPrice,
@@ -26,6 +29,15 @@ class OrderInputBuilder {
         return Payment(
             reference = payment.reference,
             method = payment.method
+        )
+    }
+
+    private fun locationInput(locationEntity: UserLocationEntity): DeliveryAddress {
+        return DeliveryAddress(
+            locationEntity.address!!,
+            locationEntity.city!!,
+            locationEntity.addInfo,
+            listOf(locationEntity.latitude, locationEntity.longitude)
         )
     }
 

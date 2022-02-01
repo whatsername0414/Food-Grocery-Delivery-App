@@ -12,6 +12,7 @@ import com.vroomvroom.android.domain.model.merchant.Merchants
 import com.vroomvroom.android.domain.model.merchant.MerchantsMapper
 import com.vroomvroom.android.type.LocationInput
 import com.vroomvroom.android.type.OrderInput
+import com.vroomvroom.android.type.ReviewInput
 import com.vroomvroom.android.view.state.ViewState
 import javax.inject.Inject
 
@@ -90,6 +91,18 @@ class GraphQLRepositoryImpl @Inject constructor(
         return result
     }
 
+    override suspend fun mutationReview(reviewInput: ReviewInput): ViewState<ReviewMutation.Data>? {
+        var result: ViewState<ReviewMutation.Data>? = null
+        try {
+            val response = graphQLServices.mutate(ReviewMutation(reviewInput)).await()
+            response.data?.let { data -> result = handleSuccess(data) }
+        } catch (ae: ApolloException) {
+            Log.e("GraphQLRepositoryImpl", "Error: ${ae.message}")
+            return handleException(GENERAL_ERROR_CODE)
+        }
+        return result
+    }
+
     override suspend fun queryOrders(): ViewState<OrdersQuery.Data>? {
         var result: ViewState<OrdersQuery.Data>? = null
         try {
@@ -149,10 +162,45 @@ class GraphQLRepositoryImpl @Inject constructor(
         return result
     }
 
+    override suspend fun mutationUpdateDeliveryAddress(
+        orderId: String,
+        locationInput: LocationInput
+    ): ViewState<UpdateDeliveryAddressMutation.Data>? {
+        var result: ViewState<UpdateDeliveryAddressMutation.Data>? = null
+        try {
+            val response = graphQLServices.mutate(UpdateDeliveryAddressMutation(orderId, locationInput)).await()
+            if (response.hasErrors()) {
+                return handleException(GENERAL_ERROR_CODE)
+            }
+            response.data?.let { data -> result = handleSuccess(data) }
+        } catch (ae: ApolloException) {
+            return handleException(GENERAL_ERROR_CODE)
+        }
+        return result
+    }
+
     override suspend fun mutationUpdateOrderNotified(orderId: String): ViewState<UpdateOrderNotifiedMutation.Data>? {
         var result: ViewState<UpdateOrderNotifiedMutation.Data>? = null
         try {
             val response = graphQLServices.mutate(UpdateOrderNotifiedMutation(orderId)).await()
+            response.data?.let { data -> result = handleSuccess(data) }
+        } catch (ae: ApolloException) {
+            Log.e("GraphQLRepositoryImpl", "Error: ${ae.message}")
+            return handleException(GENERAL_ERROR_CODE)
+        }
+        return result
+    }
+
+    override suspend fun mutationCancelOrder(
+        orderId: String,
+        reason: String
+    ): ViewState<CancelOrderMutation.Data>? {
+        var result: ViewState<CancelOrderMutation.Data>? = null
+        try {
+            val response = graphQLServices.mutate(CancelOrderMutation(orderId, reason)).await()
+            if (response.hasErrors()) {
+                return handleException(GENERAL_ERROR_CODE)
+            }
             response.data?.let { data -> result = handleSuccess(data) }
         } catch (ae: ApolloException) {
             Log.e("GraphQLRepositoryImpl", "Error: ${ae.message}")
@@ -177,6 +225,18 @@ class GraphQLRepositoryImpl @Inject constructor(
         var result: ViewState<RegisterMutation.Data>? = null
         try {
             val response = graphQLServices.mutate(RegisterMutation()).await()
+            response.data?.let { data -> result = handleSuccess(data) }
+        } catch (ae: ApolloException) {
+            Log.e("GraphQLRepositoryImpl", "Error: ${ae.message}")
+            return handleException(GENERAL_ERROR_CODE)
+        }
+        return result
+    }
+
+    override suspend fun mutationUpdateName(name: String): ViewState<UpdateNameMutation.Data>? {
+        var result: ViewState<UpdateNameMutation.Data>? = null
+        try {
+            val response = graphQLServices.mutate(UpdateNameMutation(name)).await()
             response.data?.let { data -> result = handleSuccess(data) }
         } catch (ae: ApolloException) {
             Log.e("GraphQLRepositoryImpl", "Error: ${ae.message}")

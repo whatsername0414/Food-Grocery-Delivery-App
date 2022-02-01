@@ -3,6 +3,7 @@ package com.vroomvroom.android.di
 import com.vroomvroom.android.domain.model.merchant.FavoriteMerchantsMapper
 import com.vroomvroom.android.domain.model.merchant.MerchantMapper
 import com.vroomvroom.android.domain.model.merchant.MerchantsMapper
+import com.vroomvroom.android.domain.model.order.LocationInputMapper
 import com.vroomvroom.android.domain.model.order.OrderInputBuilder
 import com.vroomvroom.android.domain.model.order.OrderInputMapper
 import com.vroomvroom.android.domain.model.product.ProductMapper
@@ -44,6 +45,12 @@ object DomainModule {
     @Provides
     fun provideOrderInputMapper(): OrderInputMapper {
         return OrderInputMapper()
+    }
+
+    @Singleton
+    @Provides
+    fun provideLocationInputMapper(): LocationInputMapper {
+        return LocationInputMapper()
     }
 
     @Singleton

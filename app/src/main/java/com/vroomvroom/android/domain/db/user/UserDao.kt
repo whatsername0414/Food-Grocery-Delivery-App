@@ -10,6 +10,8 @@ interface UserDao {
     suspend fun insertUser(userEntity: UserEntity)
     @Update
     suspend fun updateUser(userEntity: UserEntity)
+    @Query("UPDATE user_table SET name = :name WHERE id = :id")
+    suspend fun updateUserName(id: String, name: String)
     @Delete
     suspend fun deleteUser(userEntity: UserEntity)
     @Transaction
@@ -18,11 +20,11 @@ interface UserDao {
 
     //UserLocation
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertLocation(userLocationEntity: UserLocationEntity): Long
+    suspend fun insertLocation(userLocationEntity: UserLocationEntity)
     @Update
     suspend fun updateLocation(userLocationEntity: UserLocationEntity)
-    @Query("UPDATE location_table SET current_use = :current_use WHERE id != :id")
-    suspend fun updateLocations(id: Int, current_use: Boolean = false)
+    @Query("UPDATE location_table SET current_use = :current_use")
+    suspend fun updateLocations(current_use: Boolean = false)
     @Delete
     suspend fun deleteLocation(userLocationEntity: UserLocationEntity)
     @Transaction

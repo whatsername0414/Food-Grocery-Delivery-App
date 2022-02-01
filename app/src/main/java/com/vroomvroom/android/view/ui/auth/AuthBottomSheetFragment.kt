@@ -17,6 +17,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentAuthBottomSheetBinding
+import com.vroomvroom.android.domain.db.user.Phone
 import com.vroomvroom.android.domain.db.user.UserEntity
 import com.vroomvroom.android.view.state.ViewState
 import com.vroomvroom.android.view.ui.auth.viewmodel.AuthViewModel
@@ -93,7 +94,7 @@ class AuthBottomSheetFragment : BottomSheetDialogFragment() {
                 is ViewState.Success -> {
                     val result = response.result.register
                     result?.let {
-                        val user = UserEntity(it.id, it.name, it.email, it.phone_number)
+                        val user = UserEntity(it.id, it.name, it.email, Phone(it.phone?.number, it.phone?.verified!!))
                         viewModel.insertUserRecord(user)
                     }
                     findNavController().popBackStack()

@@ -11,13 +11,14 @@ interface RoomRepository {
     //User
     suspend fun insertUser(userEntity: UserEntity)
     suspend fun updateUser(userEntity: UserEntity)
+    suspend fun updateUserName(id: String, name: String)
     suspend fun deleteUser(userEntity: UserEntity)
     fun getUser(): LiveData<List<UserEntity>>
 
     //UserLocation
-    suspend fun insertLocation(userLocationEntity: UserLocationEntity): Long
+    suspend fun insertLocation(userLocationEntity: UserLocationEntity)
     suspend fun updateLocation(userLocationEntity: UserLocationEntity)
-    suspend fun updateLocations(id: Int)
+    suspend fun updateLocations()
     suspend fun deleteLocation(userLocationEntity: UserLocationEntity)
     fun getUserLocation(): LiveData<List<UserLocationEntity>>
 

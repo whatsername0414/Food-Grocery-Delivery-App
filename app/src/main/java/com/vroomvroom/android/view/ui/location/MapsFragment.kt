@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -40,6 +41,7 @@ import com.vroomvroom.android.utils.Utils.hasLocationPermission
 import com.vroomvroom.android.utils.Utils.requestLocationPermission
 import com.vroomvroom.android.utils.Utils.setSafeOnClickListener
 import com.vroomvroom.android.utils.Utils.userLocationBuilder
+import com.vroomvroom.android.view.ui.activityviewmodel.ActivityViewModel
 import com.vroomvroom.android.view.ui.location.viewmodel.LocationViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -49,6 +51,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     private val viewModel by viewModels<LocationViewModel>()
+    private val activityViewModel by activityViewModels<ActivityViewModel>()
     private var isConnected: Boolean = false
     private var newLatLng: LatLng? = null
     private var mapFragment: SupportMapFragment? = null
@@ -129,8 +132,10 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             viewModel.userLocation.observe(viewLifecycleOwner, { userLocation ->
                 if (!userLocation.isNullOrEmpty()) {
                     val location = userLocation.find { it.current_use }
-                    map?.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                        LatLng(location!!.latitude, location.longitude), 17f))
+                    location?.let {
+                        map?.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                            LatLng(it.latitude, it.longitude), 17f))
+                    }
                 }
             })
         }
@@ -199,6 +204,7 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                 showDialog(prevDestination)
             } else {
                 if (address?.thoroughfare.isNullOrBlank() && newLatLng != null) {
+                    activityViewModel.prevDestination = prevDestination
                     navController.navigate(
                         MapsFragmentDirections.actionMapsFragmentToAddressBottomSheetFragment(
                             userLocationBuilder(address = address, latLng = newLatLng!!)
