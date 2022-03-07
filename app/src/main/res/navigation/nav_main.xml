@@ -11,14 +11,13 @@
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_homeFragment_to_locationFragment"
-            app:destination="@id/locationFragment"
-            app:enterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@anim/custom_slide_out_left" />
+            app:destination="@id/locationFragment" />
         <action
             android:id="@+id/action_homeFragment_to_merchantFragment"
             app:destination="@id/merchantFragment"
-            app:enterAnim="@anim/custom_slide_in_left"
-            app:popExitAnim="@anim/custom_slide_out_left"/>
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popExitAnim="@anim/to_right" />
         <action
             android:id="@+id/action_homeFragment_to_locationBottomSheetFragment"
             app:destination="@id/locationBottomSheetFragment" />
@@ -27,45 +26,70 @@
             app:destination="@id/cartBottomSheetFragment" />
         <action
             android:id="@+id/action_homeFragment_to_favoriteFragment"
-            app:destination="@id/favoriteFragment" />
+            app:destination="@id/favoriteFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popExitAnim="@anim/to_right"/>
     </fragment>
     <fragment
-        android:id="@+id/searchFragment"
-        android:name="com.vroomvroom.android.view.ui.home.SearchFragment"
-        android:label="fragment_search"
-        tools:layout="@layout/fragment_search" />
+        android:id="@+id/browseFragment"
+        android:name="com.vroomvroom.android.view.ui.browse.BrowseFragment"
+        tools:layout="@layout/fragment_browse" >
+        <action
+            android:id="@+id/action_browseFragment_to_merchantSearchFragment"
+            app:destination="@id/merchantSearchFragment" />
+    </fragment>
     <fragment
         android:id="@+id/ordersFragment"
         android:name="com.vroomvroom.android.view.ui.orders.OrdersFragment"
         android:label="Orders"
         tools:layout="@layout/fragment_orders" >
         <action
-            android:id="@+id/action_ordersFragment_to_merchantFragment"
-            app:destination="@id/merchantFragment" />
-        <action
             android:id="@+id/action_ordersFragment_to_orderDetailFragment"
-            app:destination="@id/orderDetailFragment" />
+            app:destination="@id/orderDetailFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popExitAnim="@anim/to_right"/>
         <action
             android:id="@+id/action_ordersFragment_to_authBottomSheetFragment"
             app:destination="@id/authBottomSheetFragment" />
+        <argument
+            android:name="status"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null"/>
     </fragment>
     <fragment
         android:id="@+id/accountFragment"
         android:name="com.vroomvroom.android.view.ui.account.AccountFragment"
-        android:label="Account"
         tools:layout="@layout/fragment_account" >
         <action
             android:id="@+id/action_accountFragment_to_addressesFragment"
-            app:destination="@id/addressesFragment" />
+            app:destination="@id/addressesFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popExitAnim="@anim/to_right"/>
         <action
             android:id="@+id/action_accountFragment_to_favoriteFragment"
-            app:destination="@id/favoriteFragment" />
+            app:destination="@id/favoriteFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popExitAnim="@anim/to_right"/>
         <action
             android:id="@+id/action_accountFragment_to_authBottomSheetFragment"
             app:destination="@id/authBottomSheetFragment" />
         <action
             android:id="@+id/action_accountFragment_to_profileManagementFragment"
-            app:destination="@id/profileFragment" />
+            app:destination="@id/profileFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popExitAnim="@anim/to_right"/>
+        <action
+            android:id="@+id/action_accountFragment_to_aboutFragment"
+            app:destination="@id/aboutFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popExitAnim="@anim/to_right"/>
     </fragment>
     <fragment
         android:id="@+id/locationFragment"
@@ -75,8 +99,9 @@
         <action
             android:id="@+id/action_locationFragment_to_mapsFragment"
             app:destination="@id/mapsFragment"
-            app:enterAnim="@anim/custom_slide_in_left"
-            app:popExitAnim="@anim/custom_slide_out_left"/>
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popExitAnim="@anim/to_right"/>
     </fragment>
     <fragment
         android:id="@+id/mapsFragment"
@@ -86,7 +111,7 @@
         <action
             android:id="@+id/action_mapsFragment_to_homeFragment"
             app:destination="@id/homeFragment"
-            app:enterAnim="@anim/custom_slide_in_left"
+            app:enterAnim="@anim/from_left"
             app:popUpTo="@id/mapsFragment"
             app:popUpToInclusive="true" />
         <action
@@ -113,8 +138,9 @@
         <action
             android:id="@+id/action_merchantFragment_to_merchantInfoFragment"
             app:destination="@id/merchantInfoFragment"
-            app:enterAnim="@anim/slide_up"
-            app:popExitAnim="@anim/slide_down" />
+            app:enterAnim="@anim/from_bottom"
+            app:exitAnim="@anim/static_middle"
+            app:popExitAnim="@anim/to_bottom" />
     </fragment>
     <dialog
         android:id="@+id/locationBottomSheetFragment"
@@ -124,8 +150,9 @@
         <action
             android:id="@+id/action_locationBottomSheetFragment_to_mapsFragment"
             app:destination="@id/mapsFragment"
-            app:enterAnim="@anim/custom_slide_in_left"
-            app:popExitAnim="@anim/custom_slide_out_left" />
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popExitAnim="@anim/to_right" />
     </dialog>
     <dialog
         android:id="@+id/cartBottomSheetFragment"
@@ -138,13 +165,15 @@
         <action
             android:id="@+id/action_cartBottomSheetFragment_to_merchantFragment"
             app:destination="@id/merchantFragment"
-            app:enterAnim="@anim/custom_slide_in_left"
-            app:popExitAnim="@anim/custom_slide_out_left" />
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popExitAnim="@anim/to_right" />
         <action
             android:id="@+id/action_cartBottomSheetFragment_to_checkoutFragment"
             app:destination="@id/checkoutFragment"
-            app:enterAnim="@anim/custom_slide_in_left"
-            app:popExitAnim="@anim/custom_slide_out_left" />
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popExitAnim="@anim/to_right" />
     </dialog>
     <dialog
         android:id="@+id/productBottomSheetFragment"
@@ -171,18 +200,21 @@
         <action
             android:id="@+id/action_checkoutFragment_to_paymentMethodFragment"
             app:destination="@id/paymentMethodFragment"
-            app:enterAnim="@anim/custom_slide_in_left"
-            app:popExitAnim="@anim/custom_slide_out_left" />
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popExitAnim="@anim/to_right" />
         <action
             android:id="@+id/action_checkoutFragment_to_phoneVerificationFragment"
             app:destination="@id/phoneVerificationFragment"
-            app:enterAnim="@anim/custom_slide_in_left"
-            app:popExitAnim="@anim/custom_slide_out_left" />
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popExitAnim="@anim/to_right" />
         <action
-            app:popUpToInclusive="true"
             app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true"
             android:id="@+id/action_checkoutFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            app:destination="@id/homeFragment"
+            app:enterAnim="@anim/from_left" />
         <action
             android:id="@+id/action_checkoutFragment_to_addressesFragment"
             app:destination="@id/addressesFragment" />
@@ -195,8 +227,9 @@
         <action
             android:id="@+id/action_authBottomSheetFragment_to_loginFragment"
             app:destination="@id/loginFragment"
-            app:enterAnim="@anim/custom_slide_in_left"
-            app:popExitAnim="@anim/custom_slide_out_left" />
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popExitAnim="@anim/to_right" />
     </dialog>
     <fragment
         android:id="@+id/loginFragment"
@@ -206,8 +239,9 @@
         <action
             android:id="@+id/action_loginFragment_to_registerFragment"
             app:destination="@id/registerFragment"
-            app:enterAnim="@anim/custom_slide_in_left"
-            app:popExitAnim="@anim/custom_slide_out_left" />
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popExitAnim="@anim/to_right" />
         <action
             android:id="@+id/action_loginFragment_to_passwordResetFragment"
             app:destination="@id/passwordResetFragment" />
@@ -222,7 +256,7 @@
             app:popUpToInclusive="true"
             android:id="@+id/action_registerFragment_to_checkoutFragment"
             app:destination="@id/checkoutFragment"
-            app:enterAnim="@anim/custom_slide_in_left" />
+            app:enterAnim="@anim/from_left" />
     </fragment>
     <dialog
         android:id="@+id/passwordResetFragment"
@@ -242,8 +276,9 @@
         <action
             android:id="@+id/action_phoneVerificationFragment_to_codeVerificationFragment"
             app:destination="@id/codeVerificationFragment"
-            app:enterAnim="@anim/custom_slide_in_left"
-            app:popExitAnim="@anim/custom_slide_out_left" />
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popExitAnim="@anim/to_right" />
     </fragment>
     <fragment
         android:id="@+id/codeVerificationFragment"
@@ -253,9 +288,9 @@
         <action
             android:id="@+id/action_codeVerificationFragment_to_checkoutFragment"
             app:destination="@id/checkoutFragment"
-            app:enterAnim="@anim/custom_slide_in_left"
             app:popUpTo="@id/codeVerificationFragment"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="true"
+            app:enterAnim="@anim/from_left"/>
     </fragment>
     <fragment
         android:id="@+id/favoriteFragment"
@@ -264,7 +299,10 @@
         tools:layout="@layout/fragment_favorite" >
         <action
             android:id="@+id/action_favoriteFragment_to_merchantFragment"
-            app:destination="@id/merchantFragment" />
+            app:destination="@id/merchantFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popExitAnim="@anim/to_right"/>
     </fragment>
     <fragment
         android:id="@+id/orderDetailFragment"
@@ -274,14 +312,14 @@
             android:name="orderId"
             app:argType="string" />
         <action
-            android:id="@+id/action_orderDetailFragment_to_merchantFragment"
-            app:destination="@id/merchantFragment" />
-        <action
             android:id="@+id/action_orderDetailFragment_to_cancelBottomSheetFragment"
             app:destination="@id/cancelBottomSheetFragment" />
         <action
             android:id="@+id/action_orderDetailFragment_to_addressesFragment"
-            app:destination="@id/addressesFragment" />
+            app:destination="@id/addressesFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popExitAnim="@anim/to_right"/>
         <action
             android:id="@+id/action_orderDetailFragment_to_reviewBottomSheetFragment"
             app:destination="@id/reviewBottomSheetFragment" />
@@ -295,7 +333,8 @@
             app:popUpToInclusive="true"
             app:popUpTo="@id/homeFragment"
             android:id="@+id/action_addressBottomSheetFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            app:destination="@id/homeFragment"
+            app:enterAnim="@anim/from_left"/>
         <argument
             android:name="location"
             app:argType="com.vroomvroom.android.domain.db.user.UserLocationEntity" />
@@ -303,7 +342,8 @@
             app:popUpToInclusive="true"
             app:popUpTo="@id/addressesFragment"
             android:id="@+id/action_addressBottomSheetFragment_to_addressesFragment"
-            app:destination="@id/addressesFragment" />
+            app:destination="@id/addressesFragment"
+            app:enterAnim="@anim/from_left"/>
     </dialog>
     <fragment
         android:id="@+id/addressesFragment"
@@ -312,7 +352,10 @@
         tools:layout="@layout/fragment_addresses" >
         <action
             android:id="@+id/action_addressesFragment_to_mapsFragment"
-            app:destination="@id/mapsFragment" />
+            app:destination="@id/mapsFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popExitAnim="@anim/to_right"/>
         <argument
             android:name="orderId"
             app:argType="string"
@@ -322,10 +365,16 @@
         android:id="@+id/profileFragment"
         android:name="com.vroomvroom.android.view.ui.account.ProfileFragment"
         android:label="Profile"
-        tools:layout="@layout/fragment_account">
+        tools:layout="@layout/fragment_profile">
         <action
             android:id="@+id/action_profileFragment_to_editBottomSheetFragment"
             app:destination="@id/editBottomSheetFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_phoneVerificationFragment"
+            app:destination="@id/phoneVerificationFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popExitAnim="@anim/to_right"/>
     </fragment>
     <dialog
         android:id="@+id/editBottomSheetFragment"
@@ -353,5 +402,49 @@
             android:name="orderId"
             app:argType="string" />
     </dialog>
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="com.vroomvroom.android.view.ui.account.AboutFragment"
+        android:label="About"
+        tools:layout="@layout/fragment_about" >
+        <action
+            android:id="@+id/action_aboutFragment_to_webViewFragment"
+            app:destination="@id/webViewFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popExitAnim="@anim/to_right"/>
+    </fragment>
+    <fragment
+        android:id="@+id/webViewFragment"
+        android:name="com.vroomvroom.android.view.ui.account.WebViewFragment"
+        tools:layout="@layout/fragment_web_view" >
+        <argument
+            android:name="title"
+            app:argType="string" />
+        <argument
+            android:name="url"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/merchantSearchFragment"
+        android:name="com.vroomvroom.android.view.ui.browse.MerchantSearchFragment"
+        android:label="fragment_merchant_search"
+        tools:layout="@layout/fragment_merchant_search" >
+        <argument
+            android:name="searchTerm"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
+
+    <action
+        android:id="@+id/action_global_to_merchantFragment"
+        app:destination="@id/merchantFragment"
+        app:enterAnim="@anim/from_right"
+        app:exitAnim="@anim/to_left"
+        app:popExitAnim="@anim/to_right"/>
+
+    <action
+        android:id="@+id/action_global_to_cartBottomSheetFragment"
+        app:destination="@+id/cartBottomSheetFragment"/>
 
 </navigation>

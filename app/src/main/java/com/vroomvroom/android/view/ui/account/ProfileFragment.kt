@@ -1,43 +1,25 @@
 package com.vroomvroom.android.view.ui.account
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.viewModels
-import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupWithNavController
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentProfileBinding
-import com.vroomvroom.android.view.ui.auth.viewmodel.AuthViewModel
+import com.vroomvroom.android.view.ui.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class ProfileFragment : Fragment() {
-
-    private val authViewModel by viewModels<AuthViewModel>()
-    private lateinit var binding: FragmentProfileBinding
-    private lateinit var navController: NavController
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentProfileBinding.inflate(inflater)
-        navController = findNavController()
-        return binding.root
-    }
+class ProfileFragment : BaseFragment<FragmentProfileBinding>(
+    FragmentProfileBinding::inflate
+) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val appBarConfiguration = AppBarConfiguration(navController.graph)
-        binding.toolbar.setupWithNavController(navController, appBarConfiguration)
+        navController = findNavController()
+        binding.appBarLayout.toolbar.setupToolbar()
 
         observeUser()
 
@@ -45,13 +27,17 @@ class ProfileFragment : Fragment() {
             navController.navigate(R.id.action_profileFragment_to_editBottomSheetFragment)
         }
 
+        binding.btnEditPhone.setOnClickListener {
+            navController.navigate(R.id.action_profileFragment_to_phoneVerificationFragment)
+        }
+
     }
 
     private fun observeUser() {
-        authViewModel.userRecord.observe(viewLifecycleOwner, { users ->
-            if (!users.isNullOrEmpty()) {
-                binding.user = users.first()
+        authViewModel.userRecord.observe(viewLifecycleOwner) { user ->
+            if (user != null) {
+                binding.user = user
             }
-        })
+        }
     }
 }

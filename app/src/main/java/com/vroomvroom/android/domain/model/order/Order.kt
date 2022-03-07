@@ -13,8 +13,8 @@ data class Payment (
 )
 
 data class DeliveryAddress (
-	val address: String,
-	val city: String,
+	val address: String?,
+	val city: String?,
 	val addInfo: String? = null,
 	val coordinates: List<Double>
 )
@@ -26,12 +26,13 @@ data class OrderDetail (
 )
 
 data class OrderProduct (
+	val id: String?,
 	val product_id : String,
 	val name : String,
 	val product_img_url : String?,
 	val price : Double,
 	val quantity : Int,
-	val instructions : String?,
+	val instructions : String? = null,
 	val option : List<OrderProductOption>?
 )
 

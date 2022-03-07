@@ -8,6 +8,7 @@ import com.vroomvroom.android.UpdateNameMutation
 import com.vroomvroom.android.repository.remote.GraphQLRepository
 import com.vroomvroom.android.view.state.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,7 +25,7 @@ class AccountViewModel @Inject constructor(
 
     fun mutationUpdateName(name: String) {
         _user.postValue(ViewState.Loading)
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val response = graphQLRepository.mutationUpdateName(name)
             response?.let { data ->
                 when (data) {

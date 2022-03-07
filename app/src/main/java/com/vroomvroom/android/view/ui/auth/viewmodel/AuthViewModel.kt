@@ -3,6 +3,7 @@ package com.vroomvroom.android.view.ui.auth.viewmodel
 import android.content.Intent
 import android.util.Log
 import androidx.lifecycle.*
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.auth.FirebaseUser
 import com.vroomvroom.android.*
@@ -46,7 +47,9 @@ class AuthViewModel @Inject constructor(
     val token = preferences.token.asLiveData()
 
     val userRecord = roomRepository.getUser()
-    val newLoggedInUser by lazy { MutableLiveData<ViewState<FirebaseUser>>() }
+    private val _newLoggedInUser by lazy { MutableLiveData<ViewState<FirebaseUser>>() }
+    val newLoggedInUser: LiveData<ViewState<FirebaseUser>>
+        get() = _newLoggedInUser
     val isPasswordResetEmailSent by lazy { MutableLiveData<ViewState<String>>() }
     val messageIntent by lazy { MutableLiveData<ViewState<Intent>>() }
 
@@ -55,13 +58,19 @@ class AuthViewModel @Inject constructor(
 
     fun mutationVerifyMobileNumber(number: String) {
         _otpGenerateConfirmation.postValue(ViewState.Loading)
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val response = graphQLRepository.mutationVerifyMobileNumber(number)
             response?.let { data ->
                 when (data) {
-                    is ViewState.Success -> _otpGenerateConfirmation.postValue(data)
-                    is ViewState.Error -> _otpGenerateConfirmation.postValue(data)
-                    else -> _otpGenerateConfirmation.postValue(data)
+                    is ViewState.Success -> {
+                        _otpGenerateConfirmation.postValue(data)
+                    }
+                    is ViewState.Error -> {
+                        _otpGenerateConfirmation.postValue(data)
+                    }
+                    else -> {
+                        _otpGenerateConfirmation.postValue(data)
+                    }
                 }
             }
         }
@@ -69,13 +78,19 @@ class AuthViewModel @Inject constructor(
 
     fun mutationOtpVerification(otp: String) {
         _otpVerificationResult.postValue(ViewState.Loading)
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val response = graphQLRepository.mutationOtpVerification(otp)
             response?.let { data ->
                 when (data) {
-                    is ViewState.Success -> _otpVerificationResult.postValue(data)
-                    is ViewState.Error -> _otpVerificationResult.postValue(data)
-                    else -> _otpVerificationResult.postValue(data)
+                    is ViewState.Success -> {
+                        _otpVerificationResult.postValue(data)
+                    }
+                    is ViewState.Error -> {
+                        _otpVerificationResult.postValue(data)
+                    }
+                    else -> {
+                        _otpVerificationResult.postValue(data)
+                    }
                 }
             }
         }
@@ -85,22 +100,28 @@ class AuthViewModel @Inject constructor(
         firebaseAuthRepository.getIdToken { result ->
             result?.let { token ->
                 Log.d("AuthViewModel", token)
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     preferences.saveToken(token)
                 }
             }
         }
     }
 
-    fun getIdToken() {
-        viewModelScope.launch {
+    fun clearDataStore() {
+        viewModelScope.launch(Dispatchers.IO) {
+            preferences.clear()
+        }
+    }
+
+    fun getLocalIdToken() {
+        viewModelScope.launch(Dispatchers.IO) {
             preferences.token.first()
         }
     }
 
     fun register() {
         _user.postValue(ViewState.Loading)
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val response = graphQLRepository.mutationRegister()
             response?.let { data ->
                 when (data) {
@@ -118,6 +139,19 @@ class AuthViewModel @Inject constructor(
         }
     }
 
+    fun logoutUser(successful: (Boolean) -> Unit) {
+        val listener = OnCompleteListener<Void> { task ->
+            if (task.isSuccessful) {
+                _user.postValue(null)
+                _newLoggedInUser.postValue(null)
+                successful.invoke(true)
+            } else {
+                successful.invoke(false)
+            }
+        }
+        firebaseAuthRepository.logoutUser(listener)
+    }
+
     fun insertUserRecord(userEntity: UserEntity) {
         viewModelScope.launch(Dispatchers.IO) {
             roomRepository.insertUser(userEntity)
@@ -130,8 +164,14 @@ class AuthViewModel @Inject constructor(
         }
     }
 
+    fun deleteUserRecord() {
+        viewModelScope.launch(Dispatchers.IO) {
+            roomRepository.deleteUser()
+        }
+    }
+
     fun updateUserName(id: String, name: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             roomRepository.updateUserName(id, name)
         }
     }
@@ -140,13 +180,13 @@ class AuthViewModel @Inject constructor(
         firebaseAuthRepository.taskGoogleSignIn(data) { result ->
             when (result) {
                 is ViewState.Success -> {
-                    newLoggedInUser.postValue(result)
+                    _newLoggedInUser.postValue(result)
                 }
                 is ViewState.Error -> {
-                    newLoggedInUser.postValue(result)
+                    _newLoggedInUser.postValue(result)
                 }
                 else -> {
-                    newLoggedInUser.postValue(result)
+                    _newLoggedInUser.postValue(result)
                 }
             }
         }
@@ -155,13 +195,13 @@ class AuthViewModel @Inject constructor(
         firebaseAuthRepository.facebookLogin(fragment) { result ->
             when (result) {
                 is ViewState.Success -> {
-                    newLoggedInUser.postValue(result)
+                    _newLoggedInUser.postValue(result)
                 }
                 is ViewState.Error -> {
-                    newLoggedInUser.postValue(result)
+                    _newLoggedInUser.postValue(result)
                 }
                 else -> {
-                    newLoggedInUser.postValue(result)
+                    _newLoggedInUser.postValue(result)
                 }
             }
         }
@@ -171,13 +211,13 @@ class AuthViewModel @Inject constructor(
         firebaseAuthRepository.registerWithEmailAndPassword(emailAddress, password) { result ->
             when (result) {
                 is ViewState.Success -> {
-                    newLoggedInUser.postValue(result)
+                    _newLoggedInUser.postValue(result)
                 }
                 is ViewState.Error -> {
-                    newLoggedInUser.postValue(result)
+                    _newLoggedInUser.postValue(result)
                 }
                 else -> {
-                    newLoggedInUser.postValue(result)
+                    _newLoggedInUser.postValue(result)
                 }
             }
         }
@@ -187,13 +227,13 @@ class AuthViewModel @Inject constructor(
         firebaseAuthRepository.logInWithEmailAndPassword(emailAddress, password) { result ->
             when (result) {
                 is ViewState.Success -> {
-                    newLoggedInUser.postValue(result)
+                    _newLoggedInUser.postValue(result)
                 }
                 is ViewState.Error -> {
-                    newLoggedInUser.postValue(result)
+                    _newLoggedInUser.postValue(result)
                 }
                 else -> {
-                    newLoggedInUser.postValue(result)
+                    _newLoggedInUser.postValue(result)
                 }
             }
         }

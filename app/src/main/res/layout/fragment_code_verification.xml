@@ -6,65 +6,43 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".view.ui.auth.CodeVerificationFragment">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/codeVerificationAppBarLayout"
+    <include
+        android:id="@+id/appBarLayout"
+        layout="@layout/item_appbar_layout"/>
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/otp_verification_progress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/app_bar_bg"
-        android:elevation="16dp"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/red_a30"
+        android:elevation="18dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <com.google.android.material.progressindicator.LinearProgressIndicator
-                android:id="@+id/otp_verification_progress"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:indeterminate="true"
-                android:indeterminateTint="@color/maroon"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/otp_verification_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:theme="@style/ToolbarTheme"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.google.android.material.appbar.AppBarLayout>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_32"
         android:gravity="center"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/codeVerificationAppBarLayout">
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
 
         <ImageView
-            android:layout_width="96dp"
-            android:layout_height="96dp"
-            android:src="@drawable/envelope" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_envelope" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/dp_8"
             android:text="@string/enter_otp"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            android:textSize="24sp"
-            android:textStyle="bold"
+            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -72,9 +50,9 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:textAlignment="center"
-            android:text="@string/enter_the_otp_sent_to" />
+            android:layout_marginTop="@dimen/dp_8"
+            android:text="@string/enter_the_otp_sent_to"
+            android:textAlignment="center" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -86,11 +64,10 @@
                 android:id="@+id/otp_edit_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
                 android:background="@null"
                 android:hint="@string/_041499"
-                android:letterSpacing="0.5"
                 android:inputType="phone"
+                android:letterSpacing="0.5"
                 android:maxLength="6"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                 android:textSize="24sp" />
@@ -99,28 +76,26 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginStart="64dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="64dp"
-            android:background="@drawable/light_gray" />
+            android:layout_marginHorizontal="@dimen/margin_xxxl"
+            android:background="@drawable/bg_gray_f2f_rounded_100dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:text="@string/didn_t_receive_the_otp_resend"
-            android:textColor="@color/teal_700"/>
+            android:textColor="@color/red_a30" />
 
-        <Button
+        <android.widget.Button
             android:id="@+id/btn_verify_otp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="32dp"
-            android:background="@drawable/btn_background"
+            android:layout_margin="@dimen/margin_large"
+            android:background="@drawable/bg_red_a30_rounded_16dp"
             android:text="@string/verify"
-            android:textAllCaps="false" />
+            android:textAllCaps="false"
+            android:textColor="@color/white" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

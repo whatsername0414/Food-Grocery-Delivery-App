@@ -9,7 +9,7 @@ data class CartItemChoiceEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int? = null,
     val name: String,
-    val additional_price: Double? = null,
+    val additionalPrice: Double? = null,
     val optionType: String,
     val cartItemId: Int? = null
 )

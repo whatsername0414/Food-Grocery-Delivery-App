@@ -1,6 +1,5 @@
 package com.vroomvroom.android.view.ui.orders.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,10 +8,12 @@ import com.apollographql.apollo.api.toInput
 import com.vroomvroom.android.*
 import com.vroomvroom.android.domain.db.user.UserLocationEntity
 import com.vroomvroom.android.domain.model.order.LocationInputMapper
+import com.vroomvroom.android.domain.model.order.OrderResponse
 import com.vroomvroom.android.repository.remote.GraphQLRepository
 import com.vroomvroom.android.type.ReviewInput
 import com.vroomvroom.android.view.state.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,12 +33,12 @@ class OrdersViewModel @Inject constructor(
     val cancelled: LiveData<ViewState<CancelOrderMutation.Data>>
         get() = _cancelled
 
-    private val _ordersByStatus by lazy { MutableLiveData<ViewState<OrdersByStatusQuery.Data>>() }
-    val ordersByStatus: LiveData<ViewState<OrdersByStatusQuery.Data>>
+    private val _ordersByStatus by lazy { MutableLiveData<ViewState<List<OrderResponse?>>>() }
+    val ordersByStatus: LiveData<ViewState<List<OrderResponse?>>>
         get() = _ordersByStatus
 
-    private val _order by lazy { MutableLiveData<ViewState<OrderQuery.Data>>() }
-    val order: LiveData<ViewState<OrderQuery.Data>>
+    private val _order by lazy { MutableLiveData<ViewState<OrderResponse>>() }
+    val order: LiveData<ViewState<OrderResponse>>
         get() = _order
 
     private val _ordersStatus by lazy { MutableLiveData<ViewState<OrdersStatusQuery.Data>>() }
@@ -77,7 +78,7 @@ class OrdersViewModel @Inject constructor(
 
     fun queryOrdersByStatus(status: String) {
         _ordersByStatus.postValue(ViewState.Loading)
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val response = graphQLRepository.queryOrdersByStatus(status)
             response?.let { data ->
                 when (data) {
@@ -97,7 +98,7 @@ class OrdersViewModel @Inject constructor(
 
     fun queryOrder(orderId: String) {
         _order.postValue(ViewState.Loading)
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val response = graphQLRepository.queryOrder(orderId)
             response?.let { data ->
                 when (data) {
@@ -116,7 +117,7 @@ class OrdersViewModel @Inject constructor(
     }
 
     fun queryOrdersStatus() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val response = graphQLRepository.queryOrdersStatus()
             response?.let { data ->
                 when (data) {
@@ -131,12 +132,11 @@ class OrdersViewModel @Inject constructor(
     fun mutationUpdateDeliveryAddress(orderId: String, userLocationEntity: UserLocationEntity) {
         _changeAddress.postValue(ViewState.Loading)
         val address = locationInputMapper.mapToDomainModel(userLocationEntity)
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val response = graphQLRepository.mutationUpdateDeliveryAddress(orderId, address)
             response?.let { data ->
                 when (data) {
                     is ViewState.Success -> {
-                        Log.d("OrderViewModel", "Success")
                         _changeAddress.postValue(data)
                     }
                     is ViewState.Error -> {
@@ -150,12 +150,12 @@ class OrdersViewModel @Inject constructor(
         }
     }
     fun mutationUpdateOrderNotified(orderId: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             graphQLRepository.mutationUpdateOrderNotified(orderId)
         }
     }
     fun mutationCancelOrder(orderId: String, reason: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val response = graphQLRepository.mutationCancelOrder(orderId, reason)
             response?.let { data ->
                 when (data) {
@@ -174,7 +174,7 @@ class OrdersViewModel @Inject constructor(
     }
     fun mutationReview(merchantId: String, orderId: String, rate: Int, review: String?) {
         val reviewInput = ReviewInput(merchantId, orderId, rate, review.toInput())
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _review.postValue(ViewState.Loading)
             val response = graphQLRepository.mutationReview(reviewInput)
             response?.let { data ->

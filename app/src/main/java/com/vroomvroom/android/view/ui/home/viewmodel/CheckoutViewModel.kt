@@ -11,6 +11,7 @@ import com.vroomvroom.android.repository.remote.GraphQLRepository
 import com.vroomvroom.android.type.OrderInput
 import com.vroomvroom.android.view.state.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -30,7 +31,7 @@ class CheckoutViewModel @Inject constructor(
 
     fun mutationCreateOrder(orderInput: OrderInput) {
         _order.postValue(ViewState.Loading)
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val response = graphQLRepository.mutationCreateOrder(orderInput)
             response?.let { data ->
                 when (data) {

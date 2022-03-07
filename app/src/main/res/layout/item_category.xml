@@ -12,15 +12,15 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="2dp">
+        android:layout_margin="@dimen/dp_2">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/categoryCardView"
-            android:layout_width="72dp"
-            android:layout_height="120dp"
-            android:layout_margin="4dp"
-            app:cardElevation="4dp"
+            android:layout_width="160dp"
+            android:layout_height="64dp"
+            android:layout_margin="@dimen/dp_4"
             app:cardCornerRadius="100dp"
+            app:cardBackgroundColor="@color/gray_f2f"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -37,57 +37,42 @@
                     android:id="@+id/image_bg"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:background="@drawable/light_gray"
-                    app:layout_constraintBottom_toTopOf="@+id/guideline5"
+                    android:layout_marginVertical="@dimen/dp_12"
+                    android:layout_marginStart="@dimen/dp_12"
+                    android:background="@drawable/bg_gray_f2f_rounded_100dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintDimensionRatio="1:1"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/guideline4" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
-                    android:id="@+id/imageView"
-                    categoryImageUrl="@{category.img_url}"
+                    android:id="@+id/category_img"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    app:layout_constraintBottom_toTopOf="@+id/guideline5"
+                    android:layout_marginHorizontal="@dimen/dp_8"
+                    android:layout_marginVertical="@dimen/dp_8"
+                    app:layout_constraintBottom_toBottomOf="@+id/image_bg"
                     app:layout_constraintDimensionRatio="1:1"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/guideline4"
-                    tools:src="@drawable/logo"/>
+                    app:layout_constraintEnd_toEndOf="@+id/image_bg"
+                    app:layout_constraintStart_toStartOf="@+id/image_bg"
+                    app:layout_constraintTop_toTopOf="@+id/image_bg"
+                    tools:src="@drawable/ic_logo" />
 
                 <TextView
                     android:id="@+id/nameTv"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="@dimen/dp_8"
                     android:text="@{category.name}"
                     android:textAlignment="center"
-                    android:textSize="12sp"
                     android:textColor="@color/black"
-                    tools:text="Restaurant"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:textSize="16sp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    app:layout_constraintBottom_toBottomOf="@+id/image_bg"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/guideline5" />
-
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/guideline4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    app:layout_constraintGuide_percent=".08" />
-
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/guideline5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    app:layout_constraintGuide_percent="0.48" />
+                    app:layout_constraintStart_toEndOf="@+id/image_bg"
+                    app:layout_constraintTop_toTopOf="@+id/image_bg"
+                    tools:text="Restaurant" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 

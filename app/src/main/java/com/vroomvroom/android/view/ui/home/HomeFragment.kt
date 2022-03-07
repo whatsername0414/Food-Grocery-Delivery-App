@@ -2,80 +2,62 @@ package com.vroomvroom.android.view.ui.home
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.LayoutInflater
+import android.util.Log
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
-import androidx.core.view.ViewCompat
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
+import android.view.animation.Animation
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.snackbar.Snackbar
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentHomeBinding
 import com.vroomvroom.android.domain.db.user.UserLocationEntity
-import com.vroomvroom.android.domain.model.merchant.MerchantData
+import com.vroomvroom.android.domain.model.merchant.Merchant
+import com.vroomvroom.android.utils.Constants.ALL
+import com.vroomvroom.android.utils.Constants.BY_CATEGORY
 import com.vroomvroom.android.utils.Utils.safeNavigate
-import com.vroomvroom.android.utils.Utils.updateAdapter
 import com.vroomvroom.android.view.state.ViewState
-import com.vroomvroom.android.view.ui.auth.viewmodel.AuthViewModel
 import com.vroomvroom.android.view.ui.home.adapter.CategoryAdapter
 import com.vroomvroom.android.view.ui.home.adapter.MerchantAdapter
-import com.vroomvroom.android.view.ui.activityviewmodel.ActivityViewModel
-import com.vroomvroom.android.view.ui.location.viewmodel.LocationViewModel
-import com.vroomvroom.android.view.ui.home.viewmodel.HomeViewModel
+import com.vroomvroom.android.view.ui.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-@SuppressLint("NotifyDataSetChanged", "SetTextI18n")
-class HomeFragment: Fragment() {
+@SuppressLint("NotifyDataSetChanged")
+class HomeFragment: BaseFragment<FragmentHomeBinding>(
+    FragmentHomeBinding::inflate
+) {
 
-    private val homeViewModel by viewModels<HomeViewModel>()
-    private val locationViewModel by viewModels<LocationViewModel>()
-    private val authViewModel by viewModels<AuthViewModel>()
-    private val activityViewModel by activityViewModels<ActivityViewModel>()
     private val categoryAdapter by lazy { CategoryAdapter() }
-    private val merchantAdapter by lazy { MerchantAdapter(false) }
-    private var snackBar: Snackbar? = null
+    private val merchantAdapter by lazy { MerchantAdapter() }
+    private var categoriesLoaded = false
+    private var merchantsLoaded = false
+    private var categoryClicked = false
 
-    private lateinit var binding: FragmentHomeBinding
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentHomeBinding.inflate(inflater)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.fetchProgress.visibility = View.GONE
-
-        homeViewModel.queryCategory()
-        homeViewModel.queryMerchants()
 
         observeUser()
-        observeUserLocation()
-        observeCategory()
+        observeCategories()
         observeMerchants()
+        observeUserLocation()
         observeRoomCartItem()
 
         binding.categoryRv.adapter = categoryAdapter
         binding.merchantRv. adapter = merchantAdapter
-        ViewCompat.setNestedScrollingEnabled(binding.merchantRv, false)
 
-        binding.locationCv.setOnClickListener {
+        binding.addressLayout.setOnClickListener {
+            Log.d("HomeFragment", "Clicked Address Group")
             findNavController().safeNavigate(
                 HomeFragmentDirections.actionHomeFragmentToLocationBottomSheetFragment()
             )
         }
 
         binding.favorite.setOnClickListener {
+            binding.fetchProgress.visibility = View.VISIBLE
             findNavController().safeNavigate(
                 HomeFragmentDirections.actionHomeFragmentToFavoriteFragment()
             )
@@ -88,15 +70,19 @@ class HomeFragment: Fragment() {
         }
 
         categoryAdapter.onCategoryClicked = { category ->
-            homeViewModel.categoryClicked = true
+            categoryClicked = true
             if (category?.name != null) {
-                homeViewModel.queryMerchantsByCategory(category.name)
+                mainViewModel.queryMerchants(BY_CATEGORY, category.name)
+                binding.shopsTitle.text = category.name
+
             } else {
-                homeViewModel.queryMerchantsByCategory("")
+                mainViewModel.queryMerchants(ALL, null)
+                binding.shopsTitle.text = getString(R.string.all_shops)
             }
         }
 
         merchantAdapter.onMerchantClicked = { merchant ->
+            categoryClicked = false
             if (merchant._id.isNotBlank()) {
                 findNavController().navigate(
                     HomeFragmentDirections.actionHomeFragmentToMerchantFragment(merchant._id)
@@ -104,41 +90,37 @@ class HomeFragment: Fragment() {
             }
         }
 
-        merchantAdapter.onFavoriteClicked = { merchant, direction ->
-            homeViewModel.favorite(merchant._id, direction)
-            activityViewModel.favoriteDirection = direction
-            observeFavorite(merchant)
-        }
-
-        binding.btnRetry.setOnClickListener {
-            homeViewModel.queryCategory()
-            homeViewModel.queryMerchants()
+        merchantAdapter.apply {
+            onFavoriteClicked = { merchant, position, direction ->
+                homeViewModel.favorite(merchant._id, direction)
+                observeFavorite(this, merchant, position, direction)
+            }
         }
     }
 
     private fun observeUser() {
-        authViewModel.userRecord.observe(viewLifecycleOwner, { users ->
-            if (!users.isNullOrEmpty()) {
+        authViewModel.userRecord.observe(viewLifecycleOwner) { user ->
+            if (user != null) {
                 binding.favorite.visibility = View.VISIBLE
-                merchantAdapter.setUser(users.first())
+                merchantAdapter.setUser(user)
                 merchantAdapter.notifyDataSetChanged()
             } else {
                 binding.favorite.visibility = View.GONE
                 merchantAdapter.setUser(null)
                 merchantAdapter.notifyDataSetChanged()
             }
-        })
+        }
     }
 
     private fun observeUserLocation() {
-        locationViewModel.userLocation.observe(viewLifecycleOwner, { userLocation ->
+        locationViewModel.userLocation.observe(viewLifecycleOwner) { userLocation ->
             if (userLocation.isNullOrEmpty()) {
                 findNavController().navigate(R.id.action_homeFragment_to_locationFragment)
             } else {
-                val location = userLocation.find { it.current_use }
+                val location = userLocation.find { it.currentUse }
                 location?.let { updateLocationTextView(it) }
             }
-        })
+        }
     }
     private fun updateLocationTextView(locationEntity: UserLocationEntity) {
         binding.addressTv.text =
@@ -147,42 +129,44 @@ class HomeFragment: Fragment() {
             locationEntity.city ?: getString(R.string.city_not_provided)
     }
 
-    private fun observeCategory() {
-        homeViewModel.category.observe(viewLifecycleOwner) { response ->
+    private fun observeCategories() {
+        mainViewModel.categories.observe(viewLifecycleOwner) { response ->
             when(response) {
                 is ViewState.Loading -> {
                     binding.apply {
-                        connectionFailedLayout.visibility = View.GONE
-                        title.visibility = View.GONE
-                        categoryRv.visibility = View.GONE
-                        categoryShimmerLayout.apply {
-                            visibility = View.VISIBLE
-                            startShimmer()
-                        }
+                        commonNoticeLayout.hideNotice()
+                        homeRvLinearLayout.visibility = View.GONE
+                        categoryShimmerLayout.visibility = View.VISIBLE
+                        categoryShimmerLayout.startShimmer()
+
                     }
                 }
                 is ViewState.Success -> {
+                    categoriesLoaded = true
                     val category = response.result.getCategories
                     categoryAdapter.submitList(category)
                     binding.apply {
-                        title.visibility = View.VISIBLE
-                        categoryRv.visibility = View.VISIBLE
-                        categoryShimmerLayout.apply {
-                            stopShimmer()
-                            visibility = View.INVISIBLE
+                        if (categoriesLoaded && merchantsLoaded) {
+                            categoryShimmerLayout.stopShimmer()
+                            merchantsShimmerLayout.stopShimmer()
+                            categoryShimmerLayout.visibility = View.GONE
+                            merchantsShimmerLayout.visibility = View.GONE
+                            homeRvLinearLayout.visibility = View.VISIBLE
                         }
                     }
                 }
                 is ViewState.Error -> {
-                    categoryAdapter.submitList(emptyList())
+                    categoriesLoaded = false
                     binding.apply {
-                        categoryRv.visibility = View.GONE
-                        title.visibility = View.GONE
-                        connectionFailedLayout.visibility = View.VISIBLE
-                        categoryShimmerLayout.apply {
-                            stopShimmer()
-                            visibility = View.GONE
-                        }
+                        categoryShimmerLayout.stopShimmer()
+                        merchantsShimmerLayout.stopShimmer()
+                        categoryShimmerLayout.visibility = View.GONE
+                        merchantsShimmerLayout.visibility = View.GONE
+                        homeRvLinearLayout.visibility = View.VISIBLE
+                    }
+                    binding.commonNoticeLayout.showNetworkError {
+                        mainViewModel.queryCategory("main")
+                        mainViewModel.queryMerchants(ALL, null)
                     }
                 }
             }
@@ -190,111 +174,99 @@ class HomeFragment: Fragment() {
     }
 
     private fun observeMerchants() {
-        homeViewModel.merchants.observe(viewLifecycleOwner, { response ->
-            when(response) {
-                is ViewState.Loading -> {
-                    binding.apply {
-                        connectionFailedLayout.visibility = View.GONE
-                        if (homeViewModel.categoryClicked) {
-                            fetchProgress.visibility = View.VISIBLE
-                        } else {
+        mainViewModel.merchants.observe(viewLifecycleOwner) { response ->
+            lifecycleScope.launch(Dispatchers.Main) {
+                when (response) {
+                    is ViewState.Loading -> {
+                        binding.apply {
+                            commonNoticeLayout.hideNotice()
+                            if (categoryClicked) {
+                                fetchProgress.visibility = View.VISIBLE
+                            } else {
+                                homeRvLinearLayout.visibility = View.GONE
+                                merchantsShimmerLayout.visibility = View.VISIBLE
+                                merchantsShimmerLayout.startShimmer()
+                            }
+                        }
+                    }
+                    is ViewState.Success -> {
+                        merchantsLoaded = true
+                        val merchants = response.result.data
+                        merchantAdapter.submitList(checkForChanges(merchants))
+                        binding.apply {
+                            if (categoryClicked) {
+                                fetchProgress.visibility = View.GONE
+                            } else {
+                                if (categoriesLoaded && merchantsLoaded) {
+                                    categoryShimmerLayout.stopShimmer()
+                                    merchantsShimmerLayout.stopShimmer()
+                                    categoryShimmerLayout.visibility = View.GONE
+                                    merchantsShimmerLayout.visibility = View.GONE
+                                    homeRvLinearLayout.visibility = View.VISIBLE
+                                }
+                            }
+                        }
+                    }
+                    is ViewState.Error -> {
+                        merchantsLoaded = false
+                        binding.apply {
                             merchantsShimmerLayout.apply {
-                                visibility = View.VISIBLE
-                                startShimmer()
+                                visibility = View.GONE
+                                stopShimmer()
+                            }
+                            homeRvLinearLayout.visibility = View.GONE
+                            fetchProgress.visibility = View.GONE
+                            commonNoticeLayout.showNetworkError {
+                                mainViewModel.queryCategory("main")
+                                mainViewModel.queryMerchants(ALL, null)
                             }
                         }
                     }
                 }
-                is ViewState.Success -> {
-                    val merchant = response.result.data
-                    merchantAdapter.setData(merchant)
-                    binding.apply {
-                        fetchProgress.visibility = View.GONE
-                        merchantsShimmerLayout.apply {
-                            visibility = View.GONE
-                            stopShimmer()
-                        }
-                    }
-                }
-                is ViewState.Error -> {
-                    merchantAdapter.setData(mutableListOf())
-                    binding.apply {
-                        Toast.makeText(
-                            requireContext(),
-                            "Something went wrong",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        merchantRv.visibility = View.GONE
-                        fetchProgress.visibility = View.GONE
-                        merchantsShimmerLayout.apply {
-                            visibility = View.GONE
-                            stopShimmer()
-                        }
-                    }
-                }
             }
-        })
+        }
     }
 
-    private fun observeFavorite(merchant: MerchantData) {
-        homeViewModel.favorite.observe(viewLifecycleOwner, { response ->
-            val direction = activityViewModel.favoriteDirection
-            when(response) {
-                is ViewState.Loading -> Unit
-                is ViewState.Success -> {
-                    if (direction == 1) {
-                        showSnackBar("Added to favorites")
-                        snackBar?.setAction(R.string.view_all) {
-                            findNavController().navigate(R.id.action_homeFragment_to_favoriteFragment)
-                        }?.show()
-                        merchantAdapter.updateAdapter(merchant, true)
-                    } else {
-                        showSnackBar("Removed from favorites")
-                        snackBar?.show()
-                        merchantAdapter.updateAdapter(merchant, false)
-                    }
-                    homeViewModel.favorite.removeObservers(viewLifecycleOwner)
-                }
-                is ViewState.Error -> {
-                    Toast.makeText(
-                        requireContext(),
-                        "Something went wrong",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    if (direction == 1) {
-                        merchantAdapter.updateAdapter(merchant, true)
-                    } else {
-                        merchantAdapter.updateAdapter(merchant, false)
-                    }
-                    homeViewModel.favorite.removeObservers(viewLifecycleOwner)
-                }
-            }
-        })
+    private fun checkForChanges(merchants: MutableList<Merchant?>): MutableList<Merchant?> {
+        mainActivityViewModel.favoritesChanges.forEach { (_, v) ->
+            val index = merchants.indexOf(merchants.find { it?._id == v._id })
+            merchants[index] = v
+        }
+        return merchants
     }
 
     private fun observeRoomCartItem() {
-        homeViewModel.cartItem.observe(viewLifecycleOwner, { items ->
+        homeViewModel.cartItem.observe(viewLifecycleOwner) { items ->
             if (items.isNullOrEmpty()) {
-                binding.cardCartCounter.visibility = View.GONE
+                binding.cartCounter.visibility = View.GONE
             } else {
-                binding.cartCounter.text = "${items.size}"
-                binding.cardCartCounter.visibility = View.VISIBLE
+                binding.cartCounter.apply {
+                    text = "${items.size}"
+                    visibility = View.VISIBLE
+                }
             }
-        })
+        }
     }
 
-    private fun showSnackBar(label: String) {
-        snackBar = Snackbar.make(
-            binding.root,
-            label,
-            Snackbar.LENGTH_LONG
-        )
-        val snackBarView = snackBar?.view
-        snackBarView?.translationY = -(448 / requireContext().resources.displayMetrics.density)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        snackBar?.dismiss()
+    override fun onResume() {
+        super.onResume()
+        if (view?.animation != null) {
+            view?.animation?.setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationStart(animation: Animation?) {}
+                override fun onAnimationEnd(animation: Animation?) {
+                    if (mainViewModel.merchants.value == null &&
+                        mainViewModel.categories.value == null) {
+                        mainViewModel.queryCategory("main")
+                        mainViewModel.queryMerchants(ALL, null)
+                    }
+                }
+                override fun onAnimationRepeat(animation: Animation?) {}
+            })
+        } else {
+            if (mainViewModel.merchants.value == null && mainViewModel.categories.value == null) {
+                mainViewModel.queryCategory("main")
+                mainViewModel.queryMerchants(ALL, null)
+            }
+        }
     }
 }

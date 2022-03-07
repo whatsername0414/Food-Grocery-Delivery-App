@@ -1,44 +1,30 @@
 package com.vroomvroom.android.view.ui.home
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentCartBottomSheetBinding
 import com.vroomvroom.android.domain.db.cart.CartItemWithChoice
+import com.vroomvroom.android.utils.ClickType
+import com.vroomvroom.android.utils.Utils.safeNavigate
+import com.vroomvroom.android.utils.Utils.timeFormatter
 import com.vroomvroom.android.view.state.ViewState
+import com.vroomvroom.android.view.ui.base.BaseBottomSheetFragment
 import com.vroomvroom.android.view.ui.home.adapter.CartAdapter
-import com.vroomvroom.android.view.ui.home.viewmodel.HomeViewModel
+import com.vroomvroom.android.view.ui.widget.CommonAlertDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class CartBottomSheetFragment : BottomSheetDialogFragment() {
-
-    private lateinit var binding: FragmentCartBottomSheetBinding
+class CartBottomSheetFragment : BaseBottomSheetFragment<FragmentCartBottomSheetBinding>(
+    FragmentCartBottomSheetBinding::inflate
+) {
 
     private val cartAdapter by lazy { CartAdapter() }
-    private val alertDialog by lazy { ClosedAlertDialog(requireActivity()) }
-    private val viewModel by viewModels<HomeViewModel>()
 
-        override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentCartBottomSheetBinding.inflate(inflater)
-        return binding.root
-    }
-
-    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -48,11 +34,11 @@ class CartBottomSheetFragment : BottomSheetDialogFragment() {
         observeMerchant()
 
         cartAdapter.onCartItemClicked = { cartItem ->
-            viewModel.updateCartItem(cartItem)
+            homeViewModel.updateCartItem(cartItem)
         }
 
         cartAdapter.onDeleteCartItemClick = { cartItemWithChoice ->
-            deleteCartItemWithChoice(cartItemWithChoice)
+            initAlertDialog(cartItemWithChoice)
         }
 
         binding.btnStartShopping.setOnClickListener {
@@ -64,47 +50,71 @@ class CartBottomSheetFragment : BottomSheetDialogFragment() {
             if (previousDestination == R.id.homeFragment) {
                 findNavController().navigate(
                     CartBottomSheetFragmentDirections
-                        .actionCartBottomSheetFragmentToMerchantFragment(viewModel.currentMerchantId))
+                        .actionCartBottomSheetFragmentToMerchantFragment(homeViewModel.currentMerchantId))
             } else findNavController().popBackStack()
         }
 
         binding.btnCheckOut.setOnClickListener {
-            viewModel.queryMerchant(viewModel.currentMerchantId)
+            homeViewModel.queryMerchant(homeViewModel.currentMerchantId)
         }
     }
 
     private fun observeMerchant() {
-        viewModel.merchant.observe(viewLifecycleOwner, { response ->
-            when(response) {
+        homeViewModel.merchant.observe(viewLifecycleOwner) { response ->
+            when (response) {
                 is ViewState.Loading -> {
                     binding.cartProgress.visibility = View.VISIBLE
                     binding.btnCheckOut.isEnabled = false
                 }
                 is ViewState.Success -> {
                     binding.cartProgress.visibility = View.GONE
+                    binding.btnCheckOut.isEnabled = true
                     val merchant = response.result.getMerchant
                     if (merchant.isOpen) {
-                        findNavController().navigate(R.id.action_cartBottomSheetFragment_to_checkoutFragment)
+                        findNavController().safeNavigate(
+                            CartBottomSheetFragmentDirections
+                                .actionCartBottomSheetFragmentToCheckoutFragment())
                     } else {
-                        alertDialog.showDialog(merchant.opening)
+                        dialog.show(
+                            getString(R.string.prompt),
+                            getString(R.string.closed_alert_label, timeFormatter(merchant.opening)),
+                            getString(R.string.cancel),
+                            getString(R.string.okay),
+                            false
+                        ) { type ->
+                            when (type) {
+                                ClickType.POSITIVE -> dialog.dismiss()
+                                ClickType.NEGATIVE -> Unit
+                            }
+                        }
                     }
                 }
                 is ViewState.Error -> {
-                    Toast.makeText(
-                        requireContext(),
-                        "Something went wrong",
-                        Toast.LENGTH_LONG
-                    ).show()
                     binding.cartProgress.visibility = View.GONE
                     binding.btnCheckOut.isEnabled = true
+                    dialog.show(
+                        getString(R.string.network_error),
+                        getString(R.string.network_error_message),
+                        getString(R.string.cancel),
+                        getString(R.string.retry),
+                        false
+                    ) { type ->
+                        when (type) {
+                            ClickType.POSITIVE -> {
+                                homeViewModel.queryMerchant(homeViewModel.currentMerchantId)
+                                dialog.dismiss()
+                            }
+                            ClickType.NEGATIVE -> dialog.dismiss()
+                        }
+                    }
                 }
             }
-        })
+        }
     }
 
     @SuppressLint("SetTextI18n")
     private fun observeRoomCartItem() {
-        viewModel.cartItem.observe(viewLifecycleOwner, { items ->
+        homeViewModel.cartItem.observe(viewLifecycleOwner) { items ->
             var subTotal = 0.0
             if (items.isEmpty()) {
                 cartAdapter.submitList(emptyList())
@@ -115,27 +125,35 @@ class CartBottomSheetFragment : BottomSheetDialogFragment() {
                 items.forEach { item ->
                     subTotal += item.cartItemEntity.price
                 }
-                viewModel.currentMerchantId = items.first().cartItemEntity.merchant.merchant_id
-                binding.merchantName.text = items.first().cartItemEntity.merchant.merchant_name
+                homeViewModel.currentMerchantId = items.first().cartItemEntity.cartMerchant.merchantId
+                binding.merchantName.text = items.first().cartItemEntity.cartMerchant.merchantName
                 binding.subtotalTv.text = "₱${"%.2f".format(subTotal)}"
                 binding.cartLayout.visibility = View.VISIBLE
                 binding.emptyCartLayout.visibility = View.GONE
             }
-        })
+        }
     }
 
-    private fun deleteCartItemWithChoice(cartItemWithChoice: CartItemWithChoice) {
-        AlertDialog.Builder(requireContext())
-            .setPositiveButton("Yes") { _, _ ->
-                viewModel.deleteCartItem(cartItemWithChoice.cartItemEntity)
-                cartItemWithChoice.choiceEntities?.forEach { cartItemChoice ->
-                    viewModel.deleteCartItemChoice(cartItemChoice)
+    private fun initAlertDialog(cartItemWithChoice: CartItemWithChoice) {
+        val dialog = CommonAlertDialog(
+            requireActivity()
+        )
+        dialog.show(
+            getString(R.string.cart_delete_title),
+            getString(R.string.cart_delete_message, cartItemWithChoice.cartItemEntity.name),
+            getString(R.string.cancel),
+            getString(R.string.cart_delete_button)
+        ) { type ->
+            when (type) {
+                ClickType.POSITIVE -> {
+                    homeViewModel.deleteCartItem(cartItemWithChoice.cartItemEntity)
+                    cartItemWithChoice.choiceEntities?.let {
+                        homeViewModel.deleteAllCartItemChoice()
+                    }
+                    dialog.dismiss()
                 }
+                ClickType.NEGATIVE -> dialog.dismiss()
             }
-            .setNegativeButton("Cancel") { _, _ -> }
-            .setTitle("Confirm Delete")
-            .setMessage("Are you sure you want to remove " +
-                "${cartItemWithChoice.cartItemEntity.name} from the cart?")
-            .create().show()
+        }
     }
 }

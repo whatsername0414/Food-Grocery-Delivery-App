@@ -13,6 +13,7 @@ import com.google.android.gms.location.LocationResult
 import com.vroomvroom.android.domain.db.user.UserLocationEntity
 import com.vroomvroom.android.repository.local.RoomRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -34,10 +35,7 @@ class LocationViewModel @Inject constructor(
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
             super.onLocationResult(locationResult)
-            val location: Location? = locationResult.lastLocation
-            location?.let {
-                currentLocation.postValue(it)
-            }
+            currentLocation.postValue(locationResult.lastLocation)
         }
     }
 
@@ -61,24 +59,29 @@ class LocationViewModel @Inject constructor(
 
     fun insertLocation(userLocationEntity: UserLocationEntity) {
         updateLocations()
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             roomRepository.insertLocation(userLocationEntity)
         }
     }
     fun updateLocation(userLocationEntity: UserLocationEntity) {
         updateLocations()
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             roomRepository.updateLocation(userLocationEntity)
         }
     }
     private fun updateLocations() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             roomRepository.updateLocations()
         }
     }
     fun deleteLocation(userLocationEntity: UserLocationEntity) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             roomRepository.deleteLocation(userLocationEntity)
+        }
+    }
+    fun deleteAllAddress() {
+        viewModelScope.launch(Dispatchers.IO) {
+            roomRepository.deleteAllAddress()
         }
     }
 }

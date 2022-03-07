@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".view.ui.account.AboutFragment">
+
+    <include
+        android:id="@+id/appBarLayout"
+        layout="@layout/item_appbar_layout" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:overScrollMode="never"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_32"
+                android:src="@drawable/ic_logo"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
+
+            <TextView
+                android:id="@+id/company_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_large"
+                android:layout_marginTop="@dimen/dp_32"
+                android:text="Company"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:textSize="20sp"
+                app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+
+            <android.widget.Button
+                android:id="@+id/btn_about_us"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_large"
+                android:layout_marginTop="@dimen/dp_8"
+                android:background="@drawable/bg_gray_3d3_rounded_16dp_stroke_filled"
+                android:text="@string/about_us"
+                android:textAllCaps="false"
+                android:textColor="@color/gray_7f7"
+                app:layout_constraintTop_toBottomOf="@+id/company_title" />
+
+            <android.widget.Button
+                android:id="@+id/btn_terms_conditions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_large"
+                android:layout_marginTop="@dimen/dp_8"
+                android:background="@drawable/bg_gray_3d3_rounded_16dp_stroke_filled"
+                android:text="@string/terms_and_conditions"
+                android:textAllCaps="false"
+                android:textColor="@color/gray_7f7"
+                app:layout_constraintTop_toBottomOf="@+id/btn_about_us" />
+
+            <android.widget.Button
+                android:id="@+id/btn_privacy_policy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_large"
+                android:layout_marginTop="@dimen/dp_8"
+                android:background="@drawable/bg_gray_3d3_rounded_16dp_stroke_filled"
+                android:text="@string/privacy_policy"
+                android:textAllCaps="false"
+                android:textColor="@color/gray_7f7"
+                app:layout_constraintTop_toBottomOf="@+id/btn_terms_conditions" />
+
+            <TextView
+                android:id="@+id/support_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_large"
+                android:layout_marginTop="@dimen/dp_16"
+                android:text="Support"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:textSize="20sp"
+                app:layout_constraintTop_toBottomOf="@+id/btn_privacy_policy" />
+
+            <android.widget.Button
+                android:id="@+id/btn_contact_us"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_large"
+                android:layout_marginTop="@dimen/dp_8"
+                android:background="@drawable/bg_gray_3d3_rounded_16dp_stroke_filled"
+                android:text="@string/contact_us"
+                android:textAllCaps="false"
+                android:textColor="@color/gray_7f7" />
+
+            <android.widget.Button
+                android:id="@+id/btn_faqs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_large"
+                android:layout_marginTop="@dimen/dp_8"
+                android:layout_marginBottom="@dimen/dp_32"
+                android:background="@drawable/bg_gray_3d3_rounded_16dp_stroke_filled"
+                android:text="@string/faqs"
+                android:textAllCaps="false"
+                android:textColor="@color/gray_7f7" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

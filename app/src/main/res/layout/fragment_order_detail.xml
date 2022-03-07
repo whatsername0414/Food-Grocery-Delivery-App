@@ -6,32 +6,18 @@
     <data>
         <variable
             name="order"
-            type="com.vroomvroom.android.OrderQuery.GetOrder" />
+            type="com.vroomvroom.android.domain.model.order.OrderResponse" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         tools:context=".view.ui.orders.OrderDetailFragment">
 
-        <com.google.android.material.appbar.AppBarLayout
+        <include
             android:id="@+id/appBarLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/app_bar_bg"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:theme="@style/ToolbarTheme"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </com.google.android.material.appbar.AppBarLayout>
+            layout="@layout/item_appbar_layout"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/orderDetailLayout"
@@ -46,12 +32,11 @@
                 android:id="@+id/textView9"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="@dimen/dp_24"
+                android:layout_marginTop="@dimen/dp_8"
                 android:text="@{order.status}"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                 android:textSize="20sp"
-                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Pending" />
@@ -60,7 +45,7 @@
                 android:id="@+id/textView23"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
+                android:layout_marginStart="@dimen/dp_24"
                 android:text="@{`Paid by ` + order.payment.method}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView9"
@@ -70,7 +55,7 @@
                 android:id="@+id/placed_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
+                android:layout_marginStart="@dimen/dp_24"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView23"
                 tools:text="Placed on: 12 Dec 2021 12:04:05" />
@@ -79,10 +64,9 @@
                 android:id="@+id/cardView6"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginHorizontal="@dimen/margin_mid"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                app:cardBackgroundColor="@color/light_gray"
+                app:cardBackgroundColor="@color/gray_ccc"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -93,14 +77,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="1dp"
-                    android:background="@drawable/img_bg">
+                    android:background="@drawable/bg_white_fff_rounded_16dp">
 
                     <ImageView
                         android:id="@+id/imageView11"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:src="@drawable/ic_pin_user"
+                        android:src="@drawable/ic_pinned_user"
                         app:layout_constraintBottom_toBottomOf="@+id/textView20"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/textView25" />
@@ -123,7 +107,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:layout_marginEnd="32dp"
-                        android:text="@{order.delivery_address.address ?? `Not Provided`}"
+                        android:text="@{order.deliveryAddress.address ?? `Not Provided`}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/imageView11"
                         app:layout_constraintTop_toBottomOf="@+id/textView25"
@@ -135,7 +119,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:layout_marginBottom="8dp"
-                        android:text="@{order.delivery_address.city ?? `Not Provided`}"
+                        android:text="@{order.deliveryAddress.city ?? `Not Provided`}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/imageView11"
                         app:layout_constraintTop_toBottomOf="@+id/textView19"
@@ -145,10 +129,10 @@
                         android:id="@+id/textView21"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="@dimen/dp_16"
+                        android:layout_marginTop="@dimen/dp_8"
                         android:text="@{order.customer.phone.number}"
-                        app:layout_constraintStart_toEndOf="@+id/textView25"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:text="+639319481202" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -157,35 +141,30 @@
 
             <LinearLayout
                 android:id="@+id/orderMerchantLayout"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="@dimen/dp_24"
                 android:layout_marginTop="16dp"
                 android:gravity="center"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cardView6">
 
-                <ImageView
-                    android:id="@+id/imageView10"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_storefront" />
-
                 <TextView
                     android:id="@+id/textView18"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
+                    android:drawablePadding="@dimen/dp_8"
                     android:text="@{order.merchant.name}"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
+                    app:drawableStartCompat="@drawable/ic_store"
                     tools:text="Mcdonald's Tabaco" />
 
                 <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginStart="8dp"
-                    android:src="@drawable/ic_right_arrow_maroon" />
+                    android:src="@drawable/ic_next_red_a30" />
             </LinearLayout>
 
             <View
@@ -195,7 +174,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                android:background="@drawable/light_gray"
+                android:background="@drawable/bg_gray_f2f_rounded_100dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/orderMerchantLayout" />
@@ -204,10 +183,8 @@
                 android:id="@+id/orderProductRv"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginHorizontal="@dimen/margin_big"
+                android:layout_marginVertical="@dimen/margin_big"
                 android:overScrollMode="never"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintBottom_toTopOf="@+id/view4"
@@ -216,31 +193,30 @@
                 app:layout_constraintTop_toBottomOf="@+id/view3"
                 tools:listitem="@layout/item_order_product" />
 
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/btn_modify_order"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="@dimen/dp_24"
                 android:background="@android:color/transparent"
-                android:padding="4dp"
+                android:padding="@dimen/dp_4"
                 android:textAlignment="textEnd"
                 android:textAllCaps="false"
-                android:textColor="@color/teal_700"
+                android:textColor="@color/red_a30"
+                android:maxLines="1"
+                android:maxLength="16"
                 app:layout_constraintBottom_toTopOf="@+id/view3"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/orderMerchantLayout"
                 app:layout_constraintTop_toBottomOf="@+id/cardView6"
                 tools:text="Change address" />
 
             <View
                 android:id="@+id/view4"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/light_gray"
+                android:layout_height="@dimen/dp_1"
+                android:layout_marginHorizontal="@dimen/margin_big"
+                android:layout_marginBottom="@dimen/dp_16"
+                android:background="@drawable/bg_gray_f2f_rounded_100dp"
                 app:layout_constraintBottom_toTopOf="@+id/textView11"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -249,11 +225,11 @@
                 android:id="@+id/textView11"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginStart="@dimen/dp_24"
+                android:layout_marginBottom="@dimen/dp_8"
                 android:text="@string/subtotal"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 app:layout_constraintBottom_toTopOf="@+id/textView13"
                 app:layout_constraintStart_toStartOf="parent" />
 
@@ -261,11 +237,10 @@
                 android:id="@+id/textView13"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginStart="@dimen/dp_24"
+                android:layout_marginBottom="@dimen/dp_8"
                 android:text="@string/delivery_fee"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textSize="16sp"
                 app:layout_constraintBottom_toTopOf="@+id/textView26"
                 app:layout_constraintStart_toStartOf="parent" />
 
@@ -273,10 +248,9 @@
                 android:id="@+id/textView26"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginBottom="32dp"
+                android:layout_marginStart="@dimen/dp_24"
+                android:layout_marginBottom="@dimen/dp_32"
                 android:text="@string/total"
-                android:textSize="18sp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -285,10 +259,9 @@
                 android:id="@+id/subTotalTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="24dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="@dimen/dp_24"
+                android:layout_marginBottom="@dimen/dp_8"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textSize="16sp"
                 app:layout_constraintBottom_toTopOf="@+id/delivery_fee"
                 app:layout_constraintEnd_toEndOf="parent"
                 tools:text="₱344.00" />
@@ -297,10 +270,9 @@
                 android:id="@+id/delivery_fee"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="24dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="@dimen/dp_24"
+                android:layout_marginBottom="@dimen/dp_8"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textSize="16sp"
                 app:layout_constraintBottom_toTopOf="@+id/totalTv"
                 app:layout_constraintEnd_toEndOf="parent"
                 tools:text="₱49.00"/>
@@ -309,10 +281,10 @@
                 android:id="@+id/totalTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="24dp"
-                android:layout_marginBottom="32dp"
+                android:layout_marginEnd="@dimen/dp_24"
+                android:layout_marginBottom="@dimen/dp_32"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 tools:text="₱493.00" />
@@ -329,40 +301,18 @@
             <include layout="@layout/fragment_order_detail_shimmer"/>
         </com.facebook.shimmer.ShimmerFrameLayout>
 
-        <LinearLayout
-            android:id="@+id/connectionFailedLayout"
-            android:layout_width="wrap_content"
+        <include
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical"
+            android:layout_marginHorizontal="@dimen/margin_large"
+            android:layout_marginBottom="@dimen/dp_64"
+            android:id="@+id/commonNoticeLayout"
+            layout="@layout/common_notice_layout"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:visibility="gone">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/sorry_for_the_delay"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                android:textSize="18sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/Error_message"
-                android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_retry"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/retry"
-                app:cornerRadius="16dp" />
-        </LinearLayout>
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

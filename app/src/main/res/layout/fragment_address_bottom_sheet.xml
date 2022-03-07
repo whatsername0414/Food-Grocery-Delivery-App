@@ -6,26 +6,18 @@
     android:layout_height="wrap_content"
     tools:context=".view.ui.location.AddressBottomSheetFragment">
 
-    <View
+    <include
         android:id="@+id/view"
-        android:layout_width="48dp"
-        android:layout_height="6dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/light_gray"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        layout="@layout/bottom_sheet_top_indicator_layout" />
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="24dp"
-        android:text="@string/we_re_missing_your_street"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-        android:textSize="18sp"
+        android:textSize="20sp"
+        android:text="@string/we_re_missing_your_street"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view" />
 
@@ -34,18 +26,18 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginHorizontal="@dimen/dp_32"
         android:hint="@string/street"
-        app:boxCornerRadiusBottomEnd="15dp"
-        app:boxCornerRadiusBottomStart="15dp"
-        app:boxCornerRadiusTopEnd="15dp"
-        app:boxCornerRadiusTopStart="15dp"
-        app:helperTextTextColor="#fa0606"
-        app:hintTextColor="@color/maroon"
+        app:boxCornerRadiusBottomEnd="@dimen/dp_15"
+        app:boxCornerRadiusBottomStart="@dimen/dp_15"
+        app:boxCornerRadiusTopEnd="@dimen/dp_15"
+        app:boxCornerRadiusTopStart="@dimen/dp_15"
+        app:helperTextTextColor="@color/red_ff0"
+        app:hintTextColor="@color/red_a30"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4">
+
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/streetInputEditText"
             android:layout_width="match_parent"
@@ -58,26 +50,26 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/dp_32"
         android:layout_marginTop="8dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
         android:hint="@string/city"
         app:boxCornerRadiusBottomEnd="15dp"
         app:boxCornerRadiusBottomStart="15dp"
         app:boxCornerRadiusTopEnd="15dp"
         app:boxCornerRadiusTopStart="15dp"
-        app:helperTextTextColor="#fa0606"
-        app:hintTextColor="@color/maroon"
+        app:helperTextTextColor="@color/red_ff0"
+        app:hintTextColor="@color/red_a30"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/streetInputLayout">
+
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/localityInputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:focusable="false"
             android:clickable="false"
             android:cursorVisible="false"
+            android:focusable="false"
             android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -85,17 +77,15 @@
         android:id="@+id/addInfoInputLayout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginStart="32dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/dp_32"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="32dp"
         android:hint="@string/additional_information"
-        app:boxCornerRadiusBottomEnd="15dp"
-        app:boxCornerRadiusBottomStart="15dp"
-        app:boxCornerRadiusTopEnd="15dp"
-        app:boxCornerRadiusTopStart="15dp"
-        app:helperTextTextColor="#fa0606"
-        app:hintTextColor="@color/maroon"
+        app:boxCornerRadiusBottomEnd="@dimen/dp_15"
+        app:boxCornerRadiusBottomStart="@dimen/dp_15"
+        app:boxCornerRadiusTopEnd="@dimen/dp_15"
+        app:boxCornerRadiusTopStart="@dimen/dp_15"
+        app:hintTextColor="@color/red_a30"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/localityInputLayout">
@@ -105,23 +95,20 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:inputType="text"
-            android:maxLines="3"/>
+            android:maxLines="3" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
+    <android.widget.Button
         android:id="@+id/btn_save"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="16dp"
-        android:backgroundTint="@color/maroon"
-        android:text="@string/save_and_continue"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/dp_32"
+        android:layout_marginTop="@dimen/dp_8"
+        android:layout_marginBottom="@dimen/dp_16"
+        android:background="@drawable/bg_red_a30_rounded_16dp"
+        android:text="@string/continue_word"
         android:textAllCaps="false"
         android:textColor="@color/white"
-        android:textSize="16sp"
-        app:cornerRadius="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -13,43 +13,26 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:background="@color/white"
         tools:context=".view.ui.home.MerchantInfoFragment">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/favoriteAppBarLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/app_bar_bg"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:theme="@style/ToolbarTheme"
-                app:navigationIcon="@drawable/ic_close_maroon"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </com.google.android.material.appbar.AppBarLayout>
+        <include
+            android:id="@+id/appBarLayout"
+            layout="@layout/item_appbar_layout"/>
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardView8"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginHorizontal="@dimen/margin_small"
+            android:layout_marginTop="@dimen/dp_8"
             android:background="@color/white"
             app:cardCornerRadius="8dp"
             app:cardElevation="0dp"
             app:layout_constraintBottom_toTopOf="@+id/guideline9"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/favoriteAppBarLayout">
+            app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
 
             <com.google.android.gms.maps.MapView
                 android:id="@+id/user_location_map_view"
@@ -59,98 +42,64 @@
         </androidx.cardview.widget.CardView>
 
         <TextView
-            android:id="@+id/name_detail_bottom_sheet"
+            android:id="@+id/merchant_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_8"
             android:text="@{merchant.name}"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            android:textSize="24sp"
+            android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/guideline9"
             tools:text="Jollibee Tabaco" />
 
-        <LinearLayout
-            android:id="@+id/linearLayout4"
+        <TextView
+            android:id="@+id/location_detail_bottom_sheet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginTop="@dimen/dp_8"
+            android:layout_marginStart="@dimen/dp_16"
+            tools:text="Tomas Cabiles St"
+            android:drawablePadding="@dimen/dp_8"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/name_detail_bottom_sheet">
+            app:layout_constraintTop_toBottomOf="@+id/merchant_name"
+            app:drawableStartCompat="@drawable/ic_location_outline" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_outline_place" />
-
-            <TextView
-                android:id="@+id/location_detail_bottom_sheet"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="8dp"
-                android:textSize="16sp"
-                tools:text="Tomas Cabiles St" />
-        </LinearLayout>
-
-        <LinearLayout
+        <TextView
             android:id="@+id/linearLayout6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="@dimen/dp_16"
+            android:text="@{merchant.rates != null ? Double.valueOf(merchant.ratings).toString() + `(` + merchant.rates + ` ratings)` : `0.0`}"
+            tools:text="4.6 (44 ratings)"
+            android:drawablePadding="@dimen/dp_8"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
+            app:layout_constraintTop_toBottomOf="@+id/location_detail_bottom_sheet"
+            app:drawableStartCompat="@drawable/ic_star_outline_red" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_outline_star" />
-
-            <TextView
-                android:id="@+id/rating_detail_bottom_sheet"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="8dp"
-                android:text="@{merchant.rates != null ? Double.valueOf(merchant.ratings).toString() + `(` + merchant.rates + ` ratings)` : `0.0`}"
-                android:textSize="16sp"
-                tools:text="4.6 (44 ratings)" />
-        </LinearLayout>
-
-        <LinearLayout
+        <TextView
             android:id="@+id/linearLayout5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:text="@{merchant.opening + `am - ` + merchant.closing + `pm`}"
+            tools:text="7:00am - 9:00pm"
+            android:drawablePadding="@dimen/dp_8"
+            android:gravity="center"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout6">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_clock" />
-
-            <TextView
-                android:id="@+id/opening_detail_bottom_sheet"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="8dp"
-                android:text="@{merchant.opening + `am - ` + merchant.closing + `pm`}"
-                android:textSize="16sp"
-                tools:text="7:00am - 9:00pm" />
-        </LinearLayout>
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout6"
+            app:drawableStartCompat="@drawable/ic_clock" />
 
         <TextView
             android:id="@+id/textView34"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_16"
             android:text="@string/reviews"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            android:textSize="24sp"
+            android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout5" />
 
@@ -158,9 +107,8 @@
             android:id="@+id/reviewRv"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginHorizontal="@dimen/margin_big"
+            android:layout_marginTop="@dimen/dp_8"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"

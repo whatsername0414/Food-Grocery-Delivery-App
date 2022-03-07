@@ -1,31 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".view.ui.orders.CancelBottomSheetFragment">
 
-    <View
+    <include
         android:id="@+id/view"
-        android:layout_width="48dp"
-        android:layout_height="6dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/light_gray"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        layout="@layout/bottom_sheet_top_indicator_layout" />
 
     <TextView
         android:id="@+id/textView33"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginStart="32dp"
         android:text="@string/cancellation_reason"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-        android:textSize="24sp"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view" />
 
@@ -33,9 +26,8 @@
         android:id="@+id/radioGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
+        android:layout_marginHorizontal="@dimen/margin_mid"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="32dp"
         android:checkedButton="@id/rb1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -46,51 +38,49 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/i_change_my_mind"
-            android:textSize="16sp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:theme="@style/RadioButtonStyle" />
 
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/duplicate_order"
-            android:textSize="16sp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:theme="@style/RadioButtonStyle" />
 
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/change_combine_order"
-            android:textSize="16sp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:theme="@style/RadioButtonStyle" />
 
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/change_payment_method"
-            android:textSize="16sp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:theme="@style/RadioButtonStyle" />
 
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/i_want_to_change_my_information"
-            android:textSize="16sp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:theme="@style/RadioButtonStyle" />
     </RadioGroup>
 
-    <com.google.android.material.button.MaterialButton
+    <android.widget.Button
         android:id="@+id/btn_confirm"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="24dp"
-        android:background="@drawable/btn_background"
-        app:backgroundTint="@color/maroon"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/dp_32"
+        android:layout_marginTop="@dimen/dp_16"
+        android:layout_marginBottom="@dimen/dp_16"
+        android:background="@drawable/bg_red_a30_rounded_16dp"
         android:text="@string/confirm"
-        android:textColor="@color/white"
         android:textAllCaps="false"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -101,9 +91,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:indeterminate="true"
-        android:indeterminateTint="@color/maroon"
+        android:indeterminateTint="@color/red_a30"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:visibility="gone"/>
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

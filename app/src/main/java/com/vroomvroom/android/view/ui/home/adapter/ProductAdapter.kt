@@ -3,11 +3,9 @@ package com.vroomvroom.android.view.ui.home.adapter
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
-import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
+import com.bumptech.glide.Glide
 import com.vroomvroom.android.MerchantQuery
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.ItemProductBinding
@@ -35,6 +33,12 @@ class ProductAdapter(
         val product = product[position]
         holder.binding.product = product
 
+        Glide
+            .with(holder.itemView.context)
+            .load(product?.product_img_url)
+            .placeholder(R.drawable.ic_placeholder)
+            .into(holder.binding.orderProductImage)
+
         holder.binding.productPrice.text = "₱${"%.2f".format(product?.price)}"
 
         holder.binding.root.setOnClickListener {
@@ -45,9 +49,4 @@ class ProductAdapter(
     override fun getItemCount(): Int {
         return product.size
     }
-}
-
-@BindingAdapter("productImageUrl")
-fun setProductImageUrl(imageView: ImageView, url: String?) {
-    imageView.load(url)
 }

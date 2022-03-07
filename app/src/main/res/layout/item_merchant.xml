@@ -6,7 +6,7 @@
     <data>
         <variable
             name="merchant"
-            type="com.vroomvroom.android.domain.model.merchant.MerchantData" />
+            type="com.vroomvroom.android.domain.model.merchant.Merchant" />
     </data>
 
     <LinearLayout
@@ -23,11 +23,10 @@
                 android:id="@+id/cardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                app:cardCornerRadius="25dp"
-                app:cardElevation="8dp"
+                android:layout_marginHorizontal="@dimen/margin_small"
+                android:layout_marginTop="@dimen/dp_8"
+                app:cardCornerRadius="@dimen/dp_24"
+                app:cardElevation="@dimen/dp_8"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -37,12 +36,12 @@
                     android:layout_height="match_parent">
 
                     <ImageView
-                        android:id="@+id/img_restaurant"
-                        merchantImageUrl="@{merchant.img_url}"
+                        android:id="@+id/merchant_img"
                         android:layout_width="match_parent"
-                        android:layout_height="184dp"
+                        android:layout_height="0dp"
                         android:scaleType="centerCrop"
                         tools:src="@drawable/mcdo"
+                        app:layout_constraintDimensionRatio="2.2:1"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -51,8 +50,9 @@
                     <ImageView
                         android:id="@+id/closed_bg"
                         android:layout_width="match_parent"
-                        android:layout_height="184dp"
+                        android:layout_height="0dp"
                         android:alpha="0.5"
+                        app:layout_constraintDimensionRatio="2.2:1"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -64,17 +64,17 @@
                         android:id="@+id/favoriteLayout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="16dp"
-                        android:background="@drawable/img_bg"
+                        android:layout_marginTop="@dimen/dp_8"
+                        android:layout_marginEnd="@dimen/dp_8"
+                        android:background="@drawable/bg_white_fff_rounded_56dp"
                         android:gravity="center"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
                         <CheckBox
                             android:id="@+id/checkbox_favorite"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_margin="4dp"
+                            android:layout_width="@dimen/dp_16"
+                            android:layout_height="@dimen/dp_16"
+                            android:layout_margin="@dimen/dp_6"
                             android:background="@drawable/favorite_icon"
                             android:button="@null"
                             android:checked="@{merchant.favorite}" />
@@ -85,10 +85,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="@{`Opens at ` + merchant.opening + ` am`}"
                         android:textColor="@color/white"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                         android:textSize="16sp"
-                        android:textStyle="bold"
+                        android:textAllCaps="false"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -101,8 +101,9 @@
                         android:layout_gravity="center"
                         android:layout_marginBottom="22dp"
                         android:text="@string/preorder"
-                        android:textSize="12sp"
-                        android:background="@drawable/left_curve_bg"
+                        android:textAllCaps="true"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                        android:background="@drawable/bg_red_a30_rounded_10dp_right"
                         android:drawableEnd="@drawable/ic_arrow_right"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent" />
@@ -115,41 +116,36 @@
                 android:id="@+id/textView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="@dimen/dp_8"
                 android:text="@{merchant.name}"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                android:textSize="20sp"
+                android:textSize="16sp"
+                tools:text="Jollibee Tabaco"
                 app:layout_constraintStart_toStartOf="@+id/cardView"
                 app:layout_constraintTop_toBottomOf="@+id/cardView" />
-
-            <ImageView
-                android:id="@+id/imageView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="@+id/cardView"
-                app:layout_constraintTop_toBottomOf="@+id/textView2"
-                app:srcCompat="@drawable/ic_star" />
 
             <TextView
                 android:id="@+id/rating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:drawablePadding="@dimen/dp_8"
                 android:text="@{String.valueOf(merchant.ratings)}"
+                tools:text="4.5"
+                android:gravity="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView3"
-                app:layout_constraintStart_toEndOf="@+id/imageView3"
-                app:layout_constraintTop_toTopOf="@+id/imageView3" />
+                app:layout_constraintStart_toStartOf="@+id/cardView"
+                app:layout_constraintTop_toBottomOf="@+id/textView2"
+                app:drawableStartCompat="@drawable/ic_star" />
 
             <TextView
                 android:id="@+id/restaurant_categories"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:scrollbars="horizontal"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView3"
+                android:layout_marginStart="@dimen/dp_8"
+                tools:text="Restaurant . "
+                app:layout_constraintBottom_toBottomOf="@+id/rating"
                 app:layout_constraintStart_toEndOf="@+id/rating"
-                app:layout_constraintTop_toTopOf="@+id/imageView3" />
+                app:layout_constraintTop_toTopOf="@+id/rating" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 </layout>

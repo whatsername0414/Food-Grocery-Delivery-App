@@ -6,26 +6,19 @@
     android:layout_height="wrap_content"
     tools:context=".view.ui.auth.AuthBottomSheetFragment">
 
-    <View
+    <include
         android:id="@+id/view"
-        android:layout_width="48dp"
-        android:layout_height="6dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/light_gray"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        layout="@layout/bottom_sheet_top_indicator_layout" />
 
     <TextView
         android:id="@+id/textView7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="24dp"
         android:text="@string/login_or_sign_up"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-        android:textSize="24sp"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view" />
 
@@ -33,15 +26,14 @@
         android:id="@+id/btn_google"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/btn_background"
+        android:layout_marginHorizontal="@dimen/margin_large"
+        android:layout_marginTop="@dimen/dp_24"
+        android:background="@drawable/bg_red_a30_rounded_16dp"
         android:backgroundTint="@color/white"
         android:elevation="4dp"
         android:text="@string/continue_with_google"
         android:textAllCaps="false"
-        android:textColor="@color/gray"
+        android:textColor="@color/gray_a5a"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView7" />
@@ -50,8 +42,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:src="@drawable/ic_google"
         android:elevation="8dp"
+        android:src="@drawable/ic_google"
         app:layout_constraintBottom_toBottomOf="@+id/btn_google"
         app:layout_constraintStart_toStartOf="@+id/btn_google"
         app:layout_constraintTop_toTopOf="@+id/btn_google" />
@@ -60,17 +52,15 @@
         android:id="@+id/btn_facebook"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/btn_background"
-        android:backgroundTint="#4267B2"
+        android:layout_marginHorizontal="@dimen/dp_32"
+        android:layout_marginTop="@dimen/dp_16"
+        android:background="@drawable/bg_red_a30_rounded_16dp"
+        android:backgroundTint="@color/blue_426"
         android:elevation="4dp"
         android:text="@string/continue_with_facebook"
         android:textAllCaps="false"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_google" />
 
@@ -86,46 +76,43 @@
         app:layout_constraintTop_toTopOf="@+id/btn_facebook" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_email"
+        android:id="@+id/btn_email_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/btn_background_white"
+        android:layout_marginHorizontal="@dimen/dp_32"
+        android:layout_marginTop="@dimen/dp_16"
+        android:background="@drawable/bg_white_fff_rounded_16dp_stroke_filled"
         android:text="@string/continue_with_email"
         android:textAllCaps="false"
-        android:textColor="@color/maroon"
-        app:cornerRadius="16dp"
+        android:textColor="@color/red_a30"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_facebook" />
 
     <TextView
         android:id="@+id/textView8"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
+        android:layout_marginHorizontal="@dimen/dp_16"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="32dp"
         android:layout_marginBottom="24dp"
+        android:textColorLink="@color/red_a30"
         android:textSize="11sp"
         android:textStyle="bold"
-        android:textColorLink="@color/maroon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_email" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_email_address" />
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/progress_indicator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:indeterminate="true"
-        android:indeterminateTint="@color/maroon"
+        android:indeterminateTint="@color/red_a30"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:visibility="gone"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

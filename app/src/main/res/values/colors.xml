@@ -1,14 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="purple_200">#FFBB86FC</color>
-    <color name="gray">#808080</color>
-    <color name="light_gray">#D3D3D3</color>
-    <color name="maroon">#a30000</color>
-    <color name="yellow">#FAD900</color>
-    <color name="match">#008000</color>
+    <color name="gray_7f7">#7F7F7F</color>
+    <color name="gray_a5a">#A5A5A5</color>
+    <color name="gray_ccc">#CCCCCC</color>
+    <color name="gray_f2f">#F2F2F2</color>
+    <color name="red_a30">#A30000</color>
+    <color name="red_bc0">#BC0000</color>
+    <color name="red_d50">#D50000</color>
+    <color name="red_ee0">#EE0000</color>
+    <color name="red_ff0">#FF0707</color>
+    <color name="red_ff2">#FF2020</color>
+    <color name="red_ff3">#FF3939</color>
+    <color name="red_ff5">#FF5252</color>
+    <color name="red_ff6">#FF6A6A</color>
+    <color name="red_ff8">#FF8383</color>
+    <color name="red_ff9">#FF9C9C</color>
+    <color name="red_ffb">#FFB5B5</color>
+    <color name="red_ffc">#FFCDCD</color>
+    <color name="red_ffe">#FFE6E6</color>
+    <color name="yellow_e5a">#E5A824</color>
+    <color name="yellow_ffe">#FFEb33</color>
+    <color name="yellow_fdd">#FDD367</color>
+    <color name="yellow_fed">#FEDD8E</color>
+    <color name="yellow_fee">#FEE9B4</color>
+    <color name="green_008">#008000</color>
+    <color name="blue_426">#4267B2</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#0DA2FF</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="light_maroon">#FFCCCC</color>
 </resources>

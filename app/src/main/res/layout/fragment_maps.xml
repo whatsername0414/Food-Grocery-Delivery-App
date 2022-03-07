@@ -10,7 +10,7 @@
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/app_bar_bg"
+        android:background="@drawable/bg_white_fff_rounded_10dp_bottom"
         android:elevation="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -66,7 +66,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="8dp"
-                android:indeterminateTint="@color/maroon"
+                android:indeterminateTint="@color/red_a30"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/relativeLayout"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -99,7 +99,7 @@
     <View
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:background="@drawable/light_gray"
+        android:background="@drawable/bg_gray_f2f_rounded_100dp"
         android:rotationX="50"
         android:alpha="0.65"
         app:layout_constraintBottom_toBottomOf="@+id/mapFragment"
@@ -121,19 +121,19 @@
         app:layout_constraintStart_toStartOf="@+id/mapFragment"
         app:layout_constraintTop_toTopOf="@+id/mapFragment" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_confirm_location"
+    <android.widget.Button
+        android:id="@+id/btn_continue"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="24dp"
-        android:text="Confirm Location"
-        android:textSize="16sp"
-        app:cornerRadius="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_large"
+        android:layout_marginBottom="@dimen/dp_16"
+        android:background="@drawable/bg_red_a30_rounded_16dp"
+        android:text="@string/continue_word"
+        android:textColor="@color/white"
+        android:textAllCaps="false"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

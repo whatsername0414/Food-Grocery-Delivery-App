@@ -6,9 +6,9 @@
         android:title="@string/home"
         android:icon="@drawable/ic_home" />
     <item
-        android:id="@+id/searchFragment"
-        android:title="@string/search"
-        android:icon="@drawable/ic_search" />
+        android:id="@+id/browseFragment"
+        android:title="@string/browse"
+        android:icon="@drawable/ic_browse" />
     <item
         android:id="@+id/ordersFragment"
         android:title="@string/orders"
@@ -16,5 +16,5 @@
     <item
         android:id="@+id/accountFragment"
         android:title="@string/account"
-        android:icon="@drawable/ic_person" />
+        android:icon="@drawable/ic_account" />
 </menu>

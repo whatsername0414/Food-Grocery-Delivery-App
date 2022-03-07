@@ -2,7 +2,7 @@ package com.vroomvroom.android.domain.model.order
 
 import com.apollographql.apollo.api.toInput
 import com.vroomvroom.android.domain.db.user.UserLocationEntity
-import com.vroomvroom.android.domain.mapper.DomainMapper
+import com.vroomvroom.android.domain.DomainMapper
 import com.vroomvroom.android.type.LocationInput
 
 class LocationInputMapper: DomainMapper<UserLocationEntity, LocationInput> {

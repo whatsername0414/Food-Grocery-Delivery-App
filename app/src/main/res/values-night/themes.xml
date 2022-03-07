@@ -2,8 +2,8 @@
     <!-- Base application theme. -->
     <style name="Theme.VroomVroom" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/maroon</item>
-        <item name="colorPrimaryVariant">@color/gray</item>
+        <item name="colorPrimary">@color/red_a30</item>
+        <item name="colorPrimaryVariant">@color/gray_a5a</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -14,6 +14,6 @@
         <!-- Customize your theme here. -->
     </style>
     <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
-        <item name="colorControlNormal">@color/maroon</item>
+        <item name="colorControlNormal">@color/red_a30</item>
     </style>
 </resources>

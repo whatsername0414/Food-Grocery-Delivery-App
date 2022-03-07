@@ -2,70 +2,61 @@ package com.vroomvroom.android.view.ui.home
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.bumptech.glide.Glide
 import com.vroomvroom.android.MerchantQuery
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentProductBottomSheetBinding
-import com.vroomvroom.android.domain.db.cart.CartItemEntity
 import com.vroomvroom.android.domain.db.cart.CartItemChoiceEntity
-import com.vroomvroom.android.domain.db.cart.MerchantEntity
+import com.vroomvroom.android.domain.db.cart.CartItemEntity
+import com.vroomvroom.android.domain.db.cart.CartMerchantEntity
 import com.vroomvroom.android.domain.model.product.Option
 import com.vroomvroom.android.domain.model.product.Product
-import com.vroomvroom.android.view.ui.home.adapter.ChoiceAdapter
+import com.vroomvroom.android.utils.ClickType
 import com.vroomvroom.android.utils.Utils.clearFocus
-import com.vroomvroom.android.view.ui.activityviewmodel.ActivityViewModel
-import com.vroomvroom.android.view.ui.home.viewmodel.HomeViewModel
+import com.vroomvroom.android.view.ui.base.BaseBottomSheetFragment
+import com.vroomvroom.android.view.ui.home.adapter.ChoiceAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class ProductBottomSheetFragment : BottomSheetDialogFragment() {
+class ProductBottomSheetFragment : BaseBottomSheetFragment<FragmentProductBottomSheetBinding>(
+    FragmentProductBottomSheetBinding::inflate
+) {
 
-    private lateinit var binding: FragmentProductBottomSheetBinding
     private lateinit var optionLinearLayout: LinearLayout
-
     private val navArgs: ProductBottomSheetFragmentArgs by navArgs()
-    private val viewModel by viewModels<HomeViewModel>()
-    private val activityViewModel by activityViewModels<ActivityViewModel>()
     private var quantity = 1
     private var required: Int? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentProductBottomSheetBinding.inflate(inflater)
+    @SuppressLint("SetTextI18n")
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         optionLinearLayout = binding.optionLinearLayout
         clearFocus(
             binding.root,
             binding.instructionInputEditText,
             requireActivity()
         )
-        return binding.root
-    }
-
-    @SuppressLint("SetTextI18n")
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
 
         val product = navArgs.product
+        Glide
+            .with(this)
+            .load(product.product_img_url)
+            .placeholder(R.drawable.ic_placeholder)
+            .into(binding.bottomSheetProductImg)
 
-        val currentMerchant = activityViewModel.merchant
+        val currentMerchant = mainActivityViewModel.merchant
         binding.productPrice.text = "₱${"%.2f".format(product.price)}"
         binding.product = product
         product.option?.forEach { option ->
@@ -73,23 +64,33 @@ class ProductBottomSheetFragment : BottomSheetDialogFragment() {
         }
         required = product.option?.filter { it.required }?.size
         checkRequired()
-        if (product.description.isNullOrBlank()) {
-            binding.bottomSheetTextDescription.visibility = View.GONE
-        } else binding.bottomSheetTextDescription.visibility = View.VISIBLE
-        if (product.product_img_url.isNullOrBlank()) {
-            binding.bottomSheetCardView.visibility = View.GONE
-        } else binding.bottomSheetCardView.visibility = View.VISIBLE
+        binding.bottomSheetTextDescription.isVisible = !product.description.isNullOrBlank()
 
-        viewModel.cartItem.observe(viewLifecycleOwner, { items ->
+        homeViewModel.cartItem.observe(viewLifecycleOwner) { items ->
             binding.btnAddToCart.setOnClickListener {
-                if (items.isNotEmpty() && items.first().cartItemEntity.merchant.merchant_name != currentMerchant.name) {
-                    showDialog()
+                if (items.isNotEmpty() && items.first().cartItemEntity.cartMerchant.merchantName != currentMerchant.name) {
+                    dialog.show(
+                        getString(R.string.prompt),
+                        getString(R.string.clear_cart_message),
+                        getString(R.string.cancel),
+                        getString(R.string.remove)
+                    ) { type ->
+                        when (type) {
+                            ClickType.POSITIVE -> {
+                                homeViewModel.deleteAllCartItem()
+                                homeViewModel.insertCartItem(cartItemBuilder(product, currentMerchant))
+                                dialog.dismiss()
+                                findNavController().popBackStack()
+                            }
+                            ClickType.NEGATIVE -> dialog.dismiss()
+                        }
+                    }
                 } else {
-                    viewModel.insertCartItem(cartItemBuilder(product, currentMerchant))
+                    homeViewModel.insertCartItem(cartItemBuilder(product, currentMerchant))
                     findNavController().popBackStack()
                 }
             }
-        })
+        }
 
         binding.decreaseQuantity.setOnClickListener {
             if (quantity != 1) {
@@ -102,19 +103,7 @@ class ProductBottomSheetFragment : BottomSheetDialogFragment() {
             quantity += 1
             binding.quantity.text = quantity.toString()
         }
-    }
 
-    private fun showDialog() {
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(getString(R.string.clear_cart))
-            .setMessage(getString(R.string.clear_cart_message))
-            .setNeutralButton(getString(R.string.maps_alert_dialog_cancel)) { _, _ ->
-                findNavController().popBackStack()
-            }
-            .setPositiveButton(getString(R.string.proceed)) { _, _ ->
-                viewModel.deleteAllCartItem()
-            }
-            .show()
     }
 
     private fun cartItemBuilder(
@@ -122,23 +111,23 @@ class ProductBottomSheetFragment : BottomSheetDialogFragment() {
         currentMerchant: MerchantQuery.GetMerchant
     ): CartItemEntity {
         var choicePrice = 0.0
-        viewModel.optionMap.forEach { (_, value) ->
-            value.additional_price?.let {
+        homeViewModel.optionMap.forEach { (_, value) ->
+            value.additionalPrice?.let {
                 choicePrice += it
             }
         }
-        val merchant = MerchantEntity(
-            merchant_id = currentMerchant._id,
-            merchant_name = currentMerchant.name
+        val merchant = CartMerchantEntity(
+            merchantId = currentMerchant._id,
+            merchantName = currentMerchant.name
         )
         return CartItemEntity(
-            merchant = merchant,
-            product_id = product.id,
+            cartMerchant = merchant,
+            productId = product.id,
             name = product.name,
-            product_img_url = product.product_img_url,
+            productImgUrl = product.product_img_url,
             price = (product.price + choicePrice) * quantity,
             quantity = quantity,
-            special_instructions =
+            specialInstructions =
             if (binding.instructionInputEditText.text.isNullOrBlank()) null
             else binding.instructionInputEditText.text.toString()
         )
@@ -156,7 +145,7 @@ class ProductBottomSheetFragment : BottomSheetDialogFragment() {
         }
         requiredTv.apply {
             text = "*required"
-            setTextColor(ContextCompat.getColor(requireContext(), R.color.maroon))
+            setTextColor(ContextCompat.getColor(requireContext(), R.color.red_a30))
             visibility = if (option.required) View.VISIBLE else View.GONE
         }
         choiceRv.apply {
@@ -173,10 +162,10 @@ class ProductBottomSheetFragment : BottomSheetDialogFragment() {
             optionType = option.name
             onChoiceClicked = { choice ->
                 val optionType = optionType.toString()
-                viewModel.optionMap[optionType] =
+                homeViewModel.optionMap[optionType] =
                     CartItemChoiceEntity(
                         name = choice.name,
-                        additional_price = choice.additional_price,
+                        additionalPrice = choice.additional_price,
                         optionType = optionType
                     )
                 checkRequired()
@@ -186,15 +175,15 @@ class ProductBottomSheetFragment : BottomSheetDialogFragment() {
 
     private fun checkRequired() {
         required?.let {
-            if (viewModel.optionMap.size < it) {
+            if (homeViewModel.optionMap.size < it) {
                 binding.btnAddToCart.apply {
                     isEnabled = false
-                    setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.gray))
+                    setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.gray_a5a))
                 }
             } else {
                 binding.btnAddToCart.apply {
                     isEnabled = true
-                    setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.maroon))
+                    setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.red_a30))
                 }
             }
         }

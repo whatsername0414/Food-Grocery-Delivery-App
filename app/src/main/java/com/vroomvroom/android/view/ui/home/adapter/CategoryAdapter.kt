@@ -1,17 +1,14 @@
 package com.vroomvroom.android.view.ui.home.adapter
 
 import android.annotation.SuppressLint
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.core.content.ContextCompat
-import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
+import com.bumptech.glide.Glide
 import com.vroomvroom.android.CategoryQuery
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.ItemCategoryBinding
@@ -52,32 +49,39 @@ class CategoryAdapter: ListAdapter<CategoryQuery.GetCategory, CategoryViewHolder
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         val category = getItem(position)
         holder.binding.category = category
+        Glide
+            .with(holder.itemView.context)
+            .load(category.img_url)
+            .placeholder(R.drawable.ic_placeholder)
+            .into(holder.binding.categoryImg)
+
         holder.binding.root.setOnClickListener {
             if (categoryName != category.name) {
                 onCategoryClicked?.invoke(category)
-                holder.binding.categoryCardView.setCardBackgroundColor(Color.parseColor("#a30000"))
-                holder.binding.nameTv.setTextColor(Color.parseColor("#ffffff"))
-                holder.binding.imageBg.background = ContextCompat.getDrawable(holder.binding.root.context, R.drawable.white)
+                holder.binding.apply {
+                    categoryCardView.setCardBackgroundColor(
+                        ContextCompat.getColor(it.context, R.color.red_a30))
+                    nameTv.setTextColor(ContextCompat.getColor(it.context, R.color.white))
+                    imageBg.background = ContextCompat.getDrawable(
+                            it.context, R.drawable.bg_white_fff_rounded_100dp)
+                }
                 categoryName = category.name
             } else {
-                holder.binding.categoryCardView.setCardBackgroundColor(Color.parseColor("#ffffff"))
-                holder.binding.nameTv.setTextColor(Color.parseColor("#000000"))
                 onCategoryClicked?.invoke(null)
                 categoryName = null
             }
             notifyDataSetChanged()
         }
         if (categoryName != category.name) {
-            holder.binding.categoryCardView.setCardBackgroundColor(Color.parseColor("#ffffff"))
-            holder.binding.nameTv.setTextColor(Color.parseColor("#000000"))
-            holder.binding.imageBg.background = ContextCompat.getDrawable(holder.binding.root.context, R.drawable.light_gray)
+            holder.binding.apply {
+                categoryCardView.setCardBackgroundColor(
+                    ContextCompat.getColor(this.root.context, R.color.gray_f2f))
+                nameTv.setTextColor(ContextCompat.getColor(this.root.context, R.color.black))
+                imageBg.background =
+                    ContextCompat.getDrawable(this.root.context, R.drawable.bg_gray_f2f_rounded_100dp)
+            }
         }
     }
 }
 
 class CategoryViewHolder(val binding: ItemCategoryBinding): RecyclerView.ViewHolder(binding.root)
-
-@BindingAdapter("categoryImageUrl")
-fun setImageUrl(imageView: ImageView, url: String?) {
-    imageView.load(url)
-}
