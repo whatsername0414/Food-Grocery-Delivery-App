@@ -34,6 +34,9 @@ object Constants {
 
     //Cancellation Result Key
     const val CANCEL_SUCCESSFUL: String = "CANCEL_SUCCESSFUL"
+
+    //Scroll Threshold
+    const val SCROLL_THRESHOLD = 500
 }
 
 enum class ClickType {

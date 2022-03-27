@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
+import android.view.WindowManager
 import android.view.animation.Animation
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
@@ -21,6 +22,7 @@ import com.vroomvroom.android.databinding.FragmentMerchantBinding
 import com.vroomvroom.android.domain.model.product.ProductMapper
 import com.vroomvroom.android.utils.OnProductClickListener
 import com.vroomvroom.android.utils.Utils.onReady
+import com.vroomvroom.android.utils.Utils.stringBuilder
 import com.vroomvroom.android.utils.Utils.timeFormatter
 import com.vroomvroom.android.view.state.ViewState
 import com.vroomvroom.android.view.ui.base.BaseFragment
@@ -42,13 +44,14 @@ class MerchantFragment : BaseFragment<FragmentMerchantBinding>(
     private val cartAdapter by lazy { CartAdapter() }
     private val args: MerchantFragmentArgs by navArgs()
     private var isUserScrolling: Boolean = false
-//    .. / .-.. --- ...- . / -.-- --- ..- / .-. --- ... .
-//    .- -. / -- .- -.-- / -... .-. --- -. ... .- .-..
+    /** .. / .-.. --- ...- . / -.-- --- ..- / .-. --- ... .
+    .- -. / -- .- -.-- / -... .-. --- -. ... .- .-.. **/
     @SuppressLint("ClickableViewAccessibility", "SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
         linearLayoutManager = binding.productSectionRv.layoutManager as LinearLayoutManager
-        binding.ctlMerchant.setExpandedTitleColor(ContextCompat.getColor(requireContext(), R.color.white))
+
 
         //Tesla soon
         binding.productSectionRv.adapter = productsSectionAdapter
@@ -147,18 +150,19 @@ class MerchantFragment : BaseFragment<FragmentMerchantBinding>(
     }
 
     @SuppressLint("SetTextI18n")
-    private fun dataBinder(merchant: MerchantQuery.GetMerchant?) {
-        binding.ctlMerchant.title = merchant?.name
-        binding.ratingBar.rating = merchant?.ratings?.toFloat() ?: 0f
-        binding.closingTv.text =
-            getString(R.string.opening_until, timeFormatter(merchant?.closing ?: 0))
+    private fun dataBinder(merchant: MerchantQuery.GetMerchant) {
+        binding.ctlMerchant.title = merchant.name
+        binding.categoriesTv.text = merchant.categories.stringBuilder()
+        binding.ratingBar.rating = merchant.ratings?.toFloat() ?: 0f
+        binding.timeTv.text = getString(
+            R.string.time, timeFormatter(merchant.opening), timeFormatter(merchant.closing))
         binding.merchantRating.text =
-            if (merchant?.rates != null)
-                "${merchant.ratings} (${merchant.rates} ${if (merchant.rates == 1) "rating" 
-                else "ratings"})" else "0.0"
+            if (merchant.rates != null)
+                "${merchant.ratings} (${merchant.rates} ${if (merchant.rates == 1) "Review" 
+                else "Reviews"})" else "0.0"
         Glide
             .with(this)
-            .load(merchant?.img_url)
+            .load(merchant.img_url)
             .placeholder(R.drawable.ic_placeholder)
             .into(binding.merchantImg)
     }

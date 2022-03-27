@@ -6,7 +6,7 @@ import androidx.navigation.fragment.findNavController
 import com.vroomvroom.android.databinding.FragmentBrowseBinding
 import com.vroomvroom.android.view.state.ViewState
 import com.vroomvroom.android.view.ui.base.BaseFragment
-import com.vroomvroom.android.view.ui.browse.adapter.BrowseCategoryAdapter
+import com.vroomvroom.android.view.ui.home.adapter.CategoryAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -16,11 +16,12 @@ class BrowseFragment : BaseFragment<FragmentBrowseBinding>(
     FragmentBrowseBinding::inflate
 ) {
 
-    private val adapter by lazy { BrowseCategoryAdapter() }
+    private val categoryAdapter by lazy { CategoryAdapter() }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.categoryRv.adapter = adapter
+        categoryAdapter.itemViewType = 1
+        binding.categoryRv.adapter = categoryAdapter
 
         if (mainViewModel.categories.value == null) {
             mainViewModel.queryCategory("search")
@@ -33,7 +34,7 @@ class BrowseFragment : BaseFragment<FragmentBrowseBinding>(
             )
         }
 
-        adapter.onCategoryClicked = { searchTerm ->
+        categoryAdapter.onCategoryClicked = { searchTerm ->
             findNavController().navigate(
                 BrowseFragmentDirections.actionBrowseFragmentToMerchantSearchFragment(searchTerm)
             )
@@ -57,7 +58,7 @@ class BrowseFragment : BaseFragment<FragmentBrowseBinding>(
                 }
                 is ViewState.Success -> {
                     val category = response.result.getCategories
-                    adapter.submitList(category)
+                    categoryAdapter.submitList(category)
                     binding.apply {
                         title.visibility = View.VISIBLE
                         categoryRv.visibility = View.VISIBLE

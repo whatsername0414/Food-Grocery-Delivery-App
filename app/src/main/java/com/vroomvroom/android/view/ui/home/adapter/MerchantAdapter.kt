@@ -18,6 +18,7 @@ import com.vroomvroom.android.domain.model.merchant.Merchant
 import com.vroomvroom.android.utils.Constants.ADD_TO_FAVORITES
 import com.vroomvroom.android.utils.Constants.REMOVE_FROM_FAVORITES
 import com.vroomvroom.android.utils.Utils.setSafeOnClickListener
+import com.vroomvroom.android.utils.Utils.stringBuilder
 import com.vroomvroom.android.utils.Utils.timeFormatter
 
 class MerchantDiffUtil(
@@ -68,8 +69,6 @@ class MerchantAdapter: RecyclerView.Adapter<MerchantViewHolder>() {
     override fun onBindViewHolder(holder: MerchantViewHolder, position: Int) {
         val merchant = oldList[position]
         merchant?.let { data ->
-
-
             holder.binding.tvOpening.text = timeFormatter(data.opening)
             holder.binding.merchant = data
             Glide
@@ -89,11 +88,7 @@ class MerchantAdapter: RecyclerView.Adapter<MerchantViewHolder>() {
                 holder.binding.favoriteLayout.visibility = View.GONE
             }
 
-            val categoryList = StringBuilder()
-            data.categories.forEach { category ->
-                categoryList.append("$category . ")
-            }
-            holder.binding.restaurantCategories.text = categoryList
+            holder.binding.restaurantCategories.text = data.categories.stringBuilder()
             if (data.isOpen) {
                 holder.binding.closedBg.visibility = View.GONE
                 holder.binding.tvOpening.visibility = View.GONE

@@ -4,6 +4,7 @@
     <color name="gray_7f7">#7F7F7F</color>
     <color name="gray_a5a">#A5A5A5</color>
     <color name="gray_ccc">#CCCCCC</color>
+    <color name="gray_e5e">#E5E5E5</color>
     <color name="gray_f2f">#F2F2F2</color>
     <color name="red_a30">#A30000</color>
     <color name="red_bc0">#BC0000</color>
@@ -19,12 +20,15 @@
     <color name="red_ffb">#FFB5B5</color>
     <color name="red_ffc">#FFCDCD</color>
     <color name="red_ffe">#FFE6E6</color>
+    <color name="red_fae">#FAE0E4</color>
+    <color name="red_fff">#FFF0F3</color>
+    <color name="red_f8e">#F8EDEB</color>
     <color name="yellow_e5a">#E5A824</color>
     <color name="yellow_ffe">#FFEb33</color>
     <color name="yellow_fdd">#FDD367</color>
     <color name="yellow_fed">#FEDD8E</color>
     <color name="yellow_fee">#FEE9B4</color>
-    <color name="green_008">#008000</color>
+    <color name="green_04E">#04E762</color>
     <color name="blue_426">#4267B2</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#0DA2FF</color>

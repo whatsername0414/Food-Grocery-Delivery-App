@@ -5,5 +5,5 @@
     <item android:id="@android:id/secondaryProgress"
         android:drawable="@drawable/ratingbar_empty_small_selector" />
     <item android:id="@android:id/progress"
-        android:drawable="@drawable/ratingbar_filled_small_yellow_selector" />
+        android:drawable="@drawable/ratingbar_filled_small_selector" />
 </layer-list>

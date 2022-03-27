@@ -5,11 +5,13 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.gms.auth.api.phone.SmsRetriever
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.ActivityHomeBinding
 import com.vroomvroom.android.view.ui.auth.viewmodel.AuthViewModel
@@ -26,6 +28,9 @@ class HomeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var navController: NavController
+    private lateinit var bottomNavigationView: BottomNavigationView
+
+    private var isHomeSelected = true
 
     override fun onStart() {
         super.onStart()
@@ -39,22 +44,55 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val bottomNavigationView = binding.bottomNavigationView
+        bottomNavigationView = binding.bottomNavigationView
+        bottomNavigationView.itemIconTintList = null
         val navHostFragment = supportFragmentManager.findFragmentById(binding.navHostFragment.id) as NavHostFragment
         navController = navHostFragment.findNavController()
         bottomNavigationView.setupWithNavController(navController)
+        bottomNavigationView.setOnItemReselectedListener {
+            if (it.itemId == R.id.homeFragment) {
+                if (isHomeSelected && mainActivityViewModel.isHomeScrolled.value == true) {
+                    mainActivityViewModel.shouldBackToTop.postValue(true)
+                }
+            }
+        }
 
+        destinationListener()
+        observeIsHomeScrolled()
+
+    }
+
+    private fun destinationListener() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.id == R.id.homeFragment) {
+                isHomeSelected = true
+            }
             when (destination.id) {
                 R.id.homeFragment, R.id.browseFragment, R.id.ordersFragment, R.id.accountFragment -> {
                     mainActivityViewModel.isBottomBarVisible = true
                     bottomNavigationView.visibility = View.VISIBLE
                 }
                 else -> {
+                    isHomeSelected = false
                     mainActivityViewModel.isBottomBarVisible = false
                     bottomNavigationView.visibility = View.GONE
                 }
             }
+        }
+    }
+
+    private fun observeIsHomeScrolled() {
+        mainActivityViewModel.isHomeScrolled.observe(this) {
+            if (!isHomeSelected) {
+                return@observe
+            }
+
+            val homeItem = bottomNavigationView.menu.getItem(0)
+            homeItem.icon =
+                ContextCompat.getDrawable(
+                    this,
+                    if (it) R.drawable.home_scrolled_selector else R.drawable.home_selector
+            )
         }
     }
 

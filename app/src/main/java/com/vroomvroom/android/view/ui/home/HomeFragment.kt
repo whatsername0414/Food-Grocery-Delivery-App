@@ -1,8 +1,8 @@
 package com.vroomvroom.android.view.ui.home
 
+import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import androidx.lifecycle.lifecycleScope
@@ -13,6 +13,7 @@ import com.vroomvroom.android.domain.db.user.UserLocationEntity
 import com.vroomvroom.android.domain.model.merchant.Merchant
 import com.vroomvroom.android.utils.Constants.ALL
 import com.vroomvroom.android.utils.Constants.BY_CATEGORY
+import com.vroomvroom.android.utils.Constants.SCROLL_THRESHOLD
 import com.vroomvroom.android.utils.Utils.safeNavigate
 import com.vroomvroom.android.view.state.ViewState
 import com.vroomvroom.android.view.ui.home.adapter.CategoryAdapter
@@ -45,19 +46,19 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(
         observeMerchants()
         observeUserLocation()
         observeRoomCartItem()
+        viewTreeObserver()
+        shouldBackToTopObserver()
 
         binding.categoryRv.adapter = categoryAdapter
         binding.merchantRv. adapter = merchantAdapter
 
         binding.addressLayout.setOnClickListener {
-            Log.d("HomeFragment", "Clicked Address Group")
             findNavController().safeNavigate(
                 HomeFragmentDirections.actionHomeFragmentToLocationBottomSheetFragment()
             )
         }
 
         binding.favorite.setOnClickListener {
-            binding.fetchProgress.visibility = View.VISIBLE
             findNavController().safeNavigate(
                 HomeFragmentDirections.actionHomeFragmentToFavoriteFragment()
             )
@@ -71,9 +72,9 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(
 
         categoryAdapter.onCategoryClicked = { category ->
             categoryClicked = true
-            if (category?.name != null) {
-                mainViewModel.queryMerchants(BY_CATEGORY, category.name)
-                binding.shopsTitle.text = category.name
+            if (category != null) {
+                mainViewModel.queryMerchants(BY_CATEGORY, category)
+                binding.shopsTitle.text = category
 
             } else {
                 mainViewModel.queryMerchants(ALL, null)
@@ -223,6 +224,30 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(
                         }
                     }
                 }
+            }
+        }
+    }
+
+    private fun viewTreeObserver() {
+        binding.homeNestedScrollView.setOnScrollChangeListener { _, _, scrollY, _, _ ->
+            mainActivityViewModel.isHomeScrolled.postValue(
+                scrollY > SCROLL_THRESHOLD
+            )
+        }
+    }
+
+    private fun shouldBackToTopObserver() {
+        mainActivityViewModel.shouldBackToTop.observe(viewLifecycleOwner) { shouldBackToTop ->
+            if (shouldBackToTop) {
+                binding.homeNestedScrollView.apply {
+                    scrollBy(0, 1)
+                    ObjectAnimator.ofInt(
+                        this,
+                        "scrollY",
+                        binding.root.top
+                    ).setDuration(400).start()
+                }
+                mainActivityViewModel.shouldBackToTop.postValue(false)
             }
         }
     }

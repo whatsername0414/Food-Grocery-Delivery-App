@@ -32,6 +32,8 @@ class MainViewModel @Inject constructor(
 
     lateinit var merchant: MerchantQuery.GetMerchant
     val paymentMethod by lazy { MutableLiveData("Cash On Delivery") }
+    val isHomeScrolled by lazy { MutableLiveData(false) }
+    val shouldBackToTop by lazy { MutableLiveData(false) }
     val isRefreshed by lazy { MutableLiveData(false) }
     val reviewed by lazy { MutableLiveData(false) }
     val favoritesChanges = mutableMapOf<Int, Merchant>()

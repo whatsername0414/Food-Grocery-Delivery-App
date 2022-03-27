@@ -3,17 +3,17 @@
     <style name="Theme.VroomVroom" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/red_a30</item>
-        <item name="colorPrimaryVariant">@color/gray_a5a</item>
+        <item name="colorPrimaryVariant">@color/gray_7f7</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/red_a30</item>
         <item name="colorSecondaryVariant">@color/gray_a5a</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/gray_ccc</item>
         <!-- Customize your theme here. -->
         <item name="android:windowAnimationStyle">@null</item>
-        <item name="bottomSheetDialogTheme">@style/ThemeOverlay.App.BottomSheetDialog</item>
+        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
         <item name="autoCompleteTextViewStyle">@style/SearchAutoCompleteTextView</item>
     </style>
     <style name="SplashScreenTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
@@ -30,20 +30,23 @@
     </style>
     <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textSize">20sp</item>
+        <item name="maxLines">18</item>
+        <item name="singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+    <style name="Toolbar.TitleTextExpanded" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
-    <style name="ThemeOverlay.App.BottomSheetDialog" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
-        <item name="bottomSheetStyle">@style/ModalBottomSheetDialog</item>
+    <style name="AppBottomSheetDialogTheme" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppModalStyle</item>
     </style>
 
-    <style name="ModalBottomSheetDialog" parent="Widget.MaterialComponents.BottomSheet.Modal">
-        <item name="shapeAppearance">@style/ShapeAppearance.App.LargeComponent</item>
+    <style name="AppModalStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/bg_white_fff_rounded_24dp_top</item>
     </style>
 
-    <style name="ShapeAppearance.App.LargeComponent" parent="ShapeAppearance.MaterialComponents.LargeComponent">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">24dp</item>
-    </style>
     <style name="RadioButtonStyle" parent="Theme.MaterialComponents.Light">
         <item name="colorAccent">@color/red_a30</item>
         <item name="android:textColorSecondary">@color/gray_a5a</item>
@@ -54,6 +57,12 @@
         <item name="android:minHeight">@dimen/dp_48</item>
         <item name="android:maxHeight">@dimen/dp_48</item>
         <item name="android:isIndicator">false</item>
+    </style>
+    <style name="RatingBarSmallRed" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/custom_ratingbar_small_red</item>
+        <item name="android:isIndicator">true</item>
+        <item name="android:minHeight">@dimen/dp_16</item>
+        <item name="android:maxHeight">@dimen/dp_20</item>
     </style>
     <style name="RatingBarSmall" parent="@android:style/Widget.RatingBar">
         <item name="android:progressDrawable">@drawable/custom_ratingbar_small</item>

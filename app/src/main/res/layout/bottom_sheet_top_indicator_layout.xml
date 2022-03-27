@@ -9,7 +9,7 @@
         android:layout_width="@dimen/dp_48"
         android:layout_height="@dimen/dp_6"
         android:layout_marginTop="@dimen/dp_16"
-        android:background="@drawable/bg_gray_ccc_rounded_100dp"
+        android:background="@drawable/bg_gray_e5e_rounded_100dp"
         />
 
 </LinearLayout>

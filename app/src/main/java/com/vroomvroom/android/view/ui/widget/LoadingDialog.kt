@@ -10,7 +10,7 @@ import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.PlacedOrderDialogLayoutBinding
 
 @SuppressLint("InflateParams")
-class PlacedOrderDialog(val app: Activity) {
+class LoadingDialog(val app: Activity) {
 
     private var binding: PlacedOrderDialogLayoutBinding
     private var dialog: AlertDialog

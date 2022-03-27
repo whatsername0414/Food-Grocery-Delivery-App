@@ -16,6 +16,7 @@ query Merchant($merchantId: String!) {
     getMerchant(merchantId: $merchantId) {
         _id
         name
+        categories
         img_url
         product_sections {
             _id

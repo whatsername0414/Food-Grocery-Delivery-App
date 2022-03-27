@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/gray_f2f"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".view.ui.home.MerchantFragment">
 

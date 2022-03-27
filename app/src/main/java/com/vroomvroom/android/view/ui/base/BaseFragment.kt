@@ -28,7 +28,7 @@ import com.vroomvroom.android.view.ui.home.adapter.MerchantAdapter
 import com.vroomvroom.android.view.ui.home.viewmodel.HomeViewModel
 import com.vroomvroom.android.view.ui.location.viewmodel.LocationViewModel
 import com.vroomvroom.android.view.ui.orders.viewmodel.OrdersViewModel
-import com.vroomvroom.android.view.ui.widget.PlacedOrderDialog
+import com.vroomvroom.android.view.ui.widget.LoadingDialog
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.lang.IllegalArgumentException
 
@@ -47,7 +47,7 @@ abstract class BaseFragment<VB: ViewBinding> (
     val homeViewModel by viewModels<HomeViewModel>()
     val browseViewModel by viewModels<BrowseViewModel>()
 
-    val loadingDialog by lazy { PlacedOrderDialog(requireActivity()) }
+    val loadingDialog by lazy { LoadingDialog(requireActivity()) }
 
     private var _binding: VB? = null
     val binding: VB

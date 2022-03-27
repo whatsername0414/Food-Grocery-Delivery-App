@@ -4,17 +4,17 @@
     <item
         android:id="@+id/homeFragment"
         android:title="@string/home"
-        android:icon="@drawable/ic_home" />
+        android:icon="@drawable/home_scrolled_selector" />
     <item
         android:id="@+id/browseFragment"
         android:title="@string/browse"
-        android:icon="@drawable/ic_browse" />
+        android:icon="@drawable/browser_selector" />
     <item
         android:id="@+id/ordersFragment"
         android:title="@string/orders"
-        android:icon="@drawable/ic_receipt" />
+        android:icon="@drawable/receipt_selector" />
     <item
         android:id="@+id/accountFragment"
         android:title="@string/account"
-        android:icon="@drawable/ic_account" />
+        android:icon="@drawable/account_selector" />
 </menu>

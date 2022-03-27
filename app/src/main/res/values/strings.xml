@@ -79,7 +79,7 @@
     <string name="empty_order">No orders yet</string>
     <string name="empty_cart_message">Once you add items from a store,\nit will appear here.</string>
     <string name="empty_order_message">Once you place your orders, it will appear here.</string>
-    <string name="empty_result_message">We couldn\'t find any store for \"<![CDATA[<b>%s</b>]]>\"</string>
+    <string name="empty_result_message">We couldn\'t find any store for search \"<![CDATA[<b>%s</b>]]>\".</string>
     <string name="start_shopping">Start shopping</string>
     <string name="error_message">We had some trouble connecting,\nbut should have you eating shortly.</string>
     <string name="preorder">Preorder</string>
@@ -176,6 +176,9 @@
     <string name="search_result">1 Search result for \"%s\"</string>
     <string name="search_results">%d Search results for \"%s\"</string>
     <string name="opening_until">Open until %s</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="time">%s - %s</string>
     <string name="search_for">Search for \"%s\"</string>
     <string name="search_minimum">Search with minimum 3 characters</string>
     <string name="back_icon">back icon</string>

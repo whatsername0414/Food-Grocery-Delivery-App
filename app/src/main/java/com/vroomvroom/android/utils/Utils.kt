@@ -42,21 +42,21 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class SafeClickListener(
-    private var defaultInterval: Int = 3000,
-    private val onSafeCLick: (View) -> Unit
-) : View.OnClickListener {
-    private var lastTimeClicked: Long = 0
-    override fun onClick(v: View) {
-        if (SystemClock.elapsedRealtime() - lastTimeClicked < defaultInterval) {
-            return
-        }
-        lastTimeClicked = SystemClock.elapsedRealtime()
-        onSafeCLick(v)
-    }
-}
-
 object Utils {
+
+    class SafeClickListener(
+        private var defaultInterval: Int = 3000,
+        private val onSafeCLick: (View) -> Unit
+    ) : View.OnClickListener {
+        private var lastTimeClicked: Long = 0
+        override fun onClick(v: View) {
+            if (SystemClock.elapsedRealtime() - lastTimeClicked < defaultInterval) {
+                return
+            }
+            lastTimeClicked = SystemClock.elapsedRealtime()
+            onSafeCLick(v)
+        }
+    }
 
     fun <A : Activity> Activity.startNewActivity(activity: Class<A>) {
         Intent(this, activity).also {
@@ -173,6 +173,14 @@ object Utils {
             longitude = latLng.longitude,
             currentUse = true
         )
+    }
+
+    fun List<String?>.stringBuilder(): StringBuilder {
+        val categoryList = StringBuilder()
+        this.forEach { category ->
+            categoryList.append("$category • ")
+        }
+        return categoryList
     }
 
     fun timeFormatter(time: Int): String {
