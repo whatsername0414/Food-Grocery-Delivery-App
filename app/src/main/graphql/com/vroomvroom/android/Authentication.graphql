@@ -3,6 +3,7 @@ mutation Register {
         id
         name
         email
+        phone_number
     }
 }
 
@@ -15,8 +16,6 @@ mutation OtpVerification($otp: String!) {
         id
         name
         email
-        deliveryInfo {
-            phoneNumber
-        }
+        phone_number
     }
 }

@@ -5,8 +5,8 @@
 
     <data>
         <variable
-            name="products"
-            type="com.vroomvroom.android.MerchantQuery.Product" />
+            name="product_section"
+            type="com.vroomvroom.android.MerchantQuery.Product_section" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="@{products.name}"
+            android:text="@{product_section.name}"
             android:textSize="24sp"
             android:textColor="@color/black"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"

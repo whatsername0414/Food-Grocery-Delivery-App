@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".view.ui.main.auth.AuthBottomSheetFragment">
+    tools:context=".view.ui.auth.AuthBottomSheetFragment">
 
     <View
         android:id="@+id/view"
@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
         android:layout_marginTop="24dp"
-        android:text="@string/log_in_or_sign_up"
+        android:text="@string/login_or_sign_up"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -75,6 +75,7 @@
         app:layout_constraintTop_toBottomOf="@+id/btn_google" />
 
     <ImageView
+        android:id="@+id/imageView7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -117,13 +118,14 @@
         app:layout_constraintTop_toBottomOf="@+id/btn_email" />
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
-        android:id="@+id/auth_progress"
+        android:id="@+id/progress_indicator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:indeterminate="true"
         android:indeterminateTint="@color/maroon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

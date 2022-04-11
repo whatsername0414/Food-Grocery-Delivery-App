@@ -7,20 +7,13 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.vroomvroom.android.view.ui.main.HomeFragment"
+        android:name="com.vroomvroom.android.view.ui.home.HomeFragment"
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_homeFragment_to_locationFragment"
             app:destination="@id/locationFragment"
             app:enterAnim="@android:anim/slide_in_left"
-            app:popEnterAnim="@anim/nav_default_enter_anim"
-            app:popUpTo="@id/homeFragment"
-            app:popUpToInclusive="true" />
-        <action
-            android:id="@+id/action_homeFragment_to_mapsFragment"
-            app:destination="@id/mapsFragment"
-            app:enterAnim="@anim/custom_slide_in_left"
-            app:popExitAnim="@anim/custom_slide_out_left"/>
+            app:popExitAnim="@anim/custom_slide_out_left" />
         <action
             android:id="@+id/action_homeFragment_to_merchantFragment"
             app:destination="@id/merchantFragment"
@@ -32,33 +25,40 @@
         <action
             android:id="@+id/action_homeFragment_to_cartBottomSheetFragment"
             app:destination="@id/cartBottomSheetFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_favoriteFragment"
+            app:destination="@id/favoriteFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
-        android:name="com.vroomvroom.android.view.ui.main.SearchFragment"
+        android:name="com.vroomvroom.android.view.ui.home.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" />
     <fragment
-        android:id="@+id/orderFragment"
-        android:name="com.vroomvroom.android.view.ui.main.OrderFragment"
-        android:label="fragment_order"
-        tools:layout="@layout/fragment_order" />
+        android:id="@+id/ordersFragment"
+        android:name="com.vroomvroom.android.view.ui.orders.OrdersFragment"
+        android:label="Orders"
+        tools:layout="@layout/fragment_orders" >
+        <action
+            android:id="@+id/action_ordersFragment_to_merchantFragment"
+            app:destination="@id/merchantFragment" />
+        <action
+            android:id="@+id/action_ordersFragment_to_orderDetailFragment"
+            app:destination="@id/orderDetailFragment" />
+        <action
+            android:id="@+id/action_ordersFragment_to_authBottomSheetFragment"
+            app:destination="@id/authBottomSheetFragment" />
+    </fragment>
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.vroomvroom.android.view.ui.main.ProfileFragment"
+        android:name="com.vroomvroom.android.view.ui.home.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
     <fragment
         android:id="@+id/locationFragment"
-        android:name="com.vroomvroom.android.view.ui.main.LocationFragment"
+        android:name="com.vroomvroom.android.view.ui.location.LocationFragment"
         android:label="fragment_location"
         tools:layout="@layout/fragment_location" >
-        <action
-            app:popUpToInclusive="true"
-            app:popUpTo="@id/locationFragment"
-            android:id="@+id/action_locationFragment_to_homeFragment"
-            app:destination="@id/homeFragment"
-            app:enterAnim="@android:anim/fade_in"/>
         <action
             android:id="@+id/action_locationFragment_to_mapsFragment"
             app:destination="@id/mapsFragment"
@@ -67,19 +67,22 @@
     </fragment>
     <fragment
         android:id="@+id/mapsFragment"
-        android:name="com.vroomvroom.android.view.ui.main.MapsFragment"
-        android:label="MapsFragment"
+        android:name="com.vroomvroom.android.view.ui.location.MapsFragment"
+        android:label="Maps"
         tools:layout="@layout/fragment_maps">
         <action
             android:id="@+id/action_mapsFragment_to_homeFragment"
             app:destination="@id/homeFragment"
-            app:enterAnim="@android:anim/slide_in_left"
+            app:enterAnim="@anim/custom_slide_in_left"
             app:popUpTo="@id/mapsFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_mapsFragment_to_addressBottomSheetFragment"
+            app:destination="@id/addressBottomSheetFragment" />
     </fragment>
     <fragment
         android:id="@+id/merchantFragment"
-        android:name="com.vroomvroom.android.view.ui.main.MerchantFragment"
+        android:name="com.vroomvroom.android.view.ui.home.MerchantFragment"
         android:label="fragment_merchant"
         tools:layout="@layout/fragment_merchant">
         <argument
@@ -100,16 +103,18 @@
     </fragment>
     <dialog
         android:id="@+id/locationBottomSheetFragment"
-        android:name="com.vroomvroom.android.view.ui.main.LocationBottomSheetFragment"
+        android:name="com.vroomvroom.android.view.ui.location.LocationBottomSheetFragment"
         android:label="fragment_location_bottom_sheet"
         tools:layout="@layout/fragment_location_bottom_sheet" >
         <action
             android:id="@+id/action_locationBottomSheetFragment_to_mapsFragment"
-            app:destination="@id/mapsFragment" />
+            app:destination="@id/mapsFragment"
+            app:enterAnim="@anim/custom_slide_in_left"
+            app:popExitAnim="@anim/custom_slide_out_left" />
     </dialog>
     <dialog
         android:id="@+id/cartBottomSheetFragment"
-        android:name="com.vroomvroom.android.view.ui.main.CartBottomSheetFragment"
+        android:name="com.vroomvroom.android.view.ui.home.CartBottomSheetFragment"
         android:label="fragment_cart_bottom_sheet"
         tools:layout="@layout/fragment_cart_bottom_sheet" >
         <action
@@ -128,35 +133,30 @@
     </dialog>
     <dialog
         android:id="@+id/productBottomSheetFragment"
-        android:name="com.vroomvroom.android.view.ui.main.ProductBottomSheetFragment"
+        android:name="com.vroomvroom.android.view.ui.home.ProductBottomSheetFragment"
         android:label="ProductBottomSheetFragment"
         tools:layout="@layout/fragment_product_bottom_sheet">
         <argument
-            android:name="ProductByCategory"
-            app:argType="com.vroomvroom.android.model.ProductByCategoryModel" />
+            android:name="Product"
+            app:argType="com.vroomvroom.android.domain.model.product.Product" />
     </dialog>
     <dialog
         android:id="@+id/merchantDetailsBottomSheetFragment"
-        android:name="com.vroomvroom.android.view.ui.main.MerchantDetailsBottomSheetFragment"
+        android:name="com.vroomvroom.android.view.ui.home.MerchantDetailsBottomSheetFragment"
         android:label="fragment_merchant_details_bottom_sheet"
         tools:layout="@layout/fragment_merchant_details_bottom_sheet" >
         <argument
-            android:name="merchantDetails"
-            app:argType="com.vroomvroom.android.model.MerchantModel" />
+            android:name="merchant"
+            app:argType="com.vroomvroom.android.domain.model.merchant.Merchant" />
     </dialog>
     <fragment
         android:id="@+id/checkoutFragment"
-        android:name="com.vroomvroom.android.view.ui.main.CheckoutFragment"
+        android:name="com.vroomvroom.android.view.ui.home.CheckoutFragment"
         android:label="Checkout"
         tools:layout="@layout/fragment_checkout" >
         <action
             android:id="@+id/action_checkoutFragment_to_authBottomSheetFragment"
             app:destination="@id/authBottomSheetFragment" />
-        <action
-            android:id="@+id/action_checkoutFragment_to_mapsFragment"
-            app:destination="@id/mapsFragment"
-            app:enterAnim="@anim/custom_slide_in_left"
-            app:popExitAnim="@anim/custom_slide_out_left" />
         <action
             android:id="@+id/action_checkoutFragment_to_paymentMethodFragment"
             app:destination="@id/paymentMethodFragment"
@@ -167,10 +167,18 @@
             app:destination="@id/phoneVerificationFragment"
             app:enterAnim="@anim/custom_slide_in_left"
             app:popExitAnim="@anim/custom_slide_out_left" />
+        <action
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/homeFragment"
+            android:id="@+id/action_checkoutFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_checkoutFragment_to_addressesFragment"
+            app:destination="@id/addressesFragment" />
     </fragment>
     <dialog
         android:id="@+id/authBottomSheetFragment"
-        android:name="com.vroomvroom.android.view.ui.main.auth.AuthBottomSheetFragment"
+        android:name="com.vroomvroom.android.view.ui.auth.AuthBottomSheetFragment"
         android:label="fragment_auth_bottom_sheet"
         tools:layout="@layout/fragment_auth_bottom_sheet" >
         <action
@@ -181,7 +189,7 @@
     </dialog>
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.vroomvroom.android.view.ui.main.auth.LoginFragment"
+        android:name="com.vroomvroom.android.view.ui.auth.LoginFragment"
         android:label="Login"
         tools:layout="@layout/fragment_login" >
         <action
@@ -195,7 +203,7 @@
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
-        android:name="com.vroomvroom.android.view.ui.main.auth.RegisterFragment"
+        android:name="com.vroomvroom.android.view.ui.auth.RegisterFragment"
         android:label="Register"
         tools:layout="@layout/fragment_register" >
         <action
@@ -207,17 +215,17 @@
     </fragment>
     <dialog
         android:id="@+id/passwordResetFragment"
-        android:name="com.vroomvroom.android.view.ui.main.auth.PasswordResetBottomSheetFragment"
+        android:name="com.vroomvroom.android.view.ui.auth.PasswordResetBottomSheetFragment"
         android:label="fragment_password_reset"
         tools:layout="@layout/fragment_password_reset_bottom_sheet" />
     <fragment
         android:id="@+id/paymentMethodFragment"
-        android:name="com.vroomvroom.android.view.ui.main.PaymentMethodFragment"
+        android:name="com.vroomvroom.android.view.ui.home.PaymentMethodFragment"
         android:label="Payment"
         tools:layout="@layout/fragment_payment_method" />
     <fragment
         android:id="@+id/phoneVerificationFragment"
-        android:name="com.vroomvroom.android.view.ui.main.auth.PhoneVerificationFragment"
+        android:name="com.vroomvroom.android.view.ui.auth.PhoneVerificationFragment"
         android:label="Verify Phone"
         tools:layout="@layout/fragment_phone_verification" >
         <action
@@ -228,7 +236,7 @@
     </fragment>
     <fragment
         android:id="@+id/codeVerificationFragment"
-        android:name="com.vroomvroom.android.view.ui.main.auth.CodeVerificationFragment"
+        android:name="com.vroomvroom.android.view.ui.auth.CodeVerificationFragment"
         android:label="Verify OTP"
         tools:layout="@layout/fragment_code_verification" >
         <action
@@ -237,6 +245,47 @@
             app:enterAnim="@anim/custom_slide_in_left"
             app:popUpTo="@id/codeVerificationFragment"
             app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/favoriteFragment"
+        android:name="com.vroomvroom.android.view.ui.home.FavoriteFragment"
+        android:label="Favorites"
+        tools:layout="@layout/fragment_favorite" >
+        <action
+            android:id="@+id/action_favoriteFragment_to_merchantFragment"
+            app:destination="@id/merchantFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/orderDetailFragment"
+        android:name="com.vroomvroom.android.view.ui.orders.OrderDetailFragment"
+        tools:layout="@layout/fragment_order_detail" >
+        <argument
+            android:name="orderId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_orderDetailFragment_to_merchantFragment"
+            app:destination="@id/merchantFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/addressBottomSheetFragment"
+        android:name="com.vroomvroom.android.view.ui.location.AddressBottomSheetFragment"
+        android:label="fragment_address_bottom_sheet"
+        tools:layout="@layout/fragment_address_bottom_sheet" >
+        <action
+            android:id="@+id/action_addressBottomSheetFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <argument
+            android:name="location"
+            app:argType="com.vroomvroom.android.domain.db.user.UserLocationEntity" />
+    </dialog>
+    <fragment
+        android:id="@+id/addressesFragment"
+        android:name="com.vroomvroom.android.view.ui.location.AddressesFragment"
+        android:label="Addresses"
+        tools:layout="@layout/fragment_addresses" >
+        <action
+            android:id="@+id/action_addressesFragment_to_mapsFragment"
+            app:destination="@id/mapsFragment" />
     </fragment>
 
 </navigation>

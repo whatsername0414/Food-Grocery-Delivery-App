@@ -27,16 +27,8 @@ class FirebaseAuthRepositoryImpl @Inject constructor(
     private val googleSignInClient: GoogleSignInClient,
     private val client: SmsRetrieverClient
 ) : FirebaseAuthBaseRepository(), FirebaseAuthRepository {
-
-    override fun getCurrentUser(onAuth: (ViewState<FirebaseUser>)->Unit) {
-        auth.addAuthStateListener { firebaseAuth ->
-            val user = firebaseAuth.currentUser
-            if (user != null) {
-                onAuth(handleSuccess(user))
-            } else {
-                onAuth(handleException(0))
-            }
-        }
+    override fun getCurrentUser(): FirebaseUser? {
+        return auth.currentUser
     }
 
     override fun getIdToken(onResult: (String?)->Unit) {

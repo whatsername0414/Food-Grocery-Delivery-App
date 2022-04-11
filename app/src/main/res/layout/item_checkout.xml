@@ -5,7 +5,7 @@
     <data>
         <variable
             name="cartItem"
-            type="com.vroomvroom.android.db.CartItem" />
+            type="com.vroomvroom.android.domain.db.cart.CartItemEntity" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -71,7 +71,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:layout_marginBottom="8dp"
-                        android:text="@{`₱` + cartItem.price + `.00`}"
                         android:paddingStart="12dp"
                         android:paddingEnd="12dp"
                         android:paddingTop="4dp"

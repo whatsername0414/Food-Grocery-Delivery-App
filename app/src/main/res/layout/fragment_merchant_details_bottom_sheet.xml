@@ -6,14 +6,14 @@
     <data>
         <variable
             name="merchantDetails"
-            type="com.vroomvroom.android.model.MerchantModel" />
+            type="com.vroomvroom.android.domain.model.merchant.Merchant" />
     </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".view.ui.main.MerchantDetailsBottomSheetFragment">
+        tools:context=".view.ui.home.MerchantDetailsBottomSheetFragment">
 
         <View
             android:id="@+id/view"
@@ -29,6 +29,7 @@
             android:layout_marginTop="24dp"
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
+            android:background="@color/white"
             app:cardElevation="0dp"
             app:cardCornerRadius="8dp">
 
@@ -89,7 +90,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginStart="8dp"
-                android:text="@{Double.valueOf(merchantDetails.rating).toString() + `(` + merchantDetails.ratingCount + ` ratings)`}"
+                android:text="@{merchantDetails.rates != null ? Double.valueOf(merchantDetails.ratings).toString() + `(` + merchantDetails.rates + ` ratings)` : `0.0`}"
                 android:textSize="16sp"
                 tools:text="4.6 (44 ratings)" />
         </LinearLayout>

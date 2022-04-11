@@ -4,33 +4,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".view.ui.main.MerchantFragment">
+    tools:context=".view.ui.home.MerchantFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/merchant_appBar"
+        style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
-        android:elevation="@dimen/design_appbar_elevation"
-        android:backgroundTint="@color/black"
-        style="@style/Widget.AppCompat.Button.Borderless"
         android:background="@drawable/app_bar_bg"
+        android:backgroundTint="@color/black"
+        android:elevation="@dimen/design_appbar_elevation"
+        android:fitsSystemWindows="true"
         android:theme="@style/ThemeOverlay.MaterialComponents.ActionBar">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/ctl_merchant"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fitsSystemWindows="true"
             android:layout_weight="2"
-            app:contentScrim="?attr/colorOnPrimary"
+            android:fitsSystemWindows="true"
             app:collapsedTitleTextAppearance="@style/HeaderTitleStyle"
-            app:expandedTitleTextAppearance="@style/ExpandedTitleStyle"
-            app:scrimAnimationDuration="0"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:expandedTitleMarginBottom="48dp"
+            app:contentScrim="?attr/colorOnPrimary"
             app:expandedTitleGravity="bottom"
+            app:expandedTitleMarginBottom="48dp"
             app:expandedTitleMarginStart="40dp"
+            app:expandedTitleTextAppearance="@style/ExpandedTitleStyle"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:scrimAnimationDuration="0"
             app:title="Carmen's Online Saudan">
 
             <ImageView
@@ -38,35 +38,36 @@
                 android:layout_width="match_parent"
                 android:layout_height="248dp"
                 android:alpha="0.5"
-                android:src="@drawable/mcdo"
-                android:scaleType="centerCrop"/>
+                android:scaleType="centerCrop"
+                android:src="@drawable/mcdo" />
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar_merchant"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin">
+
                 <ImageView
                     android:id="@+id/btn_back"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_arrow_back"
-                    android:background="@drawable/cat_img_bg_white"
-                    android:layout_marginTop="8dp"
                     android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/cat_img_bg_white"
                     android:padding="6dp"
+                    android:src="@drawable/ic_arrow_back"
                     app:layout_collapseMode="pin" />
 
                 <ImageView
                     android:id="@+id/btn_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_info"
-                    android:background="@drawable/cat_img_bg_white"
-                    android:padding="6dp"
+                    android:layout_gravity="end"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
-                    android:layout_gravity="end"
+                    android:background="@drawable/cat_img_bg_white"
+                    android:padding="6dp"
+                    android:src="@drawable/ic_info"
                     app:layout_collapseMode="pin" />
             </androidx.appcompat.widget.Toolbar>
 
@@ -74,49 +75,54 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:layout_marginBottom="8dp"
                 android:layout_marginStart="40dp"
-                android:orientation="vertical"
-                android:gravity="center_vertical">
+                android:layout_marginBottom="8dp"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
                     <ImageView
                         android:layout_width="16dp"
                         android:layout_height="16dp"
                         android:src="@drawable/ic_white_star" />
+
                     <TextView
                         android:id="@+id/merchant_rating"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:text="4.8 (12 rating)"
+                        android:textColor="@color/white"
                         android:textSize="12sp"
-                        android:textColor="@color/white" />
+                        tools:text="4.8 (12 rating)" />
                 </LinearLayout>
+
                 <TextView
                     android:id="@+id/closing_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:text="Open Until 7:30 PM"
                     android:textColor="@color/white"
-                    android:textSize="12sp"/>
+                    android:textSize="12sp"
+                    tools:text="Open Until 7:30 PM" />
             </LinearLayout>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
+
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tl_merchant"
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="8dp"
             android:background="@drawable/app_bar_bg"
             android:overScrollMode="never"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            app:tabTextAppearance="@style/CustomTextAppearance"
+            app:tabIndicatorFullWidth="false"
             app:tabMode="scrollable"
-            app:tabRippleColor="#fcbdbd"/>
+            app:tabRippleColor="#fcbdbd"
+            app:tabTextAppearance="@style/CustomTextAppearance" />
     </com.google.android.material.appbar.AppBarLayout>
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/by_category_rv"
+        android:id="@+id/product_section_rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:overScrollMode="never"
@@ -124,13 +130,6 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
         tools:listitem="@layout/item_product_section"/>
-
-    <com.google.android.material.progressindicator.LinearProgressIndicator
-        android:id="@+id/merchant_fetch_progress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:layout_gravity="top"/>
 
     <LinearLayout
         android:id="@+id/merchantConnectionFailedNotice"
@@ -150,7 +149,6 @@
             android:text="@string/sorry_for_the_delay"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textSize="18sp"
-            android:visibility="gone"
             tools:visibility="visible" />
 
         <TextView
@@ -160,10 +158,12 @@
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/merchantRetryButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:cornerRadius="16dp"
             android:text="@string/retry" />
 
     </LinearLayout>
@@ -205,14 +205,14 @@
                     android:layout_marginStart="56dp"
                     android:paddingTop="18dp"
                     android:paddingBottom="18dp"
-                    tools:text="Item 2 (₱650.00)"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:textColor="@color/white"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    tools:text="Item 2 (₱650.00)" />
             </LinearLayout>
 
             <ImageView
-                android:id="@+id/minimizeCartCardView"
+                android:id="@+id/btnMinimizeCartCardView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -222,7 +222,7 @@
     </androidx.cardview.widget.CardView>
 
     <ImageButton
-        android:id="@+id/maximizeCartCardView"
+        android:id="@+id/btnMaximizeCartCardView"
         android:layout_width="wrap_content"
         android:layout_height="60dp"
         android:src="@drawable/ic_left_arrow"
@@ -232,5 +232,13 @@
         android:background="@drawable/left_curve_bg"
         android:paddingStart="6dp"
         android:paddingEnd="0dp"/>
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/merchantShimmerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:visibility="invisible">
+        <include layout="@layout/fragment_merchant_shimmer" />
+    </com.facebook.shimmer.ShimmerFrameLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

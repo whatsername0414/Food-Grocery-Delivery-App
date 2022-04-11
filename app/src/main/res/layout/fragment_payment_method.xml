@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.ui.main.PaymentMethodFragment">
+    tools:context=".view.ui.home.PaymentMethodFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/paymentMethodAppBarLayout"
@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="24dp"
-            android:text="@string/cash"
+            android:text="@string/cash_on_delivery"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@+id/imageView5"
