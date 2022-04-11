@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.VroomVroom" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.VroomVroom" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/red_a30</item>
         <item name="colorPrimaryVariant">@color/gray_7f7</item>
@@ -13,10 +13,9 @@
         <item name="android:statusBarColor" tools:targetApi="l">@color/gray_ccc</item>
         <!-- Customize your theme here. -->
         <item name="android:windowAnimationStyle">@null</item>
-        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
         <item name="autoCompleteTextViewStyle">@style/SearchAutoCompleteTextView</item>
     </style>
-    <style name="SplashScreenTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="SplashScreenTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="android:windowAnimationStyle">@null</item>
         <item name="android:windowBackground">@drawable/splash_image</item>
         <item name="android:statusBarColor">@color/red_a30</item>
@@ -39,12 +38,8 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
-    <style name="AppBottomSheetDialogTheme" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
-        <item name="bottomSheetStyle">@style/AppModalStyle</item>
-    </style>
-
-    <style name="AppModalStyle" parent="Widget.Design.BottomSheet.Modal">
-        <item name="android:background">@drawable/bg_white_fff_rounded_24dp_top</item>
+    <style name="NoBackgroundDialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowBackground">@null</item>
     </style>
 
     <style name="RadioButtonStyle" parent="Theme.MaterialComponents.Light">

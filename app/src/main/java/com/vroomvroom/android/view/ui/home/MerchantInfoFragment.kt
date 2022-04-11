@@ -12,7 +12,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentMerchantInfoBinding
 import com.vroomvroom.android.utils.Constants
-import com.vroomvroom.android.utils.Utils.geoCoder
 import com.vroomvroom.android.utils.Utils.setMap
 import com.vroomvroom.android.view.ui.base.BaseFragment
 import com.vroomvroom.android.view.ui.home.adapter.ReviewAdapter
@@ -31,11 +30,11 @@ class MerchantInfoFragment : BaseFragment<FragmentMerchantInfoBinding>(
 
     private lateinit var merchantLocation: LatLng
 
-    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mapView = binding.userLocationMapView
         initGoogleMap(savedInstanceState)
+        observeAddress()
         navController = findNavController()
         binding.appBarLayout.apply {
             toolbar.setupToolbar()
@@ -53,9 +52,15 @@ class MerchantInfoFragment : BaseFragment<FragmentMerchantInfoBinding>(
             )
         }
 
-        val address = geoCoder(requireContext(), merchantLocation)
-        address?.let {
-            binding.locationDetailBottomSheet.text = "${it.thoroughfare}, ${it.locality}"
+        locationViewModel.getAddress(merchantLocation)
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun observeAddress() {
+        locationViewModel.address.observe(viewLifecycleOwner) { res ->
+            res?.let {
+                binding.locationDetailBottomSheet.text = "${it.thoroughfare}, ${it.locality}"
+            }
         }
     }
 

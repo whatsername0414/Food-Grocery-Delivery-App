@@ -108,6 +108,10 @@ abstract class BaseFragment<VB: ViewBinding> (
         Toast.makeText(requireContext(), getString(message), Toast.LENGTH_SHORT).show()
     }
 
+    fun showShortToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
     fun CommonNoticeLayoutBinding.hideNotice() {
         this.root.visibility = View.GONE
     }

@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.vroomvroom.android.R
 import com.vroomvroom.android.view.ui.account.viewmodel.AccountViewModel
 import com.vroomvroom.android.view.ui.auth.viewmodel.AuthViewModel
 import com.vroomvroom.android.view.ui.home.viewmodel.HomeViewModel
@@ -48,6 +49,7 @@ abstract class BaseBottomSheetFragment<VB: ViewBinding> (
         _binding = bindingInflater.invoke(inflater)
         if (_binding == null)
             throw IllegalArgumentException("Binding cannot be null")
+        binding.root.setBackgroundResource(R.drawable.bg_white_fff_rounded_24dp_top)
         return binding.root
     }
 
@@ -58,6 +60,10 @@ abstract class BaseBottomSheetFragment<VB: ViewBinding> (
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun getTheme(): Int {
+        return R.style.NoBackgroundDialogTheme
     }
 
 }

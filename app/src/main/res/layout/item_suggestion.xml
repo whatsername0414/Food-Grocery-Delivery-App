@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="suggestion"
+            type="com.mapbox.search.result.SearchSuggestion" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/history_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/ic_search" />
+
+        <TextView
+            android:id="@+id/search_term"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/dp_16"
+            android:layout_marginVertical="@dimen/margin_normal"
+            android:drawablePadding="@dimen/dp_16"
+            android:gravity="center|start"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btn_positive"
+            app:layout_constraintStart_toEndOf="@+id/history_icon"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Jollibee Tabaco, Ziga Ave" />
+
+        <ImageView
+            android:id="@+id/btn_positive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dp_8"
+            android:layout_gravity="end"
+            android:src="@drawable/ic_arrow_up_left_gray_7f7"
+            app:layout_constraintBottom_toBottomOf="@+id/search_term"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/search_term" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

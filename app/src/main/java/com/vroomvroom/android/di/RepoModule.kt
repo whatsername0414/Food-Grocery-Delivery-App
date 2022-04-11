@@ -70,7 +70,7 @@ object RepoModule {
     @Provides
     fun provideApolloClient(okHttpClient: OkHttpClient): ApolloClient {
         return ApolloClient.builder()
-            .serverUrl("http://192.168.1.5:5000/")
+            .serverUrl("http://192.168.1.20:5000/")
             .okHttpClient(okHttpClient)
             .build()
     }

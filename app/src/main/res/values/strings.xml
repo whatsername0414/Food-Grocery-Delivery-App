@@ -191,4 +191,6 @@
     <string name="invalid_phone_number">Invalid phone number</string>
     <string name="cancel_successful">Cancel Successful</string>
 
+    <string name="mapbox_access_token">sk.eyJ1Ijoid2g0dHNlcm5hbWUiLCJhIjoiY2wxYXQxeWpnMjBwbTNra2FxOW8xa3BhOCJ9.1nNii4m14gdAxSOksaVKhA</string>
+
 </resources>

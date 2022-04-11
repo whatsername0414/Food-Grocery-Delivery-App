@@ -16,7 +16,6 @@ import com.vmadalin.easypermissions.dialogs.SettingsDialog
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentLocationBinding
 import com.vroomvroom.android.utils.Utils.createLocationRequest
-import com.vroomvroom.android.utils.Utils.geoCoder
 import com.vroomvroom.android.utils.Utils.hasLocationPermission
 import com.vroomvroom.android.utils.Utils.requestLocationPermission
 import com.vroomvroom.android.utils.Utils.userLocationBuilder
@@ -72,13 +71,15 @@ class LocationFragment : BaseFragment<FragmentLocationBinding>(
         locationViewModel.currentLocation.observe(viewLifecycleOwner) { location ->
             if (location != null) {
                 val latLng = LatLng(location.latitude, location.longitude)
-                val address = geoCoder(requireContext(), latLng)
-                locationViewModel.insertLocation(
-                    userLocationBuilder(
-                        address = address,
-                        latLng = latLng
+                locationViewModel.getAddress(latLng)
+                locationViewModel.address.observe(viewLifecycleOwner) { res ->
+                    locationViewModel.insertLocation(
+                        userLocationBuilder(
+                            address = res,
+                            latLng = latLng
+                        )
                     )
-                )
+                }
             }
         }
 

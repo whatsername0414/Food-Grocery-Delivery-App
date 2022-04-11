@@ -193,22 +193,7 @@ object Utils {
         return ft.slice(0..3) + "am"
     }
 
-    fun geoCoder(context: Context, coordinates: LatLng): Address? {
-        val geoCoder = Geocoder(context)
-        try {
-            val addresses = geoCoder.getFromLocation(
-                coordinates.latitude,
-                coordinates.longitude,
-                1
-            )
-            if (addresses.isNotEmpty()) {
-                return addresses.first()
-            }
-        } catch (e: IOException) {
-            Toast.makeText(context, "Unknown error occurred", Toast.LENGTH_SHORT).show()
-        }
-        return null
-    }
+
 
     fun GoogleMap?.setMap(app: Context, coordinates: LatLng) {
         this?.mapType = GoogleMap.MAP_TYPE_NORMAL
@@ -234,7 +219,7 @@ object Utils {
         setOnClickListener(safeClickListener)
     }
 
-    private fun bitmapDescriptorFromVector(app: Context, vectorResId: Int): BitmapDescriptor? {
+    fun bitmapDescriptorFromVector(app: Context, vectorResId: Int): BitmapDescriptor? {
         return ContextCompat.getDrawable(app, vectorResId)?.run {
             setBounds(0, 0, intrinsicWidth, intrinsicHeight)
             val bitmap = Bitmap.createBitmap(intrinsicWidth, intrinsicHeight, Bitmap.Config.ARGB_8888)

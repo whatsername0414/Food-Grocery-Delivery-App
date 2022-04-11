@@ -75,6 +75,7 @@ class MerchantSearchFragment : BaseFragment<FragmentMerchantSearchBinding>(
                 binding.commonNoticeLayout.hideNotice()
                 binding.merchantRv.visibility = View.GONE
                 getAllSearch()
+                showSoftKeyboard(binding.searchView)
             }
         }
 
@@ -202,10 +203,5 @@ class MerchantSearchFragment : BaseFragment<FragmentMerchantSearchBinding>(
                 }
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        showSoftKeyboard(binding.searchView)
     }
 }

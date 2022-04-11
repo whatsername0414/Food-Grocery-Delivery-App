@@ -13,14 +13,14 @@ import com.vroomvroom.android.R
 import com.vroomvroom.android.utils.ClickType
 
 @SuppressLint("InflateParams")
-class CommonAlertDialog(val app: Activity) {
+class CommonAlertDialog(activity: Activity) {
 
     private var dialog: AlertDialog
     private var view: View
 
     init {
-        val dialogBuilder = AlertDialog.Builder(app)
-        val layoutInflater = app.layoutInflater
+        val dialogBuilder = AlertDialog.Builder(activity)
+        val layoutInflater = activity.layoutInflater
         view = layoutInflater.inflate(R.layout.common_alert_dialog_layout, null)
         dialogBuilder.setView(view)
         dialog = dialogBuilder.create()

@@ -23,6 +23,7 @@ import com.vroomvroom.android.view.ui.base.BaseFragment
 import com.vroomvroom.android.view.ui.home.adapter.CheckoutAdapter
 import com.vroomvroom.android.view.ui.home.viewmodel.CheckoutViewModel
 import com.vroomvroom.android.view.ui.widget.CommonAlertDialog
+import com.vroomvroom.android.view.ui.widget.ReceiptDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
@@ -147,7 +148,8 @@ class CheckoutFragment : BaseFragment<FragmentCheckoutBinding> (
                     homeViewModel.deleteAllCartItem()
                     loadingDialog.dismiss()
                     showShortToast(R.string.placed_order_message)
-                    navController.navigate(R.id.action_checkoutFragment_to_homeFragment)
+                    val dialog = ReceiptDialog(requireActivity())
+                    dialog.show()
                 }
                 is ViewState.Error -> {
                     loadingDialog.dismiss()
