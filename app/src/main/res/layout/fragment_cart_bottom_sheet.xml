@@ -104,14 +104,16 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_check_out"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
-            android:backgroundTint="@color/maroon"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/btn_background"
             android:text="@string/check_out"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="16sp"
+            app:backgroundTint="@color/maroon"
             app:cornerRadius="16dp"
             app:layout_constraintBottom_toTopOf="@+id/btn_add_items"
             app:layout_constraintEnd_toEndOf="parent"
@@ -120,15 +122,16 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_add_items"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
             android:layout_marginBottom="16dp"
-            android:backgroundTint="@color/light_gray"
+            android:background="@drawable/btn_background_gray"
             android:text="@string/add_items"
             android:textAllCaps="false"
             android:textColor="@color/maroon"
             android:textSize="16sp"
+            app:backgroundTint="@color/light_gray"
             app:cornerRadius="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -138,27 +141,25 @@
             android:id="@+id/cartProgress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:indeterminateTint="@color/maroon"
             android:indeterminate="true"
+            android:indeterminateTint="@color/maroon"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:visibility="gone"/>
+            app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
         android:id="@+id/emptyCartLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="32dp"
         android:gravity="center"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view"
-        tools:visibility="invisible">
+        tools:visibility="gone">
 
         <View
             android:id="@+id/view6"
@@ -167,10 +168,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="32dp"
-            android:background="@drawable/light_gray"
-            app:layout_constraintBottom_toTopOf="@+id/textView5"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:background="@drawable/light_gray" />
 
         <ImageView
             android:layout_width="128dp"
@@ -198,23 +196,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="@string/start_shopping"
+            android:backgroundTint="@color/maroon"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
-            android:textColor="@color/white"
-            android:backgroundTint="@color/maroon"
+            android:text="@string/start_shopping"
             android:textAllCaps="false"
+            android:textColor="@color/white"
             app:cornerRadius="16dp" />
+
         <View
             android:id="@+id/view7"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
             android:layout_marginTop="32dp"
-            android:background="@drawable/light_gray"
-            app:layout_constraintBottom_toTopOf="@+id/textView5"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/light_gray" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

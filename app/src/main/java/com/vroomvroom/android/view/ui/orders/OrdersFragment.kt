@@ -27,9 +27,9 @@ import com.vroomvroom.android.databinding.FragmentOrdersBinding
 import com.vroomvroom.android.utils.Constants.CHANNEL_ID
 import com.vroomvroom.android.utils.Constants.CHANNEL_NAME
 import com.vroomvroom.android.view.state.ViewState
+import com.vroomvroom.android.view.ui.activityviewmodel.ActivityViewModel
 import com.vroomvroom.android.view.ui.auth.viewmodel.AuthViewModel
 import com.vroomvroom.android.view.ui.orders.adapter.FragmentAdapter
-import com.vroomvroom.android.view.ui.orders.viewmodel.OrdersActivityViewModel
 import com.vroomvroom.android.view.ui.orders.viewmodel.OrdersViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -41,7 +41,7 @@ class OrdersFragment : Fragment() {
 
     private val ordersViewModel by viewModels<OrdersViewModel>()
     private val authViewModel by viewModels<AuthViewModel>()
-    private val activityViewModel by activityViewModels<OrdersActivityViewModel>()
+    private val activityViewModel by activityViewModels<ActivityViewModel>()
 
     @Inject lateinit var builder: NotificationCompat.Builder
     private lateinit var binding: FragmentOrdersBinding
@@ -144,11 +144,9 @@ class OrdersFragment : Fragment() {
             confirmed?.let {
                 setupTabBadge(it.size, 1)
                 it.forEach { item ->
-                    item?.let { oc ->
-                        if (!oc.notified) {
-                            val randomInt = (0..1000).random()
-                            createNotification(oc.status, randomInt)
-                            ordersViewModel.mutationUpdateOrderStatus(oc.id)
+                    item?.let { order ->
+                        if (!order.notified) {
+                            createNotification(order.status, order.id)
                         }
                     }
                 }
@@ -157,11 +155,9 @@ class OrdersFragment : Fragment() {
             toReceive?.let {
                 setupTabBadge(it.size, 2)
                 it.forEach { item ->
-                    item?.let { otr ->
-                        if (!otr.notified) {
-                            val randomInt = (0..1000).random()
-                            createNotification(otr.status, randomInt)
-                            ordersViewModel.mutationUpdateOrderStatus(otr.id)
+                    item?.let { order ->
+                        if (!order.notified) {
+                            createNotification(order.status, order.id)
                         }
                     }
                 }
@@ -170,14 +166,16 @@ class OrdersFragment : Fragment() {
             delivered?.let {
                 setupTabBadge(it.size, 3)
                 it.forEach { item ->
-                    item?.let { od ->
-                        if (!od.notified) {
-                            val randomInt = (0..1000).random()
-                            createNotification(od.status, randomInt)
-                            ordersViewModel.mutationUpdateOrderStatus(od.id)
+                    item?.let { order ->
+                        if (!order.notified) {
+                            createNotification(order.status, order.id)
                         }
                     }
                 }
+            }
+            val cancelled = orders.cancelled
+            cancelled?.let {
+                setupTabBadge(it.size, 4)
             }
         }
     }
@@ -190,23 +188,25 @@ class OrdersFragment : Fragment() {
         }
     }
 
-    private fun createNotification(status: String, id: Int) {
+    private fun createNotification(status: String, orderId: String) {
+        val notificationId = (0..1000).random()
         when (status) {
             "Confirmed" -> {
                 setupNotification(
                     getString(R.string.confirmed_notification_title),
                     getString(R.string.confirmed_notification_content),
-                    id
+                    notificationId
                 )
             }
             "To Receive" -> {
                 setupNotification(
                     getString(R.string.to_receive_notification_title),
                     getString(R.string.to_receive_notification_content),
-                    id
+                    notificationId
                 )
             }
         }
+        ordersViewModel.mutationUpdateOrderNotified(orderId)
     }
 
     private fun setupNotification(title: String, content: String, id: Int) {

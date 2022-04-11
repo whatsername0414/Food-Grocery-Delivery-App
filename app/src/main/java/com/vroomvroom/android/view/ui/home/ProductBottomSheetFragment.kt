@@ -16,17 +16,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.vroomvroom.android.MerchantQuery
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentProductBottomSheetBinding
 import com.vroomvroom.android.domain.db.cart.CartItemEntity
 import com.vroomvroom.android.domain.db.cart.CartItemChoiceEntity
 import com.vroomvroom.android.domain.db.cart.MerchantEntity
-import com.vroomvroom.android.domain.model.merchant.Merchant
 import com.vroomvroom.android.domain.model.product.Option
 import com.vroomvroom.android.domain.model.product.Product
 import com.vroomvroom.android.view.ui.home.adapter.ChoiceAdapter
 import com.vroomvroom.android.utils.Utils.clearFocus
-import com.vroomvroom.android.view.ui.home.viewmodel.ActivityViewModel
+import com.vroomvroom.android.view.ui.activityviewmodel.ActivityViewModel
 import com.vroomvroom.android.view.ui.home.viewmodel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -64,7 +64,8 @@ class ProductBottomSheetFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val product = navArgs.product
-        val currentMerchant = activityViewModel.currentMerchant["merchant"]!!
+
+        val currentMerchant = activityViewModel.merchant
         binding.productPrice.text = "₱${"%.2f".format(product.price)}"
         binding.product = product
         product.option?.forEach { option ->
@@ -118,7 +119,7 @@ class ProductBottomSheetFragment : BottomSheetDialogFragment() {
 
     private fun cartItemBuilder(
         product: Product,
-        currentMerchant: Merchant
+        currentMerchant: MerchantQuery.GetMerchant
     ): CartItemEntity {
         var choicePrice = 0.0
         viewModel.optionMap.forEach { (_, value) ->
@@ -127,7 +128,7 @@ class ProductBottomSheetFragment : BottomSheetDialogFragment() {
             }
         }
         val merchant = MerchantEntity(
-            merchant_id = currentMerchant.id,
+            merchant_id = currentMerchant._id,
             merchant_name = currentMerchant.name
         )
         return CartItemEntity(

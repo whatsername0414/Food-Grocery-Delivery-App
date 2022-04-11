@@ -4,17 +4,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.vroomvroom.android.view.ui.orders.pagerfragment.ConfirmedFragment
-import com.vroomvroom.android.view.ui.orders.pagerfragment.DeliveredFragment
-import com.vroomvroom.android.view.ui.orders.pagerfragment.PendingFragment
-import com.vroomvroom.android.view.ui.orders.pagerfragment.ToReceiveFragment
+import com.vroomvroom.android.view.ui.orders.pagerfragment.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
 class FragmentAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
     FragmentStateAdapter(fragmentManager, lifecycle) {
     override fun getItemCount(): Int {
-        return 4
+        return 5
     }
 
     override fun createFragment(position: Int): Fragment {
@@ -27,6 +24,9 @@ class FragmentAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
             }
             3 -> {
                 return DeliveredFragment()
+            }
+            4 -> {
+                return CancelledFragment()
             }
         }
         return  PendingFragment()

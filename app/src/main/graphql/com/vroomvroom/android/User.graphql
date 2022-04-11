@@ -3,12 +3,27 @@ query User {
         id
         name
         email
-        phone_number
+        phone {
+            number
+            verified
+        }
         location {
             address
             city
             additional_information
             coordinates
+        }
+    }
+}
+
+mutation UpdateName($name: String!) {
+    updateName(name: $name) {
+        id
+        name
+        email
+        phone {
+            number
+            verified
         }
     }
 }

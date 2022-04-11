@@ -7,7 +7,7 @@
     tools:context=".view.ui.home.PaymentMethodFragment">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/paymentMethodAppBarLayout"
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/app_bar_bg"
@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/payment_method_toolbar"
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:theme="@style/ToolbarTheme" />
@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/paymentMethodAppBarLayout">
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
 
         <ImageView
             android:id="@+id/imageView5"

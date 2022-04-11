@@ -44,7 +44,7 @@ class LocationBottomSheetFragment : BottomSheetDialogFragment(), OnMapReadyCallb
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.btnAddAddress.setOnClickListener {
+        binding.btnEditAddress.setOnClickListener {
             findNavController().navigate(R.id.action_locationBottomSheetFragment_to_mapsFragment)
         }
     }

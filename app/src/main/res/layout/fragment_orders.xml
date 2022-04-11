@@ -30,31 +30,32 @@
             android:layout_height="wrap_content"
             android:background="@drawable/app_bar_bg"
             style="@style/Widget.AppCompat.Button.Borderless"
-            app:tabIndicatorFullWidth="false"
             app:tabTextAppearance="@style/CustomTextAppearance"
+            app:tabMode="scrollable"
+            android:overScrollMode="never"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/ic_pending"
                 android:text="@string/pending" />
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/ic_confirmed"
                 android:text="@string/confirmed" />
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/ic_rider"
                 android:text="@string/to_receive" />
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/ic_delivered"
                 android:text="@string/delivered" />
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cancelled" />
         </com.google.android.material.tabs.TabLayout>
     </com.google.android.material.appbar.AppBarLayout>
 

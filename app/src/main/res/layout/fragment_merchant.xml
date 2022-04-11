@@ -27,7 +27,7 @@
             app:contentScrim="?attr/colorOnPrimary"
             app:expandedTitleGravity="bottom"
             app:expandedTitleMarginBottom="48dp"
-            app:expandedTitleMarginStart="40dp"
+            app:expandedTitleMarginStart="16dp"
             app:expandedTitleTextAppearance="@style/ExpandedTitleStyle"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:scrimAnimationDuration="0"
@@ -75,8 +75,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:layout_marginStart="40dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginBottom="8dp"
+                app:layout_collapseMode="parallax"
                 android:gravity="center_vertical"
                 android:orientation="vertical">
 
@@ -85,10 +86,18 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <ImageView
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:src="@drawable/ic_white_star" />
+                    <RatingBar
+                        android:id="@+id/ratingBar"
+                        style="?android:ratingBarStyleSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:isIndicator="true"
+                        android:numStars="5"
+                        android:stepSize=".5"
+                        android:progressBackgroundTint="@color/white"
+                        android:progressTint="@color/yellow"
+                        android:secondaryProgressTint="@color/white"
+                        tools:rating="4.5" />
 
                     <TextView
                         android:id="@+id/merchant_rating"

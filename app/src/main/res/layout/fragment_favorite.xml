@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/favorite_toolbar"
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:theme="@style/ToolbarTheme"
@@ -39,8 +39,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/favoriteAppBarLayout"
-        tools:listitem="@layout/item_favorite_merchant"
-        tools:visibility="invisible" />
+        tools:listitem="@layout/item_favorite_merchant" />
 
     <!-- For shimmer loading effect -->
     <com.facebook.shimmer.ShimmerFrameLayout
@@ -96,7 +95,6 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textSize="16sp"/>
     </LinearLayout>
-
 
     <LinearLayout
         android:id="@+id/favoriteConnectionFailedNotice"

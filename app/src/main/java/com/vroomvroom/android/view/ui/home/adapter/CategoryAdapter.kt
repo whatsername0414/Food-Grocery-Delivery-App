@@ -5,8 +5,7 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
@@ -53,17 +52,16 @@ class CategoryAdapter: ListAdapter<CategoryQuery.GetCategory, CategoryViewHolder
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         val category = getItem(position)
         holder.binding.category = category
-        val imgBg = holder.binding.root.findViewById<ConstraintLayout>(R.id.cl_bg)
         holder.binding.root.setOnClickListener {
             if (categoryName != category.name) {
                 onCategoryClicked?.invoke(category)
                 holder.binding.categoryCardView.setCardBackgroundColor(Color.parseColor("#a30000"))
-                holder.binding.txtCatName.setTextColor(Color.parseColor("#ffffff"))
-                imgBg.background = AppCompatResources.getDrawable(holder.binding.imageView.context, R.drawable.cat_img_bg_white)
+                holder.binding.nameTv.setTextColor(Color.parseColor("#ffffff"))
+                holder.binding.imageBg.background = ContextCompat.getDrawable(holder.binding.root.context, R.drawable.white)
                 categoryName = category.name
             } else {
                 holder.binding.categoryCardView.setCardBackgroundColor(Color.parseColor("#ffffff"))
-                holder.binding.txtCatName.setTextColor(Color.parseColor("#000000"))
+                holder.binding.nameTv.setTextColor(Color.parseColor("#000000"))
                 onCategoryClicked?.invoke(null)
                 categoryName = null
             }
@@ -71,8 +69,8 @@ class CategoryAdapter: ListAdapter<CategoryQuery.GetCategory, CategoryViewHolder
         }
         if (categoryName != category.name) {
             holder.binding.categoryCardView.setCardBackgroundColor(Color.parseColor("#ffffff"))
-            holder.binding.txtCatName.setTextColor(Color.parseColor("#000000"))
-            imgBg.background = AppCompatResources.getDrawable(holder.binding.imageView.context, R.drawable.light_gray)
+            holder.binding.nameTv.setTextColor(Color.parseColor("#000000"))
+            holder.binding.imageBg.background = ContextCompat.getDrawable(holder.binding.root.context, R.drawable.light_gray)
         }
     }
 }

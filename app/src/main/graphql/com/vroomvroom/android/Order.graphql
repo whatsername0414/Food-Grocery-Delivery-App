@@ -1,12 +1,11 @@
 query Orders {
     getOrders {
         id
-        payment {
-            method
-            createdAt
-        }
         customer {
-            phone_number
+            phone{
+                number
+                verified
+            }
             location {
                 address
                 city
@@ -15,6 +14,16 @@ query Orders {
         merchant {
             _id
             name
+        }
+        payment {
+            method
+            created_at
+        }
+        delivery_address {
+            address
+            city
+            additional_information
+            coordinates
         }
         order_detail {
             delivery_fee
@@ -34,27 +43,32 @@ query Orders {
             }
         }
         status
-        createdAt
+        created_at
     }
 }
 
 query OrdersByStatus($status: String!) {
     getOrdersByStatus(status: $status) {
         id
-        payment {
-            method
-            createdAt
-        }
         customer {
-            phone_number
-            location {
-                address
-                city
+            phone{
+                number
+                verified
             }
         }
         merchant {
             _id
             name
+        }
+        payment {
+            method
+            created_at
+        }
+        delivery_address {
+            address
+            city
+            additional_information
+            coordinates
         }
         order_detail {
             delivery_fee
@@ -74,28 +88,33 @@ query OrdersByStatus($status: String!) {
             }
         }
         status
-        createdAt
+        created_at
     }
 }
 
 query Order($orderId: ID!) {
     getOrder(orderId: $orderId) {
         id
-        payment {
-            method
-            createdAt
-        }
         customer {
             name
-            phone_number
-            location {
-                address
-                city
+            phone{
+                number
+                verified
             }
         }
         merchant {
             _id
             name
+        }
+        payment {
+            method
+            created_at
+        }
+        delivery_address {
+            address
+            city
+            additional_information
+            coordinates
         }
         order_detail {
             delivery_fee
@@ -115,7 +134,8 @@ query Order($orderId: ID!) {
             }
         }
         status
-        createdAt
+        created_at
+        reviewed
     }
 }
 
@@ -141,6 +161,10 @@ query ordersStatus {
             status
             notified
         }
+        cancelled {
+            id
+            status
+        }
     }
 }
 
@@ -149,7 +173,13 @@ mutation CreateOrder($orderInput: OrderInput!) {
         id
         payment {
             method
-            createdAt
+            created_at
+        }
+        delivery_address {
+            address
+            city
+            additional_information
+            coordinates
         }
         order_detail {
             delivery_fee
@@ -173,6 +203,14 @@ mutation CreateOrder($orderInput: OrderInput!) {
     }
 }
 
+mutation updateDeliveryAddress($orderId: ID!, $deliveryAddress: LocationInput!) {
+    updateDeliveryAddress(orderId: $orderId, deliveryAddress: $deliveryAddress)
+}
+
 mutation updateOrderNotified($orderId: ID!) {
     updateOrderNotified(orderId: $orderId)
+}
+
+mutation cancelOrder($orderId: ID!, $reason: String!) {
+    cancelOrder(orderId: $orderId, reason: $reason)
 }

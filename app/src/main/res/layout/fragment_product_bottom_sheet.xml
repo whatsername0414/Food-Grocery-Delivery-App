@@ -12,6 +12,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="16dp"
         tools:context=".view.ui.home.ProductBottomSheetFragment">
 
         <View
@@ -27,7 +28,7 @@
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nestedScrollView"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="24dp"
             android:layout_marginBottom="16dp"
@@ -36,9 +37,9 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view"
-            app:layout_constraintDimensionRatio="1:1.05">
+            app:layout_constraintDimensionRatio="1:1">
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layout_product_bottom_sheet"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -52,31 +53,38 @@
                 <androidx.cardview.widget.CardView
                     android:id="@+id/bottom_sheet_cardView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_marginStart="32dp"
                     android:layout_marginTop="2dp"
                     android:layout_marginEnd="32dp"
-                    app:cardCornerRadius="16dp">
+                    app:cardCornerRadius="16dp"
+                    app:layout_constraintDimensionRatio="2.5:1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
                         android:id="@+id/bottom_sheet_product_img"
                         bottomSheetProductImageUrl="@{product.product_img_url}"
                         android:layout_width="match_parent"
-                        android:layout_height="196dp" />
+                        android:layout_height="match_parent" />
 
                 </androidx.cardview.widget.CardView>
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/product_name"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
+                    android:layout_marginEnd="32dp"
                     android:layout_marginStart="32dp"
-                    android:layout_marginTop="32dp"
+                    android:layout_marginTop="16dp"
                     android:text="@{product.name}"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                    android:textSize="24sp"
-                    app:layout_constraintStart_toStartOf="@+id/cardView4"
-                    app:layout_constraintTop_toBottomOf="@+id/cardView4" />
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/bottom_sheet_cardView" />
 
                 <TextView
                     android:id="@+id/product_price"
@@ -84,29 +92,38 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
                     android:layout_marginStart="32dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="8dp"
                     android:textColor="@color/black"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/product_name" />
 
                 <TextView
                     android:id="@+id/bottomSheetTextDescription"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
                     android:layout_marginStart="32dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="32dp"
+                    android:layout_marginTop="8dp"
                     android:text="@{product.description}"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/product_price" />
 
                 <LinearLayout
                     android:id="@+id/optionLinearLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="32dp"
                     android:layout_marginBottom="16dp"
-                    android:orientation="vertical" />
+                    android:orientation="vertical"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/bottomSheetTextDescription" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -119,7 +136,10 @@
                     app:boxCornerRadiusBottomStart="8dp"
                     app:boxCornerRadiusTopEnd="8dp"
                     app:boxCornerRadiusTopStart="8dp"
-                    app:hintTextColor="@color/maroon">
+                    app:hintTextColor="@color/maroon"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/optionLinearLayout">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/instruction_input_editText"
@@ -130,7 +150,7 @@
                         android:maxLength="100"
                         android:nestedScrollingEnabled="true" />
                 </com.google.android.material.textfield.TextInputLayout>
-            </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -198,6 +218,7 @@
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 app:cornerRadius="16dp"
+                app:elevation="1dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

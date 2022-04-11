@@ -21,35 +21,12 @@ class CheckoutViewModel @Inject constructor(
     private val graphQLRepository: GraphQLRepository
 ) : ViewModel() {
 
-    private val _user by lazy { MutableLiveData<ViewState<UpdateUserLocationMutation.Data>>() }
-    val user: LiveData<ViewState<UpdateUserLocationMutation.Data>>
-        get() = _user
     private val _order by lazy { MutableLiveData<ViewState<CreateOrderMutation.Data>>() }
     val order: LiveData<ViewState<CreateOrderMutation.Data>>
         get() = _order
     val isLocationConfirmed by lazy { MutableLiveData(false) }
     var subtotal = 0.0
-
-    fun mutationUpdateUserLocation(locationEntity: UserLocationEntity) {
-        _user.postValue(ViewState.Loading)
-        viewModelScope.launch {
-            val response = graphQLRepository.mutationUpdateUserLocation(locationEntity)
-            response?.let { data ->
-                when(data) {
-                    is ViewState.Success -> {
-                        isLocationConfirmed.postValue(true)
-                        _user.postValue(data)
-                    }
-                    is ViewState.Error -> {
-                        _user.postValue(data)
-                    }
-                    else -> {
-                        _user.postValue(data)
-                    }
-                }
-            }
-        }
-    }
+    var isComputed = false
 
     fun mutationCreateOrder(orderInput: OrderInput) {
         _order.postValue(ViewState.Loading)

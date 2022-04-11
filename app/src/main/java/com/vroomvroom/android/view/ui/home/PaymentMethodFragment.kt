@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.vroomvroom.android.databinding.FragmentPaymentMethodBinding
-import com.vroomvroom.android.view.ui.home.viewmodel.ActivityViewModel
+import com.vroomvroom.android.view.ui.activityviewmodel.ActivityViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
@@ -33,7 +33,7 @@ class PaymentMethodFragment : Fragment() {
         val navController = findNavController()
         val appBarConfiguration = AppBarConfiguration(navController.graph)
 
-        binding.paymentMethodToolbar.setupWithNavController(navController, appBarConfiguration)
+        binding.toolbar.setupWithNavController(navController, appBarConfiguration)
 
         binding.cashConstraint.setOnClickListener {
             activityViewModel.paymentMethod.postValue("Cash On Delivery")

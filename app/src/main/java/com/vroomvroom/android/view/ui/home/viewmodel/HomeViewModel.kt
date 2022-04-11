@@ -7,13 +7,11 @@ import androidx.lifecycle.viewModelScope
 import com.vroomvroom.android.*
 import com.vroomvroom.android.domain.db.cart.CartItemChoiceEntity
 import com.vroomvroom.android.domain.db.cart.CartItemEntity
-import com.vroomvroom.android.domain.model.merchant.Merchant
 import com.vroomvroom.android.domain.model.merchant.Merchants
 import com.vroomvroom.android.repository.local.RoomRepository
 import com.vroomvroom.android.repository.remote.GraphQLRepository
 import com.vroomvroom.android.view.state.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -46,6 +44,8 @@ class HomeViewModel @Inject constructor(
         get() = _favorite
 
     val cartItem = roomRepository.getAllCartItem()
+    var categoryClicked = false
+    lateinit var currentMerchantId: String
     var optionMap: MutableMap<String, CartItemChoiceEntity> = mutableMapOf()
     val isCartCardViewVisible by lazy { MutableLiveData(false) }
 
@@ -169,40 +169,47 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun insertCartItem(cartItemEntity: CartItemEntity) = viewModelScope.launch(Dispatchers.IO) {
-        try {
-            val roomResponse = roomRepository.insertCartItem(cartItemEntity)
+    fun insertCartItem(cartItemEntity: CartItemEntity) {
+        viewModelScope.launch {
+            val id = roomRepository.insertCartItem(cartItemEntity)
             if (optionMap.isNotEmpty()) {
                 optionMap.forEach { (_, value) ->
                     val cartItemChoice = CartItemChoiceEntity(
                         name = value.name,
                         additional_price = value.additional_price,
                         optionType = value.optionType,
-                        cartItemId = roomResponse.toInt()
+                        cartItemId = id.toInt()
                     )
                     roomRepository.insertCartItemChoice(cartItemChoice)
                 }
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
         }
     }
 
-    fun updateCartItem(cartItemEntity: CartItemEntity) = viewModelScope.launch(Dispatchers.IO) {
-        roomRepository.updateCartItem(cartItemEntity)
+    fun updateCartItem(cartItemEntity: CartItemEntity) {
+        viewModelScope.launch {
+            roomRepository.updateCartItem(cartItemEntity)
+        }
+
     }
 
-    fun deleteCartItem(cartItemEntity: CartItemEntity) = viewModelScope.launch(Dispatchers.IO) {
-        roomRepository.deleteCartItem(cartItemEntity)
+    fun deleteCartItem(cartItemEntity: CartItemEntity) {
+        viewModelScope.launch {
+            roomRepository.deleteCartItem(cartItemEntity)
+        }
     }
 
-    fun deleteCartItemChoice(cartItemChoiceEntity: CartItemChoiceEntity) = viewModelScope.launch(
-        Dispatchers.IO) {
-        roomRepository.deleteCartItemChoice(cartItemChoiceEntity)
+    fun deleteCartItemChoice(cartItemChoiceEntity: CartItemChoiceEntity) {
+        viewModelScope.launch {
+            roomRepository.deleteCartItemChoice(cartItemChoiceEntity)
+        }
     }
 
-    fun deleteAllCartItem() = viewModelScope.launch(Dispatchers.IO) {
-        roomRepository.deleteAllCartItem()
-        roomRepository.deleteAllCartItemChoice()
+    fun deleteAllCartItem() {
+        viewModelScope.launch {
+            roomRepository.deleteAllCartItem()
+            roomRepository.deleteAllCartItemChoice()
+        }
+
     }
 }

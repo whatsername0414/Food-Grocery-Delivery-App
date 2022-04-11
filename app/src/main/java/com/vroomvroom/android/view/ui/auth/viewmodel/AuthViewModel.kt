@@ -118,12 +118,22 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    fun insertUserRecord(userEntity: UserEntity) = viewModelScope.launch(Dispatchers.IO) {
-        roomRepository.insertUser(userEntity)
+    fun insertUserRecord(userEntity: UserEntity) {
+        viewModelScope.launch(Dispatchers.IO) {
+            roomRepository.insertUser(userEntity)
+        }
     }
 
-    fun updateUserRecord(userEntity: UserEntity) = viewModelScope.launch(Dispatchers.IO) {
-        roomRepository.updateUser(userEntity)
+    fun updateUserRecord(userEntity: UserEntity) {
+        viewModelScope.launch(Dispatchers.IO) {
+            roomRepository.updateUser(userEntity)
+        }
+    }
+
+    fun updateUserName(id: String, name: String) {
+        viewModelScope.launch {
+            roomRepository.updateUserName(id, name)
+        }
     }
 
     fun taskGoogleSignIn(data: Intent?) {

@@ -94,7 +94,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:text="@{order.customer.location.address ?? `Not Provided`}"
+                    android:text="@{order.delivery_address.address ?? `Not Provided`}"
                     app:layout_constraintEnd_toStartOf="@+id/textView21"
                     app:layout_constraintStart_toEndOf="@+id/imageView11"
                     app:layout_constraintTop_toTopOf="parent"
@@ -106,7 +106,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginBottom="8dp"
-                    android:text="@{order.customer.location.city ?? `Not Provided`}"
+                    android:text="@{order.delivery_address.city ?? `Not Provided`}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/imageView11"
                     app:layout_constraintTop_toBottomOf="@+id/textView19"
@@ -118,7 +118,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
-                    android:text="@{order.customer.phone_number}"
+                    android:text="@{order.customer.phone.number}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="+639319481202" />
@@ -178,14 +178,14 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="16dp"
             android:background="@drawable/light_gray"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView22" />
+            app:layout_constraintTop_toBottomOf="@+id/subtotal" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

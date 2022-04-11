@@ -39,7 +39,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
-            android:id="@+id/txt_catName"
+            android:id="@+id/nameTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@{category.name}"

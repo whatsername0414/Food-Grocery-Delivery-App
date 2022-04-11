@@ -22,6 +22,11 @@ query Merchant($merchantId: String!) {
                 }
             }
         }
+        reviews {
+            rate
+            _review
+            created_at
+        }
         rates
         ratings
         favorite
@@ -46,4 +51,8 @@ query FavoriteMerchant {
 
 mutation Favorite($merchantId: ID!, $direction: Int!) {
     updateFavorite(merchantId: $merchantId, direction: $direction)
+}
+
+mutation Review($reviewInput: ReviewInput!) {
+    reviewMerchant(review: $reviewInput)
 }

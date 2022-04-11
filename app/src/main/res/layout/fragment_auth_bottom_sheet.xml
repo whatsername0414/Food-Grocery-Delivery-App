@@ -21,7 +21,7 @@
         android:id="@+id/textView7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="24dp"
         android:text="@string/login_or_sign_up"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"

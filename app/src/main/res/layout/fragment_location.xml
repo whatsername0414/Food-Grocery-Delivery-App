@@ -12,69 +12,92 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:indeterminateTint="@color/maroon"
         android:indeterminate="true"
+        android:indeterminateTint="@color/maroon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
+    <ImageView
+        android:id="@+id/imageView8"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:src="@drawable/map"
+        app:layout_constraintBottom_toTopOf="@+id/guideline12"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline11" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/allow_your_location"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textSize="32sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView8" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/we_will_need_your_location_to_ngive_you_better_experience"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <Button
+        android:id="@+id/btn_allowLocation"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/btn_background"
+        android:text="@string/allow_location_access"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
-        <ImageView
-            android:id="@+id/imageView8"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:src="@drawable/map"
-            />
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/bnt_enterLocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/btn_background_gray"
+        android:elevation="0dp"
+        android:text="@string/enter_my_location"
+        android:textAllCaps="false"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textColor="@color/gray"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_allowLocation" />
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Allow your location"
-            android:textSize="32sp"
-            android:layout_marginTop="32dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2"/>
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent=".20" />
 
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="We will need your location to\ngive you better experience."
-            android:textSize="18sp"
-            android:layout_marginTop="8dp"
-            android:textAppearance="@style/TextAppearance.AppCompat"
-            android:textAlignment="center"/>
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent=".45" />
 
-        <Button
-            android:id="@+id/btn_allowLocation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Allow Location Access"
-            android:layout_marginEnd="32dp"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="64dp"
-            android:background="@drawable/btn_background"/>
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/bnt_enterLocation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:elevation="0dp"
-            android:layout_marginTop="16dp"
-            android:text="Enter my location"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            android:textStyle="bold"
-            android:letterSpacing="0.05"
-            android:textAllCaps="false"
-            android:textColor="@color/maroon"
-            android:background="@android:color/transparent"
-            android:layout_marginBottom="16dp"/>
-
-    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
