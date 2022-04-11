@@ -11,6 +11,7 @@
     <string name="placed_order_message">Order placed successfully</string>
     <string name="creating_dialog_message">Creating order…</string>
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyDCtiSPULjYWEZ5Ly9bB1G3WRQrg6ubeDI</string>
+    <string name="maps_alert_dialog_proceed">Proceed Anyway</string>
     <string name="facebook_app_id">593283722014887</string>
     <string name="fb_login_protocol_scheme">fb593283722014887</string>
     <string name="special_instructions">Special Instructions</string>
@@ -190,7 +191,5 @@
     <string name="placed_on">Placed on: %s</string>
     <string name="invalid_phone_number">Invalid phone number</string>
     <string name="cancel_successful">Cancel Successful</string>
-
     <string name="mapbox_access_token">sk.eyJ1Ijoid2g0dHNlcm5hbWUiLCJhIjoiY2wxYXQxeWpnMjBwbTNra2FxOW8xa3BhOCJ9.1nNii4m14gdAxSOksaVKhA</string>
-
 </resources>
