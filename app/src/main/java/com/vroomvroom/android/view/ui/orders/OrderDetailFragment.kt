@@ -1,72 +1,53 @@
 package com.vroomvroom.android.view.ui.orders
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupWithNavController
-import com.vroomvroom.android.OrderQuery
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentOrderDetailBinding
-import com.vroomvroom.android.utils.Utils.dateBuilder
+import com.vroomvroom.android.domain.model.order.OrderResponse
+import com.vroomvroom.android.utils.Constants.CANCEL_SUCCESSFUL
+import com.vroomvroom.android.utils.Constants.FORMAT_DD_MMM_YYYY_HH_MM_SS
+import com.vroomvroom.android.utils.Utils.parseTimeToString
 import com.vroomvroom.android.view.state.ViewState
-import com.vroomvroom.android.view.ui.activityviewmodel.ActivityViewModel
-import com.vroomvroom.android.view.ui.orders.adapter.OrderDetailProductAdapter
-import com.vroomvroom.android.view.ui.orders.viewmodel.OrdersViewModel
+import com.vroomvroom.android.view.ui.base.BaseFragment
+import com.vroomvroom.android.view.ui.orders.adapter.OrderProductAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class OrderDetailFragment : Fragment() {
+class OrderDetailFragment : BaseFragment<FragmentOrderDetailBinding>(
+    FragmentOrderDetailBinding::inflate
+) {
 
-    private val viewModel by viewModels<OrdersViewModel>()
-    private val activityViewModel by activityViewModels<ActivityViewModel>()
-    private val adapter by lazy { OrderDetailProductAdapter() }
     private val args: OrderDetailFragmentArgs by navArgs()
 
-    private lateinit var binding: FragmentOrderDetailBinding
-    private lateinit var navController: NavController
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentOrderDetailBinding.inflate(inflater)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         navController = findNavController()
-        return binding.root
+        val currentBackStackEntry = navController.currentBackStackEntry
+        val savedStateHandle = currentBackStackEntry?.savedStateHandle
+        savedStateHandle?.getLiveData<Boolean>(CANCEL_SUCCESSFUL)
+            ?.observe(currentBackStackEntry) { isCancelled ->
+                if (isCancelled) navController.popBackStack()
+            }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val appBarConfiguration = AppBarConfiguration(navController.graph)
-        binding.toolbar.setupWithNavController(navController, appBarConfiguration)
+        binding.appBarLayout.toolbar.setupToolbar()
 
-        binding.orderProductRv.adapter = adapter
-
-        viewModel.queryOrder(args.orderId)
+        ordersViewModel.queryOrder(args.orderId)
         observeOrder()
         observeReviewed()
 
-        binding.btnRetry.setOnClickListener {
-            viewModel.queryOrder(args.orderId)
-        }
-
     }
 
-    @SuppressLint("SetTextI18n")
     private fun observeOrder() {
-        viewModel.order.observe(viewLifecycleOwner, { response ->
+        ordersViewModel.order.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is ViewState.Loading -> {
                     binding.orderDetailLayout.visibility = View.GONE
@@ -74,15 +55,17 @@ class OrderDetailFragment : Fragment() {
                     binding.shimmerLayout.startShimmer()
                 }
                 is ViewState.Success -> {
-                    binding.connectionFailedLayout.visibility = View.GONE
+                    binding.commonNoticeLayout.hideNotice()
                     binding.orderDetailLayout.visibility = View.VISIBLE
-                    val order = response.result.getOrder
-                    viewModel.merchantId = order.merchant._id
+                    val order = response.result
+                    ordersViewModel.merchantId = order.merchant._id
                     updateButtonModify(order)
                     updateViewsOnDataReady(order)
                     binding.orderMerchantLayout.setOnClickListener {
                         navController.navigate(
-                            OrderDetailFragmentDirections.actionOrderDetailFragmentToMerchantFragment(order.merchant._id)
+                            OrderDetailFragmentDirections.actionGlobalToMerchantFragment(
+                                order.merchant._id
+                            )
                         )
                     }
                 }
@@ -90,13 +73,15 @@ class OrderDetailFragment : Fragment() {
                     binding.orderDetailLayout.visibility = View.GONE
                     binding.shimmerLayout.visibility = View.GONE
                     binding.shimmerLayout.stopShimmer()
-                    binding.connectionFailedLayout.visibility = View.VISIBLE
+                    binding.commonNoticeLayout.showNetworkError {
+                        ordersViewModel.queryOrder(args.orderId)
+                    }
                 }
             }
-        })
+        }
     }
 
-    private fun updateButtonModify(order: OrderQuery.GetOrder) {
+    private fun updateButtonModify(order: OrderResponse) {
         when (order.status) {
             "Pending" -> {
                 binding.btnModifyOrder.text = getString(R.string.cancel)
@@ -132,29 +117,32 @@ class OrderDetailFragment : Fragment() {
     }
 
     private fun observeReviewed() {
-        activityViewModel.reviewed.observe(viewLifecycleOwner, { reviewed ->
+        mainActivityViewModel.reviewed.observe(viewLifecycleOwner) { reviewed ->
             if (reviewed) {
                 binding.btnModifyOrder.visibility = View.GONE
             }
-        })
+        }
     }
 
     private fun reviewNavigation(orderId: String) {
         navController.navigate(
             OrderDetailFragmentDirections
-                .actionOrderDetailFragmentToReviewBottomSheetFragment(viewModel.merchantId, orderId)
+                .actionOrderDetailFragmentToReviewBottomSheetFragment(ordersViewModel.merchantId, orderId)
         )
     }
 
-    @SuppressLint("SetTextI18n")
-    private fun updateViewsOnDataReady(order: OrderQuery.GetOrder) {
+    private fun updateViewsOnDataReady(order: OrderResponse) {
         binding.order = order
-        binding.subTotalTv.text = "₱${"%.2f".format(order.order_detail.total_price)}"
-        binding.deliveryFee.text = "₱${"%.2f".format(order.order_detail.delivery_fee)}"
-        val total = order.order_detail.total_price + order.order_detail.delivery_fee
-        binding.totalTv.text = "₱${"%.2f".format(total)}"
-        adapter.submitList(order.order_detail.product)
-        binding.placedDate.text = "Placed on: " + dateBuilder(order.created_at as String)
+        binding.subTotalTv.text =
+            getString(R.string.peso, "%.2f".format(order.orderDetail.totalPrice))
+        binding.deliveryFee.text =
+            getString(R.string.peso, "%.2f".format(order.orderDetail.deliveryFee))
+        val total = order.orderDetail.totalPrice + order.orderDetail.deliveryFee
+        binding.totalTv.text = getString(R.string.peso, "%.2f".format(total))
+        binding.orderProductRv.adapter = OrderProductAdapter(order.orderDetail.product)
+        binding.placedDate.text =
+            getString(R.string.placed_on,
+                parseTimeToString(order.created_at.toLong(), FORMAT_DD_MMM_YYYY_HH_MM_SS))
         binding.shimmerLayout.visibility = View.GONE
         binding.shimmerLayout.stopShimmer()
     }

@@ -15,18 +15,15 @@
 
         <RatingBar
             android:id="@+id/ratingBar"
-            style="?android:ratingBarStyleSmall"
+            style="@style/RatingBarSmall"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:isIndicator="true"
             android:numStars="5"
             android:rating="@{review.rate}"
-            android:progressBackgroundTint="@color/light_gray"
-            android:progressTint="@color/yellow"
-            android:secondaryProgressTint="@color/light_gray"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:rating="3" />
+            tools:rating="5" />
 
         <TextView
             android:id="@+id/textView35"
@@ -55,7 +52,7 @@
             android:layout_height="1dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
-            android:background="@drawable/light_gray"
+            android:background="@drawable/bg_gray_f2f_rounded_100dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

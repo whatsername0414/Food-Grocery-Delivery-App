@@ -1,23 +1,29 @@
 package com.vroomvroom.android.view.ui.home.adapter
 
+import android.annotation.SuppressLint
+import android.text.format.DateUtils
+import android.text.format.DateUtils.FORMAT_SHOW_TIME
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
+import com.bumptech.glide.Glide
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.ItemMerchantBinding
 import com.vroomvroom.android.domain.db.user.UserEntity
-import com.vroomvroom.android.domain.model.merchant.MerchantData
+import com.vroomvroom.android.domain.model.merchant.Merchant
+import com.vroomvroom.android.utils.Constants.ADD_TO_FAVORITES
+import com.vroomvroom.android.utils.Constants.REMOVE_FROM_FAVORITES
 import com.vroomvroom.android.utils.Utils.setSafeOnClickListener
+import com.vroomvroom.android.utils.Utils.stringBuilder
+import com.vroomvroom.android.utils.Utils.timeFormatter
 
 class MerchantDiffUtil(
-    private val oldList: List<MerchantData?>,
-    private val newList: List<MerchantData?>
+    private val oldList: List<Merchant?>,
+    private val newList: List<Merchant?>
 ) : DiffUtil.Callback() {
     override fun getOldListSize(): Int {
         return oldList.size
@@ -37,14 +43,14 @@ class MerchantDiffUtil(
 
 }
 
-class MerchantAdapter(private var inFavorites: Boolean):
-    RecyclerView.Adapter<MerchantViewHolder>() {
+class MerchantAdapter: RecyclerView.Adapter<MerchantViewHolder>() {
 
     private var currentUser: UserEntity? = null
-    var oldList = mutableListOf<MerchantData?>()
-    var onMerchantClicked: ((MerchantData) -> Unit)? = null
+    private var oldList = mutableListOf<Merchant?>()
+    var onMerchantClicked: ((Merchant) -> Unit)? = null
     var onFavoriteClicked: ((
-        MerchantData,
+        Merchant,
+        position: Int,
         direction: Int
     ) -> Unit)? = null
 
@@ -59,35 +65,30 @@ class MerchantAdapter(private var inFavorites: Boolean):
         return MerchantViewHolder(binding)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: MerchantViewHolder, position: Int) {
         val merchant = oldList[position]
         merchant?.let { data ->
+            holder.binding.tvOpening.text = timeFormatter(data.opening)
             holder.binding.merchant = data
-            if (inFavorites) {
+            Glide
+                .with(holder.itemView.context)
+                .load(data.img_url)
+                .placeholder(R.drawable.ic_placeholder)
+                .into(holder.binding.merchantImg)
+
+            if (currentUser != null) {
                 holder.binding.favoriteLayout.visibility = View.VISIBLE
                 holder.binding.checkboxFavorite.apply {
                     this.setSafeOnClickListener {
-                        setOnFavoriteClick(data, isChecked)
+                        setOnFavoriteClick(data, position, isChecked)
                     }
                 }
             } else {
-                if (currentUser != null) {
-                    holder.binding.favoriteLayout.visibility = View.VISIBLE
-                    holder.binding.checkboxFavorite.apply {
-                        this.setSafeOnClickListener {
-                            setOnFavoriteClick(data, isChecked)
-                        }
-                    }
-                } else {
-                    holder.binding.favoriteLayout.visibility = View.GONE
-                }
+                holder.binding.favoriteLayout.visibility = View.GONE
             }
 
-            val categoryList = StringBuilder()
-            data.categories.forEach { category ->
-                categoryList.append("$category . ")
-            }
-            holder.binding.restaurantCategories.text = categoryList
+            holder.binding.restaurantCategories.text = data.categories.stringBuilder()
             if (data.isOpen) {
                 holder.binding.closedBg.visibility = View.GONE
                 holder.binding.tvOpening.visibility = View.GONE
@@ -116,25 +117,20 @@ class MerchantAdapter(private var inFavorites: Boolean):
         currentUser = user
     }
 
-    fun setData(newList: MutableList<MerchantData?>) {
+    fun submitList(newList: MutableList<Merchant?>) {
         val diffUtil = MerchantDiffUtil(oldList, newList)
         val diffResult = DiffUtil.calculateDiff(diffUtil)
         oldList = newList
         diffResult.dispatchUpdatesTo(this)
     }
 
-    private fun setOnFavoriteClick(data: MerchantData, isChecked: Boolean) {
+    private fun setOnFavoriteClick(data: Merchant, position: Int, isChecked: Boolean) {
             if (!isChecked) {
-                onFavoriteClicked?.invoke(data, 0)
+                onFavoriteClicked?.invoke(data, position, REMOVE_FROM_FAVORITES)
             } else {
-                onFavoriteClicked?.invoke(data, 1)
+                onFavoriteClicked?.invoke(data, position, ADD_TO_FAVORITES)
             }
     }
 }
 
 class MerchantViewHolder(val binding: ItemMerchantBinding): RecyclerView.ViewHolder(binding.root)
-
-@BindingAdapter("merchantImageUrl")
-fun setMerchantImageUrl(imageView: ImageView, url: String) {
-    imageView.load(url)
-}

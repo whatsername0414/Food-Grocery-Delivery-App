@@ -1,72 +1,52 @@
 package com.vroomvroom.android.view.ui.location
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupWithNavController
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentAddressesBinding
 import com.vroomvroom.android.domain.db.user.UserLocationEntity
+import com.vroomvroom.android.utils.ClickType
 import com.vroomvroom.android.view.state.ViewState
+import com.vroomvroom.android.view.ui.base.BaseFragment
 import com.vroomvroom.android.view.ui.location.adapter.AddressAdapter
-import com.vroomvroom.android.view.ui.location.viewmodel.LocationViewModel
-import com.vroomvroom.android.view.ui.orders.viewmodel.OrdersViewModel
+import com.vroomvroom.android.view.ui.widget.CommonAlertDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class AddressesFragment : Fragment() {
-
-    private val viewModel by viewModels<LocationViewModel>()
-    private val ordersViewModel by viewModels<OrdersViewModel>()
-    private val adapter by lazy { AddressAdapter() }
+class AddressesFragment : BaseFragment<FragmentAddressesBinding>(
+    FragmentAddressesBinding::inflate
+) {
     private val args: AddressesFragmentArgs by navArgs()
-
-    private lateinit var binding: FragmentAddressesBinding
-    private lateinit var navController: NavController
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentAddressesBinding.inflate(inflater)
-        navController = findNavController()
-        return binding.root
-    }
+    private val adapter by lazy { AddressAdapter() }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val appBarConfiguration = AppBarConfiguration(navController.graph)
-        binding.toolbar.setupWithNavController(navController, appBarConfiguration)
+        navController = findNavController()
+        binding.appBarLayout.toolbar.setupToolbar()
 
         binding.addressRv.adapter = adapter
         observeUserLocation()
 
         adapter.onAddressClicked = { address ->
-            viewModel.clickedAddress = address
-            viewModel.updateLocation(address.use())
+            locationViewModel.clickedAddress = address
+            locationViewModel.updateLocation(address.use())
         }
 
         adapter.onDeleteClicked = { address ->
-            viewModel.userLocation.observe(viewLifecycleOwner, { locations ->
-                if (address.current_use && !locations.isNullOrEmpty()) {
-                    viewModel.updateLocation(locations.last().use())
+            locationViewModel.userLocation.observe(viewLifecycleOwner) { locations ->
+                if (address.currentUse && !locations.isNullOrEmpty()) {
+                    locationViewModel.updateLocation(locations.last().use())
                 }
                 if (locations.size > 1) {
-                    viewModel.deleteLocation(address)
+                    locationViewModel.deleteLocation(address)
                 }
-            })
+            }
         }
 
         binding.btnAddAddress.setOnClickListener {
@@ -76,22 +56,23 @@ class AddressesFragment : Fragment() {
         if (args.orderId != null) {
             observeChangeAddress()
             binding.btnSave.visibility = View.VISIBLE
-            binding.btnSave.setOnClickListener {
-                viewModel.clickedAddress?.let { address ->
-                    ordersViewModel.mutationUpdateDeliveryAddress(args.orderId!!, address)
+            adapter.currentUseAddress =  { address ->
+                    binding.btnSave.setOnClickListener{
+                        ordersViewModel
+                            .mutationUpdateDeliveryAddress(args.orderId ?: "", address)
                 }
             }
         }
     }
 
     private fun observeUserLocation() {
-        viewModel.userLocation.observe(viewLifecycleOwner, { locations ->
+        locationViewModel.userLocation.observe(viewLifecycleOwner) { locations ->
             adapter.submitList(locations)
-        })
+        }
     }
 
     private fun observeChangeAddress() {
-        ordersViewModel.changeAddress.observe(viewLifecycleOwner, { response ->
+        ordersViewModel.changeAddress.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is ViewState.Loading -> {
                     binding.progressIndicator.visibility = View.VISIBLE
@@ -107,14 +88,32 @@ class AddressesFragment : Fragment() {
                 }
                 is ViewState.Error -> {
                     binding.progressIndicator.visibility = View.GONE
-                    Toast.makeText(
-                        requireContext(),
-                        "Something went wrong",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    initAlertDialog()
                 }
             }
-        })
+        }
+    }
+
+    private fun initAlertDialog() {
+        val dialog = CommonAlertDialog(
+            requireActivity()
+        )
+        dialog.show(
+            getString(R.string.network_error),
+            getString(R.string.network_error_message),
+            getString(R.string.cancel),
+            getString(R.string.retry)
+        ) { type ->
+            when (type) {
+                ClickType.POSITIVE -> {
+                    adapter.currentUseAddress = { address ->
+                        ordersViewModel.mutationUpdateDeliveryAddress(args.orderId ?: "", address)
+                    }
+                    dialog.dismiss()
+                }
+                ClickType.NEGATIVE -> dialog.dismiss()
+            }
+        }
     }
 
     private fun UserLocationEntity.use(): UserLocationEntity {

@@ -16,8 +16,6 @@ interface CartItemDAO {
 
     @Delete
     suspend fun deleteCartItem(cartItemEntity: CartItemEntity)
-    @Delete
-    suspend fun deleteCartItemChoice(cartItemChoiceEntity: CartItemChoiceEntity)
 
     @Query("DELETE FROM cart_item_table")
     suspend fun deleteAllCartItem()

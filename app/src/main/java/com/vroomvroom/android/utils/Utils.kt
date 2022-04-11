@@ -3,7 +3,6 @@ package com.vroomvroom.android.utils
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
@@ -11,18 +10,21 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.location.Address
 import android.location.Geocoder
-import android.os.CountDownTimer
 import android.os.SystemClock
 import android.text.TextUtils
+import android.text.format.DateUtils
 import android.util.Patterns
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -36,25 +38,25 @@ import com.google.android.material.textfield.TextInputEditText
 import com.vmadalin.easypermissions.EasyPermissions
 import com.vroomvroom.android.R
 import com.vroomvroom.android.domain.db.user.UserLocationEntity
-import com.vroomvroom.android.domain.model.merchant.MerchantData
-import com.vroomvroom.android.view.ui.home.adapter.MerchantAdapter
 import java.io.IOException
-
-class SafeClickListener(
-    private var defaultInterval: Int = 3000,
-    private val onSafeCLick: (View) -> Unit
-) : View.OnClickListener {
-    private var lastTimeClicked: Long = 0
-    override fun onClick(v: View) {
-        if (SystemClock.elapsedRealtime() - lastTimeClicked < defaultInterval) {
-            return
-        }
-        lastTimeClicked = SystemClock.elapsedRealtime()
-        onSafeCLick(v)
-    }
-}
+import java.text.SimpleDateFormat
+import java.util.*
 
 object Utils {
+
+    class SafeClickListener(
+        private var defaultInterval: Int = 3000,
+        private val onSafeCLick: (View) -> Unit
+    ) : View.OnClickListener {
+        private var lastTimeClicked: Long = 0
+        override fun onClick(v: View) {
+            if (SystemClock.elapsedRealtime() - lastTimeClicked < defaultInterval) {
+                return
+            }
+            lastTimeClicked = SystemClock.elapsedRealtime()
+            onSafeCLick(v)
+        }
+    }
 
     fun <A : Activity> Activity.startNewActivity(activity: Class<A>) {
         Intent(this, activity).also {
@@ -75,10 +77,17 @@ object Utils {
 
     fun Activity.hideSoftKeyboard() {
         currentFocus?.let {
-            val inputMethodManager = ContextCompat.getSystemService(this, InputMethodManager::class.java)!!
-            inputMethodManager.hideSoftInputFromWindow(it.windowToken, 0)
+            val imm = ContextCompat.getSystemService(this, InputMethodManager::class.java)
+            imm?.hideSoftInputFromWindow(it.windowToken, InputMethodManager.HIDE_IMPLICIT_ONLY)
         }
     }
+
+    fun Fragment.showSoftKeyboard(searchView: SearchView) {
+        val imm = (context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+        imm.toggleSoftInputFromWindow(
+            searchView.windowToken, 0, InputMethodManager.HIDE_IMPLICIT_ONLY)
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     fun clearFocus(view: View, editText: TextInputEditText, activity: Activity) {
         if (view !is TextInputEditText) {
@@ -115,30 +124,6 @@ object Utils {
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION
         )
-    }
-
-    private fun merchantModifier(
-        merchant: MerchantData,
-        isFavorite: Boolean
-    ) = MerchantData(
-        _id = merchant._id,
-        name = merchant.name,
-        img_url = merchant.img_url,
-        categories = merchant.categories,
-        rates = merchant.rates,
-        ratings = merchant.ratings,
-        favorite = isFavorite,
-        opening = merchant.opening,
-        isOpen = merchant.isOpen
-    )
-
-    fun MerchantAdapter.updateAdapter(
-        merchant: MerchantData,
-        isChecked: Boolean,
-    ) {
-        val position = this.oldList.indexOf(this.oldList.find { it?._id == merchant._id })
-        this.oldList[position] = merchantModifier(merchant, isChecked)
-        this.notifyItemChanged(position)
     }
 
     fun createLocationRequest(activity: Activity, hostFragment: Fragment) {
@@ -186,32 +171,45 @@ object Utils {
             city = address?.locality,
             latitude = latLng.latitude,
             longitude = latLng.longitude,
-            current_use = true
+            currentUse = true
         )
     }
 
-    fun geoCoder(context: Context, coordinates: LatLng): Address? {
-        val geoCoder = Geocoder(context)
-        try {
-            val addresses = geoCoder.getFromLocation(
-                coordinates.latitude,
-                coordinates.longitude,
-                1
-            )
-            if (addresses.isNotEmpty()) {
-                return addresses.first()
-            }
-        } catch (e: IOException) {
-            Toast.makeText(context, "Unknown error occurred", Toast.LENGTH_SHORT).show()
+    fun List<String?>.stringBuilder(): StringBuilder {
+        val categoryList = StringBuilder()
+        this.forEach { category ->
+            categoryList.append("$category • ")
         }
-        return null
+        return categoryList
     }
+
+    fun timeFormatter(time: Int): String {
+        val ft = DateUtils.formatElapsedTime(time.toLong())
+        val timeSplit = ft.split(":")
+        val hour = timeSplit[0].toInt()
+        if (hour > 12) {
+            return (hour - 12).toString() + ":${timeSplit[1]}pm"
+        }
+        return ft.slice(0..3) + "am"
+    }
+
+
 
     fun GoogleMap?.setMap(app: Context, coordinates: LatLng) {
         this?.mapType = GoogleMap.MAP_TYPE_NORMAL
         this?.uiSettings?.setAllGesturesEnabled(false)
         this?.addMarker(MarkerOptions().position(coordinates).icon(bitmapDescriptorFromVector(app, R.drawable.ic_location)))
         this?.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinates, 15.8f))
+    }
+
+    fun RecyclerView.onReady(isReady: () -> Unit) {
+        val globalLayoutListener = object: ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                isReady()
+                viewTreeObserver.removeOnGlobalLayoutListener(this)
+            }
+        }
+        viewTreeObserver.addOnGlobalLayoutListener(globalLayoutListener)
     }
 
     fun View.setSafeOnClickListener(onSafeClick: (View) -> Unit) {
@@ -221,14 +219,7 @@ object Utils {
         setOnClickListener(safeClickListener)
     }
 
-    fun timer(dialog: Dialog) = object : CountDownTimer(3000, 1000) {
-        override fun onTick(millisUntilFinished: Long) {}
-        override fun onFinish() {
-            dialog.dismiss()
-        }
-    }
-
-    private fun bitmapDescriptorFromVector(app: Context, vectorResId: Int): BitmapDescriptor? {
+    fun bitmapDescriptorFromVector(app: Context, vectorResId: Int): BitmapDescriptor? {
         return ContextCompat.getDrawable(app, vectorResId)?.run {
             setBounds(0, 0, intrinsicWidth, intrinsicHeight)
             val bitmap = Bitmap.createBitmap(intrinsicWidth, intrinsicHeight, Bitmap.Config.ARGB_8888)
@@ -237,20 +228,12 @@ object Utils {
         }
     }
 
-    fun dateBuilder(dates: String, format: Int = 0): String {
-        val monthNames = listOf(
-            "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-        )
-        val splitDate = dates.split("-")
-        val splitTime = dates.split("T")[1].split(".")[0]
-        val month = splitDate[1].toInt()
-        val date = splitDate[2].split("T")[0]
-        val year = splitDate[0]
-        when (format) {
-            1 -> return "${monthNames[month - 1]} $date, $year"
-
+    fun parseTimeToString(time: Long, pattern: String): String {
+        try {
+            return SimpleDateFormat(pattern, Locale.getDefault()).format(Date(time))
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
-        return "$date ${monthNames[month - 1]} $year $splitTime"
+        return ""
     }
 }

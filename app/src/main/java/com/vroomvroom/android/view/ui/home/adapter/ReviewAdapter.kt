@@ -9,7 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.vroomvroom.android.MerchantQuery
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.ItemReviewBinding
-import com.vroomvroom.android.utils.Utils.dateBuilder
+import com.vroomvroom.android.utils.Constants.FORMAT_DD_MMM_YYYY_HH_MM_SS
+import com.vroomvroom.android.utils.Utils.parseTimeToString
 
 class ReviewDiffUtil: DiffUtil.ItemCallback<MerchantQuery.Review>() {
     override fun areItemsTheSame(
@@ -43,9 +44,8 @@ class ReviewAdapter: ListAdapter<MerchantQuery.Review, ReviewViewHolder>(ReviewD
     override fun onBindViewHolder(holder: ReviewViewHolder, position: Int) {
         val review = getItem(position)
         holder.binding.review = review
-
-        val date = dateBuilder(review.created_at.toString(), 1)
-        holder.binding.tvCreatedAt.text = date
+        val createdAt = parseTimeToString(review.created_at.toLong(), FORMAT_DD_MMM_YYYY_HH_MM_SS)
+        holder.binding.tvCreatedAt.text = createdAt
     }
 }
 

@@ -1,73 +1,166 @@
 package com.vroomvroom.android.view.ui.account
 
 import android.os.Bundle
-import android.view.LayoutInflater
+import android.util.Log
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentAccountBinding
-import com.vroomvroom.android.databinding.FragmentProfileBinding
-import com.vroomvroom.android.view.ui.auth.viewmodel.AuthViewModel
+import com.vroomvroom.android.domain.model.account.AccountOptionItem
+import com.vroomvroom.android.utils.ClickType
+import com.vroomvroom.android.view.ui.account.adapter.OptionAdapter
+import com.vroomvroom.android.view.ui.base.BaseFragment
+import com.vroomvroom.android.view.ui.widget.CommonAlertDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class AccountFragment : Fragment() {
+class AccountFragment : BaseFragment<FragmentAccountBinding>(
+    FragmentAccountBinding::inflate
+) {
 
-    private val authViewModel by viewModels<AuthViewModel>()
-    private lateinit var binding: FragmentAccountBinding
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentAccountBinding.inflate(inflater)
-        return binding.root
-    }
+    private val options = arrayListOf<AccountOptionItem>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         observeUser()
 
-        binding.profileConstraint.setOnClickListener {
-            findNavController().navigate(R.id.action_accountFragment_to_profileManagementFragment)
+        authViewModel.token.observe(viewLifecycleOwner) { token ->
+            Log.d("AccountFragment", token.toString())
         }
-
-        binding.addressesConstraint.setOnClickListener {
-            findNavController().navigate(AccountFragmentDirections.actionAccountFragmentToAddressesFragment(null))
-        }
-
-        binding.favoriteConstraint.setOnClickListener {
-            findNavController().navigate(R.id.action_accountFragment_to_favoriteFragment)
-        }
-
     }
 
     private fun observeUser() {
-        authViewModel.userRecord.observe(viewLifecycleOwner, { users ->
-            if (!users.isNullOrEmpty()) {
-                binding.profileConstraint.visibility = View.VISIBLE
-                binding.addressesConstraint.visibility = View.VISIBLE
-                binding.favoriteConstraint.visibility = View.VISIBLE
-                binding.initial.text = users.first().name?.get(0).toString()
-                binding.name.text = users.first().name
+        authViewModel.userRecord.observe(viewLifecycleOwner) { user ->
+            if (user != null) {
+                initOptionAdapter(true)
+                binding.accountIcon.visibility = View.GONE
                 binding.initialBg.visibility = View.VISIBLE
                 binding.initial.visibility = View.VISIBLE
-                binding.name.visibility = View.VISIBLE
+                binding.initial.text = user.name?.get(0).toString()
+                binding.name.text = user.name
             } else {
-                binding.profileConstraint.visibility = View.GONE
-                binding.addressesConstraint.visibility = View.GONE
-                binding.favoriteConstraint.visibility = View.GONE
+                initOptionAdapter(false)
                 binding.initialBg.visibility = View.GONE
                 binding.initial.visibility = View.GONE
-                binding.name.visibility = View.GONE
-                findNavController().navigate(R.id.action_accountFragment_to_authBottomSheetFragment)
+                binding.accountIcon.visibility = View.VISIBLE
+                binding.name.text = getString(R.string.app_name)
             }
-        })
+        }
+    }
+
+    private fun performLogout() {
+        authViewModel.logoutUser { successful ->
+            if (successful) {
+                authViewModel.deleteUserRecord()
+                authViewModel.clearDataStore()
+                locationViewModel.deleteAllAddress()
+
+            } else {
+                initAlertDialog(
+                    getString(R.string.network_error),
+                    getString(R.string.network_error_message),
+                    getString(R.string.cancel),
+                    getString(R.string.retry)
+                )
+            }
+        }
+    }
+
+    private fun initAlertDialog(
+        title: String,
+        message: String,
+        leftButtonTitle: String,
+        rightButtonTitle: String
+    ) {
+        val dialog = CommonAlertDialog(requireActivity())
+        dialog.show(
+            title,
+            message,
+            leftButtonTitle,
+            rightButtonTitle
+        ) { type ->
+            when (type) {
+                ClickType.POSITIVE -> {
+                    performLogout()
+                    dialog.dismiss()
+                }
+                ClickType.NEGATIVE -> dialog.dismiss()
+            }
+        }
+    }
+
+    private fun initOptionAdapter(hasUser: Boolean) {
+        options.clear()
+        binding.optionRv.adapter = OptionAdapter(getOptionItems(hasUser)) { type ->
+            when (type) {
+                AccountOptionType.PROFILE ->
+                    findNavController().navigate(R.id.action_accountFragment_to_profileManagementFragment)
+                AccountOptionType.ADDRESSES ->
+                    findNavController().navigate(AccountFragmentDirections.actionAccountFragmentToAddressesFragment(null))
+                AccountOptionType.FAVORITES ->
+                    findNavController().navigate(R.id.action_accountFragment_to_favoriteFragment)
+                AccountOptionType.ABOUT ->
+                    findNavController().navigate(R.id.action_accountFragment_to_aboutFragment)
+                AccountOptionType.LOGIN ->
+                    findNavController().navigate(R.id.action_accountFragment_to_authBottomSheetFragment)
+                AccountOptionType.LOGOUT ->
+                    initAlertDialog(
+                        getString(R.string.prompt),
+                        getString(R.string.logout_confirmation_message),
+                        getString(R.string.no),
+                        getString(R.string.yes)
+                    )
+            }
+        }
+    }
+
+    private fun getOptionItems(hasUser: Boolean): List<AccountOptionItem> {
+        val profile = AccountOptionItem(
+            R.drawable.ic_profile,
+            R.string.profile,
+            AccountOptionType.PROFILE
+        )
+        val addresses = AccountOptionItem(
+            R.drawable.ic_location_outline,
+            R.string.addresses,
+            AccountOptionType.ADDRESSES
+        )
+        val favorites = AccountOptionItem(
+            R.drawable.ic_love,
+            R.string.favorites,
+            AccountOptionType.FAVORITES
+        )
+        val about = AccountOptionItem(
+            R.drawable.ic_info,
+            R.string.about,
+            AccountOptionType.ABOUT
+        )
+        val login = AccountOptionItem(
+            R.drawable.ic_login,
+            R.string.login_or_sign_up,
+            AccountOptionType.LOGIN
+        )
+        val logout = AccountOptionItem(
+            R.drawable.ic_logout,
+            R.string.logout,
+            AccountOptionType.LOGOUT
+        )
+
+        if (hasUser) {
+            options.add(profile)
+            options.add(addresses)
+            options.add(favorites)
+            options.add(about)
+            options.add(logout)
+        } else {
+            options.add(addresses)
+            options.add(about)
+            options.add(login)
+        }
+
+        return options
     }
 }

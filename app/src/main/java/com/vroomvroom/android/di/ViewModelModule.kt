@@ -7,6 +7,8 @@ import com.vroomvroom.android.repository.remote.GraphQLRepository
 import com.vroomvroom.android.repository.remote.GraphQLRepositoryImpl
 import com.vroomvroom.android.repository.services.FirebaseAuthRepository
 import com.vroomvroom.android.repository.services.FirebaseAuthRepositoryImpl
+import com.vroomvroom.android.repository.services.LocationRepository
+import com.vroomvroom.android.repository.services.LocationRepositoryImpl
 import com.vroomvroom.android.utils.SmsBroadcastReceiver
 import dagger.Binds
 import dagger.Module
@@ -33,4 +35,8 @@ abstract class ViewModelModule {
     @Binds
     @ViewModelScoped
     abstract fun smsBroadcastReceiver(broadcastReceiver: SmsBroadcastReceiver) : BroadcastReceiver
+
+    @Binds
+    @ViewModelScoped
+    abstract fun locationRepository(repo: LocationRepositoryImpl) : LocationRepository
 }

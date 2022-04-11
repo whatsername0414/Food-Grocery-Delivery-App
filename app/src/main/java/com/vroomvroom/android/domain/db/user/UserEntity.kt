@@ -33,5 +33,5 @@ data class UserLocationEntity(
     val addInfo: String? = null,
     val latitude: Double,
     val longitude: Double,
-    val current_use: Boolean = false
+    val currentUse: Boolean = false
 ): Parcelable

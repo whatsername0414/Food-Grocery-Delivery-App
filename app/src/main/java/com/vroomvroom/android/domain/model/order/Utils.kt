@@ -34,8 +34,8 @@ class OrderInputBuilder {
 
     private fun locationInput(locationEntity: UserLocationEntity): DeliveryAddress {
         return DeliveryAddress(
-            locationEntity.address!!,
-            locationEntity.city!!,
+            locationEntity.address,
+            locationEntity.city,
             locationEntity.addInfo,
             listOf(locationEntity.latitude, locationEntity.longitude)
         )
@@ -49,12 +49,13 @@ class OrderInputBuilder {
 
     private fun orderProductInput(product: CartItemWithChoice) : OrderProduct {
         return OrderProduct(
-            product.cartItemEntity.product_id,
+            null,
+            product.cartItemEntity.productId,
             product.cartItemEntity.name,
-            product.cartItemEntity.product_img_url,
+            product.cartItemEntity.productImgUrl,
             product.cartItemEntity.price,
             product.cartItemEntity.quantity,
-            product.cartItemEntity.special_instructions,
+            product.cartItemEntity.specialInstructions,
             orderProductOptionList(product.choiceEntities)
         )
     }
@@ -68,7 +69,7 @@ class OrderInputBuilder {
     private fun orderProductOption(option: CartItemChoiceEntity) : OrderProductOption {
         return OrderProductOption(
             option.name,
-            option.additional_price,
+            option.additionalPrice,
             option.optionType
         )
     }

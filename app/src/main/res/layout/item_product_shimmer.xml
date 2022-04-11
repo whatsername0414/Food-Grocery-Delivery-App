@@ -14,7 +14,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginTop="2dp"
-            app:cardBackgroundColor="@color/light_gray"
+            app:cardBackgroundColor="@color/gray_ccc"
             app:cardCornerRadius="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -56,9 +56,9 @@
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
                         android:background="@drawable/gray"
-                        android:text="@string/snackbar_label"
+                        android:text="@string/already_have_an_account_login"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                        android:textColor="@color/gray"
+                        android:textColor="@color/gray_a5a"
                         android:textSize="16sp" />
 
                     <TextView
@@ -69,7 +69,7 @@
                         android:layout_marginTop="4dp"
                         android:background="@drawable/gray"
                         android:text="@string/already_have_an_account_login"
-                        android:textColor="@color/gray"
+                        android:textColor="@color/gray_a5a"
                         android:textSize="14sp" />
 
                     <TextView
@@ -86,7 +86,7 @@
                         android:paddingBottom="4dp"
                         android:text="@string/cart"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                        android:textColor="@color/gray"
+                        android:textColor="@color/gray_a5a"
                         android:textSize="14sp" />
                 </LinearLayout>
                 <androidx.constraintlayout.widget.Guideline

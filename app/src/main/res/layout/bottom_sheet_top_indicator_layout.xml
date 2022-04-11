@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="?actionBarSize"
+    android:gravity="center_horizontal">
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="@dimen/dp_48"
+        android:layout_height="@dimen/dp_6"
+        android:layout_marginTop="@dimen/dp_16"
+        android:background="@drawable/bg_gray_e5e_rounded_100dp"
+        />
+
+</LinearLayout>

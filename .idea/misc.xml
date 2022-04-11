@@ -3,116 +3,274 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/macel/.gradle/caches/transforms-3/de21b4908582fa1cae50247fb23c313e/transformed/appcompat-1.4.1/res/layout/support_simple_spinner_dropdown_item.xml" value="0.22447916666666667" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable-night/splash_image.xml" value="0.126" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable-v24/ic_close_maroon.xml" value="0.21388888888888888" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable-v24/maroon.xml" value="0.115625" />
-        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable-v24/white.xml" value="0.1962962962962963" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable-v24/white.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/account_selector.xml" value="0.1125" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/app_bar_bg.xml" value="0.17777777777777778" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/avd_done.xml" value="0.240625" />
-        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bottom_sheet_bg.xml" value="0.2203125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bf_gray_000_rounded_stroke.xml" value="0.107" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bg_gradient_black_transparent.xml" value="0.116" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bg_gray_080_rounded_stroke.xml" value="0.107" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bg_gray_1aa30_rounded.xml" value="0.1055" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bg_gray_33a30_rounded.xml" value="0.1055" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bg_gray_3d3_rounded_16dp_stroke_filled.xml" value="0.1125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bg_gray_3d3_rounded_16dp_stroke_outlined.xml" value="0.1125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bg_gray_3d3_rounded_filled_stroke.xml" value="0.1055" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bg_gray_3d3_rounded_stroke.xml" value="0.107" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bg_gray_a5a_rounded_100dp.xml" value="0.1125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bg_gray_a5a_rounded_16dp.xml" value="0.1125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bg_gray_ccc.xml" value="0.1055" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bg_gray_ccc_rounded_100dp.xml" value="0.1125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bg_gray_ccc_rounded_16dp.xml" value="0.1125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bg_gray_ccc_rounded_4dp.xml" value="0.1125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bg_gray_e5e_rounded_100dp.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bg_gray_f2f_rounded_100dp.xml" value="0.1125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bg_gray_f2f_rounded_16dp.xml" value="0.1125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bg_gray_ffa30_rounded.xml" value="0.107" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bg_green_04e_rounded_16dp.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bg_green_198_rounded_16dp.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bg_green_47E_rounded_16dp.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bg_green_47e_rounded_24dp_top.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bg_green_ff0_rounded_16dp.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bg_red_04e_rounded_16dp.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bg_red_a30.xml" value="0.1055" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bg_red_a30_rounded_100dp.xml" value="0.1055" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bg_red_a30_rounded_16dp.xml" value="0.1125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bg_red_a30_rounded_top_left_16dp.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bg_white_fff.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bg_white_fff_rounded_100dp.xml" value="0.1125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bg_white_fff_rounded_100dp_transparent_50.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bg_white_fff_rounded_10dp_bottom.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bg_white_fff_rounded_16dp.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bg_white_fff_rounded_16dp_stroke_filled.xml" value="0.1125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bg_white_fff_rounded_20dp_top.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bg_white_fff_rounded_32dp_top.xml" value="0.1125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bg_white_fff_rounded_56dp_bottom_left.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bg_white_fff_rounded_56dp_top_right.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bg_white_fff_rounded_top_32dp.xml" value="0.1125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/bottom_sheet_bg.xml" value="0.12" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/browser_selector.xml" value="0.1125" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/btn_background.xml" value="0.2890625" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/btn_background_circle.xml" value="0.107" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/btn_background_gray.xml" value="0.20833333333333334" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/btn_background_gray_080.xml" value="0.107" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/btn_background_gray_3d3.xml" value="0.1055" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/btn_background_gray_9f9.xml" value="0.107" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/btn_background_gray_e9e.xml" value="0.1055" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/btn_background_gray_f2f.xml" value="0.1125" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/btn_background_white.xml" value="0.2169230769230769" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/cat_img_bg_white.xml" value="0.1125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/check_icon.xml" value="0.1125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/custom_ratingbar.xml" value="0.16" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/custom_ratingbar_selector.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/custom_ratingbar_small.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/custom_ratingbar_small_red.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/dark_background.xml" value="0.1125" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/favorite_icon.xml" value="0.2111111111111111" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/gray.xml" value="0.23692307692307693" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/home_scroll.xml" value="0.1055" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/home_scrolled_selector.xml" value="0.1125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/home_selector.xml" value="0.1125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_account.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_account_gray_7f7.xml" value="0.1125" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_add.xml" value="0.2203125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_arrow_back.xml" value="0.1125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_arrow_left.xml" value="0.1055" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_arrow_left_gray_7f7.xml" value="0.1125" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_arrow_right.xml" value="0.240625" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_arrow_up_left_gray_7f7.xml" value="0.1125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_back.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_back_arrow.xml" value="0.1125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_bag.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_bag_white.xml" value="0.1" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_bin.xml" value="0.2" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_blank.xml" value="0.1125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_browse.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_browse_gray_7f7.xml" value="0.1125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_browse_shops.xml" value="0.1" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_check.xml" value="0.2101851851851852" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_checked.xml" value="0.1125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_clock.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_clock_small.xml" value="0.1" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_close.xml" value="0.21388888888888888" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_delivered.xml" value="0.240625" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_delivery.xml" value="0.2175925925925926" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_edit.xml" value="0.20833333333333334" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_edit_location.xml" value="0.1" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_email.xml" value="0.2101851851851852" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_email_maroon.xml" value="0.2101851851851852" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_email_shimmer.xml" value="0.23692307692307693" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_facebook.xml" value="0.2169230769230769" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_favorite.xml" value="0.107" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_heart_maroon.xml" value="0.1" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_heart_white.xml" value="0.1265625" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_hide.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_history.xml" value="0.1125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_home.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_home_gray.xml" value="0.1055" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_home_gray_7f7.xml" value="0.1125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_image_placeholder.xml" value="0.1125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_info.xml" value="0.1" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_invoice.xml" value="0.240625" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_left.xml" value="0.1125" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_left_arrow.xml" value="0.2203125" />
-        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_location.xml" value="0.240625" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_left_gray_7e7.xml" value="0.1125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_location.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_location_outline.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_location_tilt.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_login.xml" value="0.107" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_logout.xml" value="0.107" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_love.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_love_black.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_love_filled.xml" value="0.1" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_minimize.xml" value="0.2203125" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_minus.xml" value="0.2203125" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_money.xml" value="0.1962962962962963" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_next.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_next_red_a30.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_padlock.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_pen.xml" value="0.1" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_pending.xml" value="0.18611111111111112" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_person.xml" value="0.1125" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_pin_user.xml" value="0.21851851851851853" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_pin_user_gray.xml" value="0.21851851851851853" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_pinned_user.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_profile.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_receipt.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_receipt_gray_7f7.xml" value="0.1125" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_right_arrow.xml" value="0.2203125" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_right_arrow_maroon.xml" value="0.21574074074074073" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_search.xml" value="0.107" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_search_gray.xml" value="0.107" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_search_shops.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_shopping_bag.xml" value="0.1" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_star.xml" value="0.2203125" />
-        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/img_bg.xml" value="0.240625" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_star_outline_red.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_store.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_storefront.xml" value="0.1125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_tab_indicator.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_trash.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_unchecked.xml" value="0.1125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_up_left.xml" value="0.1125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_view.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_warning.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_wave.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ic_white_star.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/image_placeholder.xml" value="0.1125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/img_bg.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/left_curve_bg.xml" value="0.1125" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/light_gray.xml" value="0.2203125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/nav_back_button_icon.xml" value="0.1125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/password_toggle_icon.xml" value="0.1" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/pre_order_btn.xml" value="0.17222222222222222" />
-        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/splash_image.xml" value="0.20925925925925926" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ratingbar_empty_selector.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ratingbar_empty_small_selector.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ratingbar_filled_selector.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ratingbar_filled_small_selector.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ratingbar_filled_small_yellow_selector.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ratingbar_selector.xml" value="0.1" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/receipt_selector.xml" value="0.1125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/ripple_selector.xml" value="0.1125" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/search_view_bg.xml" value="0.107" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/splash_image.xml" value="0.1" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/transparent_maroon_bg.xml" value="0.240625" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable/white_bg.xml" value="0.1265625" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/activity_home.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/activity_main.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/alert_dialog_layout.xml" value="0.22447916666666667" />
-        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_account.xml" value="0.11041666666666666" />
-        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_address_bottom_sheet.xml" value="0.22447916666666667" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/bottom_sheet_top_indicator_layout.xml" value="0.1841880341880342" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/common_alert_dialog_layout.xml" value="0.22" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/common_notice_layout.xml" value="0.22447916666666667" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/empty_order_layout.xml" value="0.22" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_about.xml" value="0.16" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_account.xml" value="0.22" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_address_bottom_sheet.xml" value="0.2" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_addresses.xml" value="0.2" />
-        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_auth_bottom_sheet.xml" value="0.25" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_auth_bottom_sheet.xml" value="0.22" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_browse.xml" value="0.25" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_browse_shimmer.xml" value="0.18" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_cancel_bottom_sheet.xml" value="0.22447916666666667" />
-        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_cancelled.xml" value="0.22447916666666667" />
-        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_cart_bottom_sheet.xml" value="0.22" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_cancelled.xml" value="0.22" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_cart_bottom_sheet.xml" value="0.2" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_change_address_bottom_sheet.xml" value="0.22" />
-        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_checkout.xml" value="0.22" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_checkout.xml" value="0.18" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_code_verification.xml" value="0.22" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_confirmed.xml" value="0.22447916666666667" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_delivered.xml" value="0.22447916666666667" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_delivery.xml" value="0.22447916666666667" />
-        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_edit_bottom_sheet.xml" value="0.21041666666666667" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_edit_bottom_sheet.xml" value="0.22" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_favorite.xml" value="0.2" />
-        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_home.xml" value="0.2" />
-        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_location.xml" value="0.22" />
-        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_location_bottom_sheet.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_home.xml" value="0.25" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_location.xml" value="0.2" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_location_bottom_sheet.xml" value="0.18" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_login.xml" value="0.22" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_maps.xml" value="0.20416666666666666" />
-        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_merchant.xml" value="0.22" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_merchant.xml" value="0.16" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_merchant_details_bottom_sheet.xml" value="0.2" />
-        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_merchant_info.xml" value="0.22447916666666667" />
-        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_merchant_shimmer.xml" value="0.22" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_merchant_info.xml" value="0.22" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_merchant_search.xml" value="0.25" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_merchant_shimmer.xml" value="0.16" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_order.xml" value="0.22447916666666667" />
-        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_order_detail.xml" value="0.33" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_order_detail.xml" value="0.67" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_order_detail_shimmer.xml" value="0.22" />
-        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_orders.xml" value="0.22447916666666667" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_orders.xml" value="0.25" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_password_reset.xml" value="0.20416666666666666" />
-        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_password_reset_bottom_sheet.xml" value="0.2" />
-        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_payment_method.xml" value="0.25" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_password_reset_bottom_sheet.xml" value="0.18" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_payment_method.xml" value="0.22" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_pending.xml" value="0.22" />
-        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_phone_verification.xml" value="0.22" />
-        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_product_bottom_sheet.xml" value="0.2" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_phone_verification.xml" value="0.2" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_product_bottom_sheet.xml" value="0.25" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_profile.xml" value="0.2635431918008785" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_profile_management.xml" value="0.25" />
-        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_register.xml" value="0.20416666666666666" />
-        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_review_bottom_sheet.xml" value="0.25" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_register.xml" value="0.25" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_review_bottom_sheet.xml" value="0.2" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_search.xml" value="0.18" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_support.xml" value="0.22447916666666667" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_to_receive.xml" value="0.22447916666666667" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/fragment_web_view.xml" value="0.22447916666666667" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_account_option.xml" value="0.2" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_address.xml" value="0.33" />
-        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_cart.xml" value="0.18" />
-        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_category.xml" value="0.75" />
-        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_category_shimmer.xml" value="0.22447916666666667" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_appbar_layout.xml" value="0.22447916666666667" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_browse_category.xml" value="0.22447916666666667" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_browse_category_shimmer.xml" value="0.16" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_cart.xml" value="0.25" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_category.xml" value="0.5" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_category2.xml" value="0.5" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_category_shimmer.xml" value="0.22" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_checkout.xml" value="0.20416666666666666" />
-        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_choice.xml" value="0.22" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_choice.xml" value="0.33" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_favorite_merchant.xml" value="0.22447916666666667" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_home.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_merchant.xml" value="0.25" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_merchant_shimmer.xml" value="0.22447916666666667" />
-        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_order.xml" value="0.22" />
-        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_order_detail_product.xml" value="0.18" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_order.xml" value="0.16" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_order_detail_product.xml" value="0.16" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_order_product.xml" value="0.2" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_order_product_shimmer.xml" value="0.28523489932885904" />
-        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_order_shimmer.xml" value="0.33" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_order_shimmer.xml" value="0.2708018154311649" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_orders_section.xml" value="0.22447916666666667" />
-        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_product.xml" value="0.22" />
-        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_product_section.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_product.xml" value="0.2" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_product_section.xml" value="0.5" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_product_shimmer.xml" value="0.2514792899408284" />
-        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_review.xml" value="0.25" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_review.xml" value="0.2" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_search.xml" value="0.22" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_suggestion.xml" value="0.22" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/item_toolbar.xml" value="0.22447916666666667" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/layout_bottom_sheet_cart.xml" value="0.2" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/layout_bottom_sheet_location.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/layout_bottom_sheet_product.xml" value="0.22" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/loading_dialog_layout.xml" value="0.2" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/merchant_layout_test.xml" value="0.25" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/network_error_layout.xml" value="0.22447916666666667" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/placed_order_dialog_layout.xml" value="0.18" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/progress_dialog_layout.xml" value="0.2" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/layout/receipt_dialog_layout.xml" value="0.1841880341880342" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/menu/bottom_menu.xml" value="0.11041666666666666" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.107" />
+        <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.107" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/VroomVroom4/app/src/main/res/drawable/app_bar_bg.xml" value="0.2203125" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/VroomVroom4/app/src/main/res/drawable/auth_btn_background.xml" value="0.2203125" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/VroomVroom4/app/src/main/res/drawable/bottom_sheet_bg.xml" value="0.2203125" />
@@ -148,6 +306,7 @@
         <entry key="..\:/Users/macel/AndroidStudioProjects/VroomVroom4/app/src/main/res/layout/item_restaurant.xml" value="0.25" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/VroomVroom4/app/src/main/res/layout/layout_bottom_sheet_location.xml" value="0.22" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/VroomVroom4/app/src/main/res/menu/bottom_menu.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/macel/AppData/Local/Android/Sdk/platforms/android-31/data/res/layout/simple_list_item_1.xml" value="0.22447916666666667" />
         <entry key="..\:/Users/macel/StudioProjects/Android-Project/app/src/main/res/drawable-v24/coordinator_bg.xml" value="0.1125" />
         <entry key="..\:/Users/macel/StudioProjects/Android-Project/app/src/main/res/drawable-v24/ic_my_location.xml" value="0.1125" />
         <entry key="..\:/Users/macel/StudioProjects/Android-Project/app/src/main/res/drawable-v24/tab_bg.xml" value="0.1125" />

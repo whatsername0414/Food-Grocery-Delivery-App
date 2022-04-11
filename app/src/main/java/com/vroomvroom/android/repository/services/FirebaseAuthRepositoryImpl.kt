@@ -12,11 +12,13 @@ import com.google.android.gms.auth.api.phone.SmsRetrieverClient
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
+import com.vroomvroom.android.repository.BaseRepository
 import com.vroomvroom.android.view.state.ViewState
 import javax.inject.Inject
 
@@ -26,9 +28,18 @@ class FirebaseAuthRepositoryImpl @Inject constructor(
     private val callbackManager: CallbackManager,
     private val googleSignInClient: GoogleSignInClient,
     private val client: SmsRetrieverClient
-) : FirebaseAuthBaseRepository(), FirebaseAuthRepository {
+) : BaseRepository(), FirebaseAuthRepository {
     override fun getCurrentUser(): FirebaseUser? {
         return auth.currentUser
+    }
+
+    override fun logoutUser(listener: OnCompleteListener<Void>) {
+        auth.signOut()
+        googleSignInClient.signOut().addOnCompleteListener(listener)
+    }
+
+    override fun removeAuthStateListener(listener: FirebaseAuth.AuthStateListener) {
+        auth.removeAuthStateListener(listener)
     }
 
     override fun getIdToken(onResult: (String?)->Unit) {

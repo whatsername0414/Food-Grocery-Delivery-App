@@ -1,39 +1,23 @@
 package com.vroomvroom.android.view.ui.auth
 
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.firebase.auth.FirebaseAuth
+import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentPasswordResetBottomSheetBinding
+import com.vroomvroom.android.utils.ClickType
 import com.vroomvroom.android.utils.Utils.isEmailValid
 import com.vroomvroom.android.view.state.ViewState
-import com.vroomvroom.android.view.ui.auth.viewmodel.AuthViewModel
+import com.vroomvroom.android.view.ui.base.BaseBottomSheetFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
-class PasswordResetBottomSheetFragment : BottomSheetDialogFragment() {
-
-    private val viewModel by activityViewModels<AuthViewModel>()
-
-    private lateinit var binding: FragmentPasswordResetBottomSheetBinding
-    private lateinit var auth: FirebaseAuth
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentPasswordResetBottomSheetBinding.inflate(inflater)
-        auth = FirebaseAuth.getInstance()
-        return binding.root
-    }
+class PasswordResetBottomSheetFragment : BaseBottomSheetFragment<FragmentPasswordResetBottomSheetBinding>(
+    FragmentPasswordResetBottomSheetBinding::inflate
+) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -43,29 +27,47 @@ class PasswordResetBottomSheetFragment : BottomSheetDialogFragment() {
         observeIsResetPasswordEmailSent()
 
         binding.btnReset.setOnClickListener {
-            val emailAddress = binding.resetEmailInputEditText.text.toString()
-            if (emailAddress.isEmailValid()) {
-                binding.passwordResetProgress.visibility = View.VISIBLE
-                viewModel.resetPasswordWithEmail(emailAddress)
-            } else binding.resetEmailInputLayout.helperText = "Invalid email"
+            sendEmail()
         }
 
     }
 
     private fun observeIsResetPasswordEmailSent() {
-        viewModel.isPasswordResetEmailSent.observe(viewLifecycleOwner, { result ->
+        authViewModel.isPasswordResetEmailSent.observe(viewLifecycleOwner) { result ->
             when (result) {
                 is ViewState.Success -> {
-                    Toast.makeText(requireContext(), "Email sent",
-                        Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(), "Email sent",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     findNavController().popBackStack()
                 }
                 is ViewState.Error -> {
-                    Toast.makeText(requireContext(), result.exception.message,
-                        Toast.LENGTH_SHORT).show()
+                    dialog.show(
+                        getString(R.string.network_error),
+                        getString(R.string.network_error_message),
+                        getString(R.string.cancel),
+                        getString(R.string.retry),
+                    ) { type ->
+                        when (type) {
+                            ClickType.POSITIVE -> {
+                                sendEmail()
+                                dialog.dismiss()
+                            }
+                            ClickType.NEGATIVE -> Unit
+                        }
+                    }
                 }
-                else -> Log.d("PasswordResetBottomSheetFragment", result.toString())
+                else -> Unit
             }
-        })
+        }
+    }
+
+    private fun sendEmail() {
+        val emailAddress = binding.resetEmailInputEditText.text.toString()
+        if (emailAddress.isEmailValid()) {
+            binding.passwordResetProgress.visibility = View.VISIBLE
+            authViewModel.resetPasswordWithEmail(emailAddress)
+        } else binding.resetEmailInputLayout.helperText = "Invalid email"
     }
 }

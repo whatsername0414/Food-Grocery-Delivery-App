@@ -5,13 +5,8 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.Network
-import android.os.Build
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.snackbar.BaseTransientBottomBar
@@ -21,58 +16,45 @@ import com.vmadalin.easypermissions.dialogs.SettingsDialog
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentLocationBinding
 import com.vroomvroom.android.utils.Utils.createLocationRequest
-import com.vroomvroom.android.utils.Utils.geoCoder
 import com.vroomvroom.android.utils.Utils.hasLocationPermission
 import com.vroomvroom.android.utils.Utils.requestLocationPermission
 import com.vroomvroom.android.utils.Utils.userLocationBuilder
-import com.vroomvroom.android.view.ui.location.viewmodel.LocationViewModel
+import com.vroomvroom.android.view.ui.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class LocationFragment : Fragment(R.layout.fragment_location), EasyPermissions.PermissionCallbacks {
+class LocationFragment : BaseFragment<FragmentLocationBinding>(
+    FragmentLocationBinding::inflate
+), EasyPermissions.PermissionCallbacks {
 
-    private val viewModel by viewModels<LocationViewModel>()
     private var isConnected: Boolean = false
 
-    private lateinit var binding: FragmentLocationBinding
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentLocationBinding.inflate(inflater)
-        return binding.root
-    }
-
-    @SuppressLint("MissingPermission", "ObsoleteSdkInt")
+    @SuppressLint("MissingPermission")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding.linearProgress.visibility = View.GONE
 
         observeUserLocation()
 
         val connectivityManager = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            connectivityManager.registerDefaultNetworkCallback(
-                object : ConnectivityManager.NetworkCallback() {
-                    override fun onAvailable(network: Network) {
-                        isConnected = true
-                    }
-                    override fun onLost(network: Network) {
-                       isConnected = false
-                    }
-            })
-        }
+        connectivityManager.registerDefaultNetworkCallback(
+            object : ConnectivityManager.NetworkCallback() {
+                override fun onAvailable(network: Network) {
+                    isConnected = true
+                }
+                override fun onLost(network: Network) {
+                   isConnected = false
+                }
+        })
 
         binding.btnAllowLocation.setOnClickListener {
             if (isConnected) {
                 if (hasLocationPermission(requireContext())) {
-                    viewModel.requestLocationUpdates()
+                    binding.linearProgress.visibility = View.VISIBLE
+                    locationViewModel.requestLocationUpdates()
                 } else {
+                    binding.linearProgress.visibility = View.GONE
                     createLocationRequest(requireActivity(), this )
                 }
             } else {
@@ -86,13 +68,20 @@ class LocationFragment : Fragment(R.layout.fragment_location), EasyPermissions.P
                     .show()
             }
         }
-        viewModel.currentLocation.observe(viewLifecycleOwner, { location ->
+        locationViewModel.currentLocation.observe(viewLifecycleOwner) { location ->
             if (location != null) {
                 val latLng = LatLng(location.latitude, location.longitude)
-                val address = geoCoder(requireContext(), latLng)
-                viewModel.insertLocation(userLocationBuilder(address = address, latLng = latLng))
+                locationViewModel.getAddress(latLng)
+                locationViewModel.address.observe(viewLifecycleOwner) { res ->
+                    locationViewModel.insertLocation(
+                        userLocationBuilder(
+                            address = res,
+                            latLng = latLng
+                        )
+                    )
+                }
             }
-        })
+        }
 
         binding.bntEnterLocation.setOnClickListener {
             findNavController().navigate(R.id.action_locationFragment_to_mapsFragment)
@@ -105,8 +94,7 @@ class LocationFragment : Fragment(R.layout.fragment_location), EasyPermissions.P
         grantResults: IntArray
     ) {
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            binding.linearProgress.visibility = View.VISIBLE
-            viewModel.requestLocationUpdates()
+            locationViewModel.requestLocationUpdates()
         }
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
     }
@@ -125,11 +113,11 @@ class LocationFragment : Fragment(R.layout.fragment_location), EasyPermissions.P
     }
 
     private fun observeUserLocation() {
-        viewModel.userLocation.observe(viewLifecycleOwner, { userLocation ->
+        locationViewModel.userLocation.observe(viewLifecycleOwner) { userLocation ->
             if (!userLocation.isNullOrEmpty()) {
-                viewModel.removeLocationUpdates()
+                locationViewModel.removeLocationUpdates()
                 findNavController().popBackStack()
             }
-        })
+        }
     }
 }

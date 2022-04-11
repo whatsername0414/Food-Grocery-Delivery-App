@@ -6,7 +6,7 @@
     <data>
         <variable
             name="order"
-            type="com.vroomvroom.android.OrdersByStatusQuery.GetOrdersByStatus" />
+            type="com.vroomvroom.android.domain.model.order.OrderResponse" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,56 +17,50 @@
             android:id="@+id/orderMerchantLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_8"
             android:gravity="center"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
-
-            <ImageView
-                android:id="@+id/imageView10"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_storefront" />
 
             <TextView
                 android:id="@+id/textView18"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
                 android:text="@{order.merchant.name}"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                android:textSize="18sp"
-                tools:text="Mcdonald's Tabaco" />
+                android:textSize="16sp"
+                tools:text="Mcdonald's Tabaco"
+                android:drawablePadding="@dimen/dp_8"
+                app:drawableStartCompat="@drawable/ic_store" />
 
             <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_marginStart="8dp"
-                android:src="@drawable/ic_right_arrow_maroon" />
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/dp_8"
+                android:src="@drawable/ic_next_red_a30" />
         </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:text="@{order.status}"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textColor="@color/maroon"
-            android:textSize="16sp"
+            android:textColor="@color/red_a30"
+            app:layout_constraintBottom_toBottomOf="@+id/orderMerchantLayout"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:text="@{order.status}" />
+            app:layout_constraintTop_toTopOf="@+id/orderMerchantLayout"
+            tools:text="Order Status" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardView5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            app:cardBackgroundColor="@color/light_gray"
-            app:cardCornerRadius="16dp"
+            android:layout_marginTop="@dimen/dp_16"
+            android:layout_marginHorizontal="@dimen/margin_big"
+            app:cardBackgroundColor="@color/gray_ccc"
+            app:cardCornerRadius="@dimen/dp_16"
             app:cardElevation="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -75,15 +69,15 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="1dp"
-                android:background="@drawable/img_bg">
+                android:layout_margin="@dimen/dp_1"
+                android:background="@drawable/bg_white_fff_rounded_16dp">
 
                 <ImageView
                     android:id="@+id/imageView11"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:src="@drawable/ic_pin_user"
+                    android:layout_marginStart="@dimen/dp_16"
+                    android:src="@drawable/ic_pinned_user"
                     app:layout_constraintBottom_toBottomOf="@+id/textView20"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/textView19" />
@@ -92,9 +86,9 @@
                     android:id="@+id/textView19"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:text="@{order.delivery_address.address ?? `Not Provided`}"
+                    android:layout_marginStart="@dimen/dp_8"
+                    android:layout_marginBottom="@dimen/dp_8"
+                    android:text="@{order.deliveryAddress.address ?? `Not Provided`}"
                     app:layout_constraintEnd_toStartOf="@+id/textView21"
                     app:layout_constraintStart_toEndOf="@+id/imageView11"
                     app:layout_constraintTop_toTopOf="parent"
@@ -104,9 +98,9 @@
                     android:id="@+id/textView20"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:text="@{order.delivery_address.city ?? `Not Provided`}"
+                    android:layout_marginStart="@dimen/dp_8"
+                    android:layout_marginBottom="@dimen/dp_8"
+                    android:text="@{order.deliveryAddress.city ?? `Not Provided`}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/imageView11"
                     app:layout_constraintTop_toBottomOf="@+id/textView19"
@@ -137,7 +131,8 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cardView5" />
+            app:layout_constraintTop_toBottomOf="@+id/cardView5"
+            />
 
         <View
             android:id="@+id/coverView"
@@ -152,11 +147,10 @@
             android:id="@+id/textView22"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:text="@{order.order_detail.product.size() > 1 ? `Subtotal(` + order.order_detail.product.size() + ` Items):` : `Subtotal(` + order.order_detail.product.size() + ` Item):`}"
+            android:layout_marginTop="@dimen/dp_16"
+            android:layout_marginEnd="@dimen/dp_8"
+            android:text="@{order.orderDetail.product.size() > 1 ? `Subtotal(` + order.orderDetail.product.size() + ` Items):` : `Subtotal(` + order.orderDetail.product.size() + ` Item):`}"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textSize="16sp"
             app:layout_constraintEnd_toStartOf="@+id/subtotal"
             app:layout_constraintTop_toBottomOf="@+id/orderProductRv"
             tools:text="Subtotal(1 Item):" />
@@ -167,7 +161,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            android:textSize="18sp"
+            android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="@+id/textView22"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/textView22"
@@ -181,7 +175,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="16dp"
-            android:background="@drawable/light_gray"
+            android:background="@drawable/bg_gray_f2f_rounded_100dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

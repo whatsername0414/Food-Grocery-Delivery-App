@@ -1,7 +1,7 @@
 package com.vroomvroom.android.domain.model.product
 
 import com.vroomvroom.android.MerchantQuery
-import com.vroomvroom.android.domain.mapper.DomainMapper
+import com.vroomvroom.android.domain.DomainMapper
 
 class ProductMapper : DomainMapper<MerchantQuery.Product, Product> {
     override fun mapToDomainModel(model: MerchantQuery.Product): Product {

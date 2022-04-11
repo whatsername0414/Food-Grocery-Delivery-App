@@ -6,100 +6,119 @@ import android.location.Address
 import android.net.ConnectivityManager
 import android.net.Network
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.appcompat.widget.AppCompatEditText
-import androidx.appcompat.widget.AppCompatImageButton
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.navigation.NavController
+import android.view.animation.Animation
+import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.widget.SearchView
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupWithNavController
-import com.google.android.gms.common.api.Status
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.libraries.places.api.Places
-import com.google.android.libraries.places.api.model.Place
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment
-import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.gms.maps.model.*
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
+import com.mapbox.geojson.BoundingBox
+import com.mapbox.search.*
+import com.mapbox.search.result.SearchResult
+import com.mapbox.search.result.SearchSuggestion
 import com.vmadalin.easypermissions.EasyPermissions
 import com.vmadalin.easypermissions.dialogs.SettingsDialog
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentMapsBinding
+import com.vroomvroom.android.utils.ClickType
+import com.vroomvroom.android.utils.Constants.DELIVERY_RANGE_CITIES
 import com.vroomvroom.android.utils.Utils.createLocationRequest
-import com.vroomvroom.android.utils.Utils.geoCoder
 import com.vroomvroom.android.utils.Utils.hasLocationPermission
 import com.vroomvroom.android.utils.Utils.requestLocationPermission
 import com.vroomvroom.android.utils.Utils.setSafeOnClickListener
 import com.vroomvroom.android.utils.Utils.userLocationBuilder
-import com.vroomvroom.android.view.ui.activityviewmodel.ActivityViewModel
-import com.vroomvroom.android.view.ui.location.viewmodel.LocationViewModel
+import com.vroomvroom.android.view.ui.base.BaseFragment
+import com.vroomvroom.android.view.ui.location.adapter.SuggestionAdapter
+import com.vroomvroom.android.view.ui.widget.CommonAlertDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
+class MapsFragment : BaseFragment<FragmentMapsBinding>(
+    FragmentMapsBinding::inflate
+), EasyPermissions.PermissionCallbacks {
 
-    private val viewModel by viewModels<LocationViewModel>()
-    private val activityViewModel by activityViewModels<ActivityViewModel>()
     private var isConnected: Boolean = false
     private var newLatLng: LatLng? = null
     private var mapFragment: SupportMapFragment? = null
-    private var autocompleteFragment: AutocompleteSupportFragment? = null
     private var map: GoogleMap? = null
     private var address: Address? = null
+    private var mSuggestions = listOf<SearchSuggestion>()
 
-    private lateinit var binding: FragmentMapsBinding
-    private lateinit var navController: NavController
+    private lateinit var searchEngine: SearchEngine
+    private lateinit var searchRequestTask: SearchRequestTask
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentMapsBinding.inflate(inflater)
-        mapFragment = childFragmentManager.findFragmentById(R.id.mapFragment) as SupportMapFragment?
-        autocompleteFragment =
-            childFragmentManager.findFragmentById(R.id.autocomplete_fragment)
-                    as AutocompleteSupportFragment
-        navController = findNavController()
-        return binding.root
+    private val suggestionAdapter by lazy { SuggestionAdapter() }
+    private val searchCallback = object : SearchSelectionCallback {
+        override fun onResult(
+            suggestion: SearchSuggestion,
+            result: SearchResult,
+            responseInfo: ResponseInfo
+        ) {
+            map?.clear()
+            map?.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(
+                result.coordinate?.latitude() ?: 0.0,
+                result.coordinate?.longitude() ?: 0.0), 17f))
+            binding.searchView.clearFocus()
+        }
+        override fun onSuggestions(
+            suggestions: List<SearchSuggestion>,
+            responseInfo: ResponseInfo) {
+            mSuggestions = suggestions
+            suggestionAdapter.submitList(suggestions)
+        }
+
+        override fun onCategoryResult(
+            suggestion: SearchSuggestion,
+            results: List<SearchResult>,
+            responseInfo: ResponseInfo
+        ) {}
+
+        override fun onError(e: Exception) {
+            showShortToast(R.string.general_error_message)
+            e.printStackTrace()
+        }
     }
 
     @SuppressLint("MissingPermission")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val apiKey = getString(R.string.google_maps_key)
+        locationViewModel.initMapBoxDirectionClient(getString(R.string.mapbox_access_token))
+        onBackPressed()
+        initSearchView()
+        observeAddressAndError()
+        searchEngine = MapboxSearchSdk.getSearchEngine()
 
-        val appBarConfiguration = AppBarConfiguration(navController.graph)
-        binding.mapsToolbar.setupWithNavController(navController, appBarConfiguration)
+        suggestionAdapter.onSuggestionClicked = { suggestion ->
+            searchRequestTask = searchEngine.select(suggestion, searchCallback)
+        }
+
+        binding.searchSuggestionRv.adapter = suggestionAdapter
+        binding.searchView.setOnQueryTextFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                binding.btnContinue.visibility = View.GONE
+                binding.searchSuggestionRv.visibility = View.VISIBLE
+            } else {
+                binding.searchSuggestionRv.visibility = View.GONE
+                binding.btnContinue.visibility = View.VISIBLE
+            }
+        }
+
+        mapFragment = childFragmentManager.findFragmentById(R.id.mapFragment) as SupportMapFragment?
+        navController = findNavController()
+        binding.mapsToolbar.setupToolbar()
         val prevDestination = navController.previousBackStackEntry?.destination?.id
 
         observeCurrentLocation()
-
-        autocompleteFragment?.setHint("Search your address")
-        autocompleteFragment?.view
-            ?.findViewById<AppCompatImageButton>(R.id.places_autocomplete_search_button)?.visibility = View.GONE
-        autocompleteFragment?.view
-            ?.findViewById<AppCompatImageButton>(R.id.places_autocomplete_clear_button)?.setPadding(0,0,32,0)
-        autocompleteFragment
-            ?.view?.findViewById<AppCompatEditText>(R.id.places_autocomplete_search_input)?.setPadding(32,0,0,0)
-        autocompleteFragment?.setPlaceFields(listOf(Place.Field.LAT_LNG, Place.Field.NAME))
-        if (!Places.isInitialized()) {
-            Places.initialize(requireContext(), apiKey)
-        }
-        Places.createClient(requireContext())
+        loadingDialog.show(getString(R.string.init_map))
 
         val connectivityManager = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         connectivityManager.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
@@ -111,57 +130,14 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             }
         })
 
-        mapFragment?.getMapAsync { googleMap ->
-            map = googleMap
-            map?.mapType = GoogleMap.MAP_TYPE_NORMAL
-
-            map?.setOnCameraIdleListener {
-                newLatLng = map?.cameraPosition?.target
-                newLatLng?.let { latLng ->
-                    address = geoCoder(requireContext(), latLng)
-                    autocompleteFragment?.setText(address?.getAddressLine(0))
-                    binding.cameraMoveSpinner.visibility = View.GONE
-                }
-            }
-
-            map?.setOnCameraMoveListener {
-                autocompleteFragment?.setText("")
-                binding.cameraMoveSpinner.visibility = View.VISIBLE
-            }
-
-            viewModel.userLocation.observe(viewLifecycleOwner, { userLocation ->
-                if (!userLocation.isNullOrEmpty()) {
-                    val location = userLocation.find { it.current_use }
-                    location?.let {
-                        map?.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                            LatLng(it.latitude, it.longitude), 17f))
-                    }
-                }
-            })
-        }
-
-        autocompleteFragment?.setOnPlaceSelectedListener(object : PlaceSelectionListener {
-            override fun onPlaceSelected(place: Place) {
-                // TODO: Get info about the selected place.
-                Log.i("MapsFragment", "Place: ${place.name}, ${place.id}")
-            }
-
-            override fun onError(status: Status) {
-                // TODO: Handle the error.
-                Log.i("MapsFragment", "An error occurred: $status")
-            }
-        })
-
-        binding.cameraMoveSpinner.visibility = View.GONE
-        binding.cvAutoComplete.visibility = View.VISIBLE
-        binding.btnConfirmLocation.setOnClickListener {
+        binding.btnContinue.setOnClickListener {
             validateLocation(prevDestination)
         }
 
         binding.myCurrentLocation.setSafeOnClickListener {
             if (isConnected) {
                 if (hasLocationPermission(requireContext())) {
-                    viewModel.requestLocationUpdates()
+                    locationViewModel.requestLocationUpdates()
                 } else {
                     createLocationRequest(requireActivity(), this )
                 }
@@ -174,20 +150,38 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         }
     }
 
-    private fun showDialog(prevDestination: Int?) {
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(getString(R.string.maps_alert_dialog_title))
-            .setMessage(getString(R.string.maps_alert_dialog_message))
-            .setNeutralButton(getString(R.string.maps_alert_dialog_cancel)) { _, _ -> }
-            .setPositiveButton(getString(R.string.maps_alert_dialog_proceed)) { _, _ ->
-                insertLocation(prevDestination)
-            }
-            .show()
+    private fun initSearchView() {
+        val bBox = BoundingBox.fromLngLats(123.4539,13.0246,123.9611,13.498)
+        binding.searchView.apply {
+            setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    if (query?.length ?: 0 < 3) {
+                        showShortToast(R.string.search_minimum)
+                        return false
+                    }
+                    searchRequestTask = searchEngine.search(
+                        query.orEmpty(),
+                        SearchOptions(boundingBox = bBox),
+                        searchCallback
+                    )
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    searchRequestTask = searchEngine.search(
+                        newText.orEmpty(),
+                        SearchOptions(boundingBox = bBox),
+                        searchCallback
+                    )
+                    return false
+                }
+            })
+        }
     }
 
     private fun insertLocation(prevDestination: Int?) {
         newLatLng?.let { latLng ->
-            viewModel.insertLocation(
+            locationViewModel.insertLocation(
                 userLocationBuilder(address = address, latLng = latLng)
             )
         }
@@ -199,12 +193,23 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun validateLocation(prevDestination: Int?) {
+        val dialog = CommonAlertDialog(requireActivity())
         if (newLatLng != null && newLatLng?.latitude != 0.0 && newLatLng?.longitude != 0.0 ) {
-            if (address?.locality !in viewModel.deliveryRange) {
-                showDialog(prevDestination)
+            if (address?.locality !in DELIVERY_RANGE_CITIES) {
+                dialog.show(
+                    getString(R.string.prompt),
+                    getString(R.string.maps_range_error_message),
+                    getString(R.string.cancel),
+                    getString(R.string.proceed)
+                ) { type ->
+                    when (type) {
+                        ClickType.POSITIVE -> insertLocation(prevDestination)
+                        ClickType.NEGATIVE -> dialog.dismiss()
+                    }
+                }
             } else {
                 if (address?.thoroughfare.isNullOrBlank() && newLatLng != null) {
-                    activityViewModel.prevDestination = prevDestination
+                    mainActivityViewModel.prevDestination = prevDestination
                     navController.navigate(
                         MapsFragmentDirections.actionMapsFragmentToAddressBottomSheetFragment(
                             userLocationBuilder(address = address, latLng = newLatLng!!)
@@ -215,22 +220,85 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                 }
             }
         } else {
-            MaterialAlertDialogBuilder(requireContext())
-                .setTitle(getString(R.string.maps_alert_dialog_title))
-                .setMessage(getString(R.string.maps_alert_dialog_message_invalid))
-                .setNegativeButton(getString(R.string.maps_alert_dialog_understood)) { _, _ -> }
-                .show()
+            dialog.show(
+                getString(R.string.prompt),
+                getString(R.string.maps_invalid_address),
+                getString(R.string.cancel),
+                getString(R.string.okay),
+                false
+            ) { type ->
+                when (type) {
+                    ClickType.POSITIVE -> dialog.dismiss()
+                    ClickType.NEGATIVE -> Unit
+                }
+            }
+        }
+    }
+
+    private fun getMap() {
+        mapFragment?.getMapAsync { googleMap ->
+            map = googleMap
+            observeUserLocation()
+            map?.mapType = GoogleMap.MAP_TYPE_NORMAL
+
+            map?.setOnCameraIdleListener {
+                newLatLng = map?.cameraPosition?.target
+                newLatLng?.let { latLng ->
+                    locationViewModel.getAddress(latLng)
+                }
+            }
+            loadingDialog.dismiss()
+        }
+    }
+
+    private fun observeAddressAndError() {
+        locationViewModel.address.observe(viewLifecycleOwner) { res ->
+            address = res
+        }
+
+        locationViewModel.geoCoderError.observe(viewLifecycleOwner) { error ->
+            showShortToast(error)
+        }
+    }
+
+    private fun observeUserLocation() {
+        locationViewModel.userLocation.observe(viewLifecycleOwner) { userLocation ->
+            if (!userLocation.isNullOrEmpty()) {
+                val location = userLocation.find { it.currentUse }
+                location?.let {
+                    map?.moveCamera(
+                        CameraUpdateFactory.newLatLngZoom(
+                            LatLng(it.latitude, it.longitude), 17f
+                        )
+                    )
+                }
+            }
         }
     }
 
     private fun observeCurrentLocation() {
-        viewModel.currentLocation.observe(viewLifecycleOwner) { location ->
+        locationViewModel.currentLocation.observe(viewLifecycleOwner) { location ->
             if (location != null) {
-                viewModel.removeLocationUpdates()
+                locationViewModel.removeLocationUpdates()
                 map?.animateCamera(CameraUpdateFactory.newLatLngZoom(
                     LatLng(location.latitude, location.longitude), 17f))
             }
         }
+    }
+
+    private fun onBackPressed() {
+        requireActivity()
+            .onBackPressedDispatcher
+            .addCallback(this, object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (binding.searchSuggestionRv.isVisible) {
+                        binding.searchView.setQuery("", false)
+                    } else {
+                        findNavController().popBackStack()
+                    }
+                }
+            }
+            )
     }
 
     override fun onRequestPermissionsResult(
@@ -250,11 +318,23 @@ class MapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     }
 
     override fun onPermissionsGranted(requestCode: Int, perms: List<String>) {
-        viewModel.requestLocationUpdates()
+        locationViewModel.requestLocationUpdates()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    override fun onResume() {
+        super.onResume()
+        view?.animation?.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation?) {}
+            override fun onAnimationEnd(animation: Animation?) {
+                getMap()
+            }
+            override fun onAnimationRepeat(animation: Animation?) {}
+        })
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (this::searchRequestTask.isInitialized) searchRequestTask.cancel()
         if (mapFragment != null) {
             val ft = childFragmentManager.beginTransaction()
             ft.remove(mapFragment!!)

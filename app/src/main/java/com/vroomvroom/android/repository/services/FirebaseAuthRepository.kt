@@ -1,15 +1,17 @@
 package com.vroomvroom.android.repository.services
 
 import android.content.Intent
-import androidx.fragment.app.FragmentActivity
 import com.facebook.AccessToken
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.PhoneAuthProvider
 import com.vroomvroom.android.view.state.ViewState
 
 interface FirebaseAuthRepository {
     fun getCurrentUser(): FirebaseUser?
+    fun logoutUser(listener: OnCompleteListener<Void>)
+    fun removeAuthStateListener(listener: FirebaseAuth.AuthStateListener)
     fun getIdToken(onResult: (String?)->Unit)
     fun signInIntent(): Intent
     fun taskGoogleSignIn(data: Intent?, onResult: (ViewState<FirebaseUser>) -> Unit)

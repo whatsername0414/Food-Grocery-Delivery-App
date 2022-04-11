@@ -1,18 +1,9 @@
 package com.vroomvroom.android.view.ui.home
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupWithNavController
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -20,60 +11,45 @@ import com.google.android.gms.maps.model.LatLng
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentCheckoutBinding
 import com.vroomvroom.android.domain.db.user.UserLocationEntity
-import com.vroomvroom.android.domain.model.order.*
+import com.vroomvroom.android.domain.model.order.Order
+import com.vroomvroom.android.domain.model.order.OrderInputBuilder
+import com.vroomvroom.android.domain.model.order.OrderInputMapper
+import com.vroomvroom.android.domain.model.order.Payment
+import com.vroomvroom.android.utils.ClickType
 import com.vroomvroom.android.utils.Constants
 import com.vroomvroom.android.utils.Utils.setMap
 import com.vroomvroom.android.view.state.ViewState
-import com.vroomvroom.android.view.ui.auth.viewmodel.AuthViewModel
+import com.vroomvroom.android.view.ui.base.BaseFragment
 import com.vroomvroom.android.view.ui.home.adapter.CheckoutAdapter
-import com.vroomvroom.android.view.ui.activityviewmodel.ActivityViewModel
 import com.vroomvroom.android.view.ui.home.viewmodel.CheckoutViewModel
-import com.vroomvroom.android.view.ui.location.viewmodel.LocationViewModel
-import com.vroomvroom.android.view.ui.home.viewmodel.HomeViewModel
+import com.vroomvroom.android.view.ui.widget.CommonAlertDialog
+import com.vroomvroom.android.view.ui.widget.ReceiptDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
-class CheckoutFragment : Fragment(), OnMapReadyCallback {
+class CheckoutFragment : BaseFragment<FragmentCheckoutBinding> (
+    FragmentCheckoutBinding::inflate
+), OnMapReadyCallback {
 
     @Inject lateinit var orderInputBuilder: OrderInputBuilder
     @Inject lateinit var orderInputMapper: OrderInputMapper
-    private val locationViewModel by viewModels<LocationViewModel>()
     private val checkoutViewModel by viewModels<CheckoutViewModel>()
-    private val mainViewModel by viewModels<HomeViewModel>()
-    private val activityViewModel by activityViewModels<ActivityViewModel>()
-    private val authViewModel by activityViewModels<AuthViewModel>()
     private val checkoutAdapter by lazy { CheckoutAdapter() }
-    private val loadingDialog by lazy { LoadingDialog(requireActivity()) }
-
-    private lateinit var binding: FragmentCheckoutBinding
-    private lateinit var navController: NavController
 
     private var map: GoogleMap? = null
     private var mapView: MapView? = null
     private var locationEntity: UserLocationEntity? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentCheckoutBinding.inflate(inflater)
-        navController = findNavController()
-        mapView = binding.userLocationMapView
-        initGoogleMap(savedInstanceState)
-        return binding.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.success.visibility = View.GONE
 
-        val appBarConfiguration = AppBarConfiguration(navController.graph)
-        binding.toolbar.setupWithNavController(navController, appBarConfiguration)
-
+        mapView = binding.userLocationMapView
+        initGoogleMap(savedInstanceState)
+        navController = findNavController()
+        binding.appBarLayout.toolbar.setupToolbar()
         binding.checkoutRv.adapter = checkoutAdapter
 
         //private functions
@@ -95,17 +71,17 @@ class CheckoutFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun observeUserRecord() {
-        authViewModel.userRecord.observe(viewLifecycleOwner, { user ->
+        authViewModel.userRecord.observe(viewLifecycleOwner) { user ->
             when {
-                user.isEmpty() -> {
-                    binding.customBtnPlaceOrderTv.text = getString(R.string.login_or_sign_up)
-                    binding.customBtnPlaceOrder.setOnClickListener {
+                user == null -> {
+                    binding.btnPlaceOrder.text = getString(R.string.login_or_sign_up)
+                    binding.btnPlaceOrder.setOnClickListener {
                         navController.navigate(R.id.action_checkoutFragment_to_authBottomSheetFragment)
                     }
                 }
-                user.first().phone.number.isNullOrBlank() -> {
-                    binding.customBtnPlaceOrderTv.text = getString(R.string.add_mobile_number)
-                    binding.customBtnPlaceOrder.setOnClickListener {
+                user.phone.number.isNullOrBlank() -> {
+                    binding.btnPlaceOrder.text = getString(R.string.add_mobile_number)
+                    binding.btnPlaceOrder.setOnClickListener {
                         navController.navigate(R.id.action_checkoutFragment_to_phoneVerificationFragment)
                     }
                 }
@@ -113,111 +89,108 @@ class CheckoutFragment : Fragment(), OnMapReadyCallback {
                     observeIsLocationConfirmed()
                 }
             }
-        })
+        }
     }
 
-    @SuppressLint("SetTextI18n")
     private fun observeRoomCartItemLiveData() {
-        mainViewModel.cartItem.observe(viewLifecycleOwner, { items ->
+        homeViewModel.cartItem.observe(viewLifecycleOwner) { items ->
             checkoutAdapter.submitList(items)
             if (!checkoutViewModel.isComputed) {
                 items.forEach { item ->
                     checkoutViewModel.subtotal += item.cartItemEntity.price
                 }.also { checkoutViewModel.isComputed = true }
             }
-            binding.checkoutMerchant.text = items.first().cartItemEntity.merchant.merchant_name
-            binding.checkoutSubTotalTv.text = "₱${"%.2f".format(checkoutViewModel.subtotal)}"
-        })
+            binding.checkoutMerchant.text = items.first().cartItemEntity.cartMerchant.merchantName
+            binding.checkoutSubTotalTv.text =
+                getString(R.string.peso, "%.2f".format(checkoutViewModel.subtotal))
+        }
     }
 
     private fun observeLocation() {
-        locationViewModel.userLocation.observe(viewLifecycleOwner, { userLocation ->
-            locationEntity = userLocation.find { it.current_use }
+        locationViewModel.userLocation.observe(viewLifecycleOwner) { userLocation ->
+            locationEntity = userLocation.find { it.currentUse }
             locationEntity?.let {
                 updateLocationViews(it)
             }
-        })
+        }
     }
 
-    @SuppressLint("SetTextI18n")
     private fun observeIsLocationConfirmed() {
-        checkoutViewModel.isLocationConfirmed.observe(viewLifecycleOwner, { confirmed ->
+        checkoutViewModel.isLocationConfirmed.observe(viewLifecycleOwner) { confirmed ->
             if (!confirmed) {
-                binding.customBtnPlaceOrderTv.text = getString(R.string.confirm_address)
-                binding.customBtnPlaceOrder.setOnClickListener {
+                binding.btnPlaceOrder.text = getString(R.string.confirm_address)
+                binding.btnPlaceOrder.setOnClickListener {
                     locationEntity?.let {
                         checkoutViewModel.isLocationConfirmed.postValue(true)
                     }
                 }
             } else {
-                binding.customBtnPlaceOrderTv.text = "Place Order • ₱${"%.2f".format(checkoutViewModel.subtotal + 49)}.00"
-                binding.customBtnPlaceOrder.setOnClickListener {
+                binding.btnPlaceOrder.text =
+                    getString(R.string.place_order,
+                        "%.2f".format(checkoutViewModel.subtotal + 49))
+                binding.btnPlaceOrder.setOnClickListener {
                     checkoutViewModel.mutationCreateOrder(
                         orderInputMapper.mapToDomainModel(orderInputBuilder())
                     )
                 }
             }
-        })
+        }
     }
 
-    @SuppressLint("SetTextI18n")
     private fun observeOrderLiveData() {
-        checkoutViewModel.order.observe(viewLifecycleOwner, { response ->
-            when(response) {
+        checkoutViewModel.order.observe(viewLifecycleOwner) { response ->
+            when (response) {
                 is ViewState.Loading -> {
-                    loadingDialog.show()
+                    loadingDialog.show(getString(R.string.creating_order))
                 }
                 is ViewState.Success -> {
-                    loadingDialog.showSuccess()
-                    mainViewModel.cartItem.removeObservers(viewLifecycleOwner)
-                    mainViewModel.deleteAllCartItem()
-                    binding.customBtnPlaceOrderTv.text = getString(R.string.continue_shopping)
-                    binding.customBtnPlaceOrder.setOnClickListener {
-                        navController.navigate(R.id.action_checkoutFragment_to_homeFragment)
-                    }
+                    homeViewModel.cartItem.removeObservers(viewLifecycleOwner)
+                    homeViewModel.deleteAllCartItem()
+                    loadingDialog.dismiss()
+                    showShortToast(R.string.placed_order_message)
+                    val dialog = ReceiptDialog(requireActivity())
+                    dialog.show()
                 }
                 is ViewState.Error -> {
                     loadingDialog.dismiss()
-                    Toast.makeText(
-                        requireContext(),
-                        "Unable to place your order",
-                        Toast.LENGTH_LONG
-                    ).show()
-                    binding.customBtnPlaceOrderTv.text = "Place Order • ₱${"%.2f".format(checkoutViewModel.subtotal + 49)}"
+                    initCommonDialog()
+                    binding.btnPlaceOrder.text =
+                        getString(R.string.place_order,
+                            "%.2f".format(checkoutViewModel.subtotal + 49))
                 }
             }
-        })
+        }
     }
 
     private fun orderInputBuilder(): Order {
-        val cartItems = mainViewModel.cartItem.value!!
-        val merchant = cartItems.first().cartItemEntity.merchant
+        val cartItems = homeViewModel.cartItem.value!!
+        val merchant = cartItems.first().cartItemEntity.cartMerchant
         return orderInputBuilder.builder(
             Payment(
-                activityViewModel.paymentMethod.value ?: "Cash On Delivery",
+                mainActivityViewModel.paymentMethod.value ?: "Cash On Delivery",
                 null
             ),
             49.00,
             checkoutViewModel.subtotal,
-            merchant.merchant_id,
+            merchant.merchantId,
             locationEntity!!,
             cartItems
         )
     }
 
     private fun observePaymentMethod() {
-        activityViewModel.paymentMethod.observe(viewLifecycleOwner, { method ->
+        mainActivityViewModel.paymentMethod.observe(viewLifecycleOwner) { method ->
             when (method) {
                 "Cash On Delivery" -> {
                     binding.imgMethod.setImageResource(R.drawable.ic_money)
                     binding.paymentMethod.text = method
                 }
                 "GCash" -> {
-                    binding.imgMethod.setImageResource(R.drawable.gcash)
+                    binding.imgMethod.setImageResource(R.drawable.ic_gcash)
                     binding.paymentMethod.text = method
                 }
             }
-        })
+        }
     }
 
     private fun initGoogleMap(savedInstanceState: Bundle?) {
@@ -241,6 +214,25 @@ class CheckoutFragment : Fragment(), OnMapReadyCallback {
             locationEntity.address ?: getString(R.string.street_not_provided)
         binding.checkoutCity.text =
             locationEntity.city ?: getString(R.string.city_not_provided)
+    }
+
+    private fun initCommonDialog() {
+        val dialog = CommonAlertDialog(requireActivity())
+        dialog.show(
+            getString(R.string.network_error),
+            getString(R.string.network_error_message),
+            getString(R.string.cancel),
+            getString(R.string.retry),
+        ) { type ->
+            when (type) {
+                ClickType.POSITIVE -> {
+                    checkoutViewModel.mutationCreateOrder(
+                        orderInputMapper.mapToDomainModel(orderInputBuilder())
+                    )
+                }
+                ClickType.NEGATIVE -> dialog.dismiss()
+            }
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

@@ -1,87 +1,75 @@
 package com.vroomvroom.android.view.ui.home
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.navigation.NavController
+import android.view.animation.Animation
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.snackbar.Snackbar
+import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentFavoriteBinding
-import com.vroomvroom.android.domain.model.merchant.MerchantData
-import com.vroomvroom.android.utils.Utils.updateAdapter
+import com.vroomvroom.android.utils.Constants.FAVORITES
 import com.vroomvroom.android.view.state.ViewState
+import com.vroomvroom.android.view.ui.base.BaseFragment
 import com.vroomvroom.android.view.ui.home.adapter.MerchantAdapter
-import com.vroomvroom.android.view.ui.activityviewmodel.ActivityViewModel
-import com.vroomvroom.android.view.ui.home.viewmodel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class FavoriteFragment : Fragment() {
-
-    private val viewModel by viewModels<HomeViewModel>()
-    private val activityViewModel by activityViewModels<ActivityViewModel>()
-    private val merchantAdapter by lazy { MerchantAdapter(true) }
-
-    private lateinit var binding: FragmentFavoriteBinding
-    private lateinit var navController: NavController
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentFavoriteBinding.inflate(inflater)
-        navController = findNavController()
-        return binding.root
-    }
+class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(
+    FragmentFavoriteBinding::inflate
+) {
+    private val merchantAdapter by lazy { MerchantAdapter() }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val appBarConfiguration = AppBarConfiguration(navController.graph)
-        binding.toolbar.setupWithNavController(navController, appBarConfiguration)
-
-        binding.favoriteRv.adapter = merchantAdapter
-
-        viewModel.favoriteMerchant()
         observeFavoriteMerchant()
 
-        merchantAdapter.onMerchantClicked = { merchant ->
-            FavoriteFragmentDirections.actionFavoriteFragmentToMerchantFragment(merchant._id)
+        navController = findNavController()
+        binding.appBarLayout.toolbar.setupToolbar()
+
+        merchantAdapter.apply {
+            setUser(authViewModel.userRecord.value)
+            binding.favoriteRv.adapter = this
         }
 
-        merchantAdapter.onFavoriteClicked = { merchant, direction ->
-            viewModel.favorite(merchant._id, direction)
-            activityViewModel.favoriteDirection = direction
-            observeFavorite(merchant)
+        merchantAdapter.onMerchantClicked = { merchant ->
+            navController.navigate(
+                FavoriteFragmentDirections.actionFavoriteFragmentToMerchantFragment(merchant._id)
+            )
+        }
+
+        merchantAdapter.apply {
+            onFavoriteClicked = { merchant, position, direction ->
+                homeViewModel.favorite(merchant._id, direction)
+                observeFavorite(this, merchant, position, direction)
+            }
         }
     }
 
     private fun observeFavoriteMerchant() {
-        viewModel.favoriteMerchants.observe(viewLifecycleOwner, { response ->
+        mainViewModel.merchants.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is ViewState.Loading -> {
                     binding.favoriteRv.visibility = View.GONE
-                    binding.emptyFavorite.visibility = View.GONE
+                    binding.commonNoticeLayout.hideNotice()
                     binding.favoriteShimmerLayout.visibility = View.VISIBLE
                     binding.favoriteShimmerLayout.startShimmer()
                 }
                 is ViewState.Success -> {
                     val merchants = response.result.data
                     if (merchants.isNullOrEmpty()) {
-                        binding.emptyFavorite.visibility = View.VISIBLE
-                        merchantAdapter.setData(mutableListOf())
+                        binding.commonNoticeLayout.showNotice(
+                            R.drawable.ic_favorites,
+                            R.string.empty_favorite,
+                            R.string.empty_favorite_detail,
+                            null,
+                            R.string.start_shopping
+                        ) {
+                            findNavController().popBackStack()
+                        }
                     } else {
-                        merchantAdapter.setData(merchants)
-                        binding.emptyFavorite.visibility = View.GONE
+                        merchantAdapter.submitList(merchants)
                         binding.favoriteRv.visibility = View.VISIBLE
                     }
                     binding.favoriteShimmerLayout.visibility = View.GONE
@@ -91,45 +79,22 @@ class FavoriteFragment : Fragment() {
                     binding.favoriteShimmerLayout.visibility = View.GONE
                     binding.favoriteShimmerLayout.stopShimmer()
                     binding.favoriteRv.visibility = View.GONE
-                    binding.emptyFavorite.visibility = View.GONE
-                    binding.favoriteConnectionFailedNotice.visibility = View.VISIBLE
+                    binding.commonNoticeLayout.showNetworkError {
+                        mainViewModel.queryMerchants(FAVORITES, null)
+                    }
                 }
             }
-        })
+        }
     }
 
-    private fun observeFavorite(merchant: MerchantData) {
-        viewModel.favorite.observe(viewLifecycleOwner, { response ->
-            val direction = activityViewModel.favoriteDirection
-            when(response) {
-                is ViewState.Loading -> Unit
-                is ViewState.Success -> {
-                    if (direction == 1) {
-                        merchantAdapter.updateAdapter(merchant, true)
-                    } else {
-                        Snackbar.make(
-                            binding.root,
-                            "Removed from favorites",
-                            Snackbar.LENGTH_LONG
-                        ).show()
-                        merchantAdapter.updateAdapter(merchant, false)
-                    }
-                    viewModel.favorite.removeObservers(viewLifecycleOwner)
-                }
-                is ViewState.Error -> {
-                    Toast.makeText(
-                        requireContext(),
-                        "Something went wrong",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    if (direction == 1) {
-                        merchantAdapter.updateAdapter(merchant, true)
-                    } else {
-                        merchantAdapter.updateAdapter(merchant, false)
-                    }
-                    viewModel.favorite.removeObservers(viewLifecycleOwner)
-                }
+    override fun onResume() {
+        super.onResume()
+        view?.animation?.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation?) {}
+            override fun onAnimationEnd(animation: Animation?) {
+                mainViewModel.queryMerchants(FAVORITES, null)
             }
+            override fun onAnimationRepeat(animation: Animation?) {}
         })
     }
 }

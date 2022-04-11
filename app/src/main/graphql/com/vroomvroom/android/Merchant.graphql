@@ -1,7 +1,22 @@
+query Merchants($query: String!, $filter: String) {
+    getMerchants(query: $query, filter: $filter) {
+        _id
+        name
+        img_url
+        categories
+        rates
+        ratings
+        favorite
+        opening
+        isOpen
+    }
+}
+
 query Merchant($merchantId: String!) {
     getMerchant(merchantId: $merchantId) {
         _id
         name
+        categories
         img_url
         product_sections {
             _id
@@ -34,18 +49,6 @@ query Merchant($merchantId: String!) {
         isOpen
         opening
         closing
-    }
-}
-query FavoriteMerchant {
-    getFavoriteMerchants{
-        _id
-        name
-        img_url
-        categories
-        rates
-        ratings
-        opening
-        isOpen
     }
 }
 

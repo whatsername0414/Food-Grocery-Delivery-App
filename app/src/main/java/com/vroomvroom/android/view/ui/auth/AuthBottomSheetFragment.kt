@@ -5,88 +5,82 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Html
 import android.text.method.LinkMovementMethod
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.text.HtmlCompat.FROM_HTML_MODE_COMPACT
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.android.material.snackbar.Snackbar
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentAuthBottomSheetBinding
 import com.vroomvroom.android.domain.db.user.Phone
 import com.vroomvroom.android.domain.db.user.UserEntity
+import com.vroomvroom.android.utils.ClickType
 import com.vroomvroom.android.view.state.ViewState
-import com.vroomvroom.android.view.ui.auth.viewmodel.AuthViewModel
+import com.vroomvroom.android.view.ui.base.BaseBottomSheetFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class AuthBottomSheetFragment : BottomSheetDialogFragment() {
+class AuthBottomSheetFragment : BaseBottomSheetFragment<FragmentAuthBottomSheetBinding>(
+    FragmentAuthBottomSheetBinding::inflate
+) {
 
-    private val viewModel by activityViewModels<AuthViewModel>()
-    private lateinit var binding: FragmentAuthBottomSheetBinding
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentAuthBottomSheetBinding.inflate(inflater)
-        binding.textView8.movementMethod = LinkMovementMethod.getInstance()
-        binding.textView8.text = Html.fromHtml(getString(R.string.terms_and_policy), FROM_HTML_MODE_COMPACT)
-        return binding.root
-    }
+    private lateinit var getSignInWithGoogle : ActivityResultLauncher<Intent>
+    private var currentLoginChoice: String = "Google Sign In"
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.textView8.movementMethod = LinkMovementMethod.getInstance()
+        binding.textView8.text = Html.fromHtml(getString(R.string.terms_and_policy), FROM_HTML_MODE_COMPACT)
 
         observeToken()
         observeRegisterUser()
         observeNewLoggedInUser()
 
-        val getSignInWithGoogle = registerForActivityResult(
+        getSignInWithGoogle = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-                viewModel.taskGoogleSignIn(result.data)
+                authViewModel.taskGoogleSignIn(result.data)
             }
         }
 
-        binding.btnEmail.setOnClickListener {
+        binding.btnEmailAddress.setOnClickListener {
             findNavController().navigate(R.id.action_authBottomSheetFragment_to_loginFragment)
         }
 
         binding.btnGoogle.setOnClickListener {
+            isCancelable = false
             binding.progressIndicator.visibility = View.VISIBLE
-            getSignInWithGoogle.launch(viewModel.signInIntent)
+            getSignInWithGoogle.launch(authViewModel.signInIntent)
+            currentLoginChoice = "Google Sign In"
         }
 
         binding.btnFacebook.setOnClickListener {
+            isCancelable = false
             binding.progressIndicator.visibility = View.VISIBLE
-            viewModel.facebookLogIn(this)
+            authViewModel.facebookLogIn(this)
+            currentLoginChoice = "Facebook Sign In"
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        viewModel.onActivityResult(requestCode, resultCode, data)
+        authViewModel.onActivityResult(requestCode, resultCode, data)
     }
 
     private fun observeToken() {
-        viewModel.token.observe(viewLifecycleOwner, { token ->
+        authViewModel.token.observe(viewLifecycleOwner) { token ->
             if (token != null) {
-                viewModel.register()
+                authViewModel.register()
             }
-        })
+        }
     }
 
     private fun observeRegisterUser() {
-        viewModel.user.observe(viewLifecycleOwner, { response ->
+        authViewModel.user.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is ViewState.Loading -> {
                     binding.progressIndicator.visibility = View.VISIBLE
@@ -94,43 +88,67 @@ class AuthBottomSheetFragment : BottomSheetDialogFragment() {
                 is ViewState.Success -> {
                     val result = response.result.register
                     result?.let {
-                        val user = UserEntity(it.id, it.name, it.email, Phone(it.phone?.number, it.phone?.verified!!))
-                        viewModel.insertUserRecord(user)
+                        val user = UserEntity(
+                            it.id,
+                            it.name,
+                            it.email,
+                            Phone(it.phone?.number, it.phone?.verified ?: false)
+                        )
+                        authViewModel.insertUserRecord(user)
                     }
                     findNavController().popBackStack()
                 }
                 is ViewState.Error -> {
-                    Snackbar.make(
-                        binding.root,
-                        R.string.snackbar_label,
-                        Snackbar.LENGTH_LONG
-                    )
-                        .setAction(R.string.retry) {
-                            viewModel.register()
-                        }.show()
+                    dialog.show(
+                        getString(R.string.network_error),
+                        getString(R.string.unsaved_error),
+                        getString(R.string.cancel),
+                        getString(R.string.retry),
+                        isButtonLeftVisible = false,
+                        isCancellable = false
+                    ) { type ->
+                        when (type) {
+                            ClickType.POSITIVE -> {
+                                authViewModel.register()
+                                dialog.dismiss()
+                            }
+                            ClickType.NEGATIVE -> Unit
+                        }
+                    }
                 }
             }
-        })
+        }
     }
 
     private fun observeNewLoggedInUser() {
-        viewModel.newLoggedInUser.observe(viewLifecycleOwner, { result ->
+        authViewModel.newLoggedInUser.observe(viewLifecycleOwner) { result ->
             when (result) {
-                is ViewState.Loading -> {
-                }
+                is ViewState.Loading -> Unit
                 is ViewState.Success -> {
-                    viewModel.saveIdToken()
+                    authViewModel.saveIdToken()
                 }
                 is ViewState.Error -> {
                     binding.progressIndicator.visibility = View.GONE
-                    val error = result.exception.message
-                    Toast.makeText(
-                        requireContext(),
-                        error,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    dialog.show(
+                        getString(R.string.auth_failed),
+                        getString(R.string.network_error_message),
+                        getString(R.string.cancel),
+                        getString(R.string.retry)
+                    ) { type ->
+                        when (type) {
+                            ClickType.POSITIVE -> {
+                                binding.progressIndicator.visibility = View.VISIBLE
+                                if (currentLoginChoice == "Google Sign In")  {
+                                    getSignInWithGoogle.launch(authViewModel.signInIntent)
+                                } else {
+                                    authViewModel.facebookLogIn(this)
+                                }
+                            }
+                            ClickType.NEGATIVE -> dialog.dismiss()
+                        }
+                    }
                 }
             }
-        })
+        }
     }
 }

@@ -70,7 +70,7 @@ object RepoModule {
     @Provides
     fun provideApolloClient(okHttpClient: OkHttpClient): ApolloClient {
         return ApolloClient.builder()
-            .serverUrl("http://192.168.1.8:5000/")
+            .serverUrl("http://192.168.1.20:5000/")
             .okHttpClient(okHttpClient)
             .build()
     }
@@ -92,4 +92,8 @@ object RepoModule {
     @Singleton
     @Provides
     fun provideUserDao(db: Database) = db.userDao()
+
+    @Singleton
+    @Provides
+    fun provideSearchDao(db: Database) = db.searchDao()
 }

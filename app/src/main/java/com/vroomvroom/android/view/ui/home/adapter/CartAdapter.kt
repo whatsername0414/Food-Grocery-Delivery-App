@@ -3,18 +3,16 @@ package com.vroomvroom.android.view.ui.home.adapter
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
-import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
+import com.bumptech.glide.Glide
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.ItemCartBinding
 import com.vroomvroom.android.domain.db.cart.CartItemEntity
 import com.vroomvroom.android.domain.db.cart.CartItemWithChoice
-import com.vroomvroom.android.domain.db.cart.MerchantEntity
+import com.vroomvroom.android.domain.db.cart.CartMerchantEntity
 
 class CartDiffUtil: DiffUtil.ItemCallback<CartItemWithChoice>() {
     override fun areItemsTheSame(
@@ -52,28 +50,33 @@ class CartAdapter: ListAdapter<CartItemWithChoice, CartViewHolder>(CartDiffUtil(
     override fun onBindViewHolder(holder: CartViewHolder, position: Int) {
         val cartItemWithChoice = getItem(position)
         holder.binding.cartItemWithChoice = cartItemWithChoice
+        Glide
+            .with(holder.itemView.context)
+            .load(cartItemWithChoice.cartItemEntity.productImgUrl)
+            .placeholder(R.drawable.ic_placeholder)
+            .into(holder.binding.productImage)
         val choiceList = StringBuilder()
         cartItemWithChoice?.choiceEntities?.forEach { choice ->
-            choiceList.append("• ${choice.name}\n")
+            choiceList.append("${choice.optionType}: ${choice.name} •\n")
         }
 
         holder.binding.productDescription.text = choiceList
         holder.binding.productPrice.text = "₱${"%.2f".format(cartItemWithChoice.cartItemEntity.price)}"
 
         val cartItem = getItem(position).cartItemEntity
-        val merchant = MerchantEntity(
-            merchant_id = cartItem.merchant.merchant_id,
-            merchant_name = cartItem.merchant.merchant_name
+        val merchant = CartMerchantEntity(
+            merchantId = cartItem.cartMerchant.merchantId,
+            merchantName = cartItem.cartMerchant.merchantName
         )
         val increaseQuantityCartItem = CartItemEntity(
             cartItemId = cartItem.cartItemId,
-            product_id = cartItem.product_id,
-            merchant = merchant,
+            productId = cartItem.productId,
+            cartMerchant = merchant,
             name = cartItem.name,
-            product_img_url = cartItem.product_img_url,
+            productImgUrl = cartItem.productImgUrl,
             price = cartItem.price + (cartItem.price / cartItem.quantity),
             quantity = cartItem.quantity + 1,
-            special_instructions = cartItem.special_instructions
+            specialInstructions = cartItem.specialInstructions
         )
         holder.binding.increaseQuantity.setOnClickListener {
             onCartItemClicked?.invoke(increaseQuantityCartItem)
@@ -81,13 +84,13 @@ class CartAdapter: ListAdapter<CartItemWithChoice, CartViewHolder>(CartDiffUtil(
 
         val decreaseQuantityCartItem = CartItemEntity(
             cartItemId = cartItem.cartItemId,
-            product_id = cartItem.product_id,
-            merchant = merchant,
+            productId = cartItem.productId,
+            cartMerchant = merchant,
             name = cartItem.name,
-            product_img_url = cartItem.product_img_url,
+            productImgUrl = cartItem.productImgUrl,
             price = cartItem.price - (cartItem.price / cartItem.quantity),
             quantity = cartItem.quantity - 1,
-            special_instructions = cartItem.special_instructions
+            specialInstructions = cartItem.specialInstructions
         )
         holder.binding.decreaseQuantity.setOnClickListener {
             if (cartItem.quantity > 1) {
@@ -102,8 +105,3 @@ class CartAdapter: ListAdapter<CartItemWithChoice, CartViewHolder>(CartDiffUtil(
 }
 
 class CartViewHolder(val binding: ItemCartBinding): RecyclerView.ViewHolder(binding.root)
-
-@BindingAdapter("cartItemImageUrl")
-fun setCartItemImageUrl(imageView: ImageView, url: String?) {
-    imageView.load(url)
-}

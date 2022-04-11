@@ -27,10 +27,9 @@ class AddressDiffUtil: DiffUtil.ItemCallback<UserLocationEntity>() {
     }
 }
 
-class AddressAdapter(
-    private val fragmentName: String = "Default"
-): ListAdapter<UserLocationEntity, AddressViewHolder>(AddressDiffUtil()) {
+class AddressAdapter: ListAdapter<UserLocationEntity, AddressViewHolder>(AddressDiffUtil()) {
 
+    var currentUseAddress: ((UserLocationEntity) -> Unit)? = null
     var onAddressClicked: ((UserLocationEntity) -> Unit)? = null
     var onDeleteClicked: ((UserLocationEntity) -> Unit)? = null
 
@@ -48,9 +47,10 @@ class AddressAdapter(
         val address = getItem(position)
         holder.binding.address = address
 
-        if (fragmentName == "BottomSheetFragment") {
-            holder.binding.delete.visibility = View.INVISIBLE
+        if (address.currentUse) {
+            currentUseAddress?.invoke(address)
         }
+
         holder.binding.root.setOnClickListener {
             onAddressClicked?.invoke(address)
         }

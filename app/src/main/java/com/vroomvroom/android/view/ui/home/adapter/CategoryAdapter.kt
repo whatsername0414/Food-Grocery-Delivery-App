@@ -1,19 +1,18 @@
 package com.vroomvroom.android.view.ui.home.adapter
 
 import android.annotation.SuppressLint
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.core.content.ContextCompat
-import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
+import androidx.viewbinding.ViewBinding
+import com.bumptech.glide.Glide
 import com.vroomvroom.android.CategoryQuery
 import com.vroomvroom.android.R
+import com.vroomvroom.android.databinding.ItemBrowseCategoryBinding
 import com.vroomvroom.android.databinding.ItemCategoryBinding
 
 class CategoryDiffUtil: DiffUtil.ItemCallback<CategoryQuery.GetCategory>() {
@@ -35,49 +34,81 @@ class CategoryDiffUtil: DiffUtil.ItemCallback<CategoryQuery.GetCategory>() {
 
 class CategoryAdapter: ListAdapter<CategoryQuery.GetCategory, CategoryViewHolder>(CategoryDiffUtil()) {
 
-    var onCategoryClicked: ((CategoryQuery.GetCategory?) -> Unit)? = null
+    var onCategoryClicked: ((String?) -> Unit)? = null
+    var itemViewType = 0
     private var categoryName: String? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
-        val binding: ItemCategoryBinding = DataBindingUtil.inflate(
+        val layoutBinding1: ItemCategoryBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
             R.layout.item_category,
             parent,
             false
             )
-        return CategoryViewHolder(binding)
+        val layoutBinding2: ItemBrowseCategoryBinding = DataBindingUtil.inflate(
+            LayoutInflater.from(parent.context),
+            R.layout.item_browse_category,
+            parent,
+            false
+        )
+        if (itemViewType == 1) return CategoryViewHolder(layoutBinding2)
+        return CategoryViewHolder(layoutBinding1)
     }
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         val category = getItem(position)
-        holder.binding.category = category
-        holder.binding.root.setOnClickListener {
-            if (categoryName != category.name) {
-                onCategoryClicked?.invoke(category)
-                holder.binding.categoryCardView.setCardBackgroundColor(Color.parseColor("#a30000"))
-                holder.binding.nameTv.setTextColor(Color.parseColor("#ffffff"))
-                holder.binding.imageBg.background = ContextCompat.getDrawable(holder.binding.root.context, R.drawable.white)
-                categoryName = category.name
-            } else {
-                holder.binding.categoryCardView.setCardBackgroundColor(Color.parseColor("#ffffff"))
-                holder.binding.nameTv.setTextColor(Color.parseColor("#000000"))
-                onCategoryClicked?.invoke(null)
-                categoryName = null
+        when (itemViewType) {
+            0 -> {
+                val view = holder.binding as ItemCategoryBinding
+                view.category = category
+                Glide
+                    .with(holder.itemView.context)
+                    .load(category.img_url)
+                    .placeholder(R.drawable.ic_placeholder)
+                    .into(view.categoryImg)
+
+                view.root.setOnClickListener {
+                    if (categoryName != category.name) {
+                        onCategoryClicked?.invoke(category.name)
+                        view.apply {
+                            categoryCardView.setCardBackgroundColor(
+                                ContextCompat.getColor(it.context, R.color.red_a30))
+                            nameTv.setTextColor(ContextCompat.getColor(it.context, R.color.white))
+                            imageBg.background = ContextCompat.getDrawable(
+                                it.context, R.drawable.bg_white_fff_rounded_100dp)
+                        }
+                        categoryName = category.name
+                    } else {
+                        onCategoryClicked?.invoke(null)
+                        categoryName = null
+                    }
+                    notifyDataSetChanged()
+                }
+                if (categoryName != category.name) {
+                    view.apply {
+                        categoryCardView.setCardBackgroundColor(
+                            ContextCompat.getColor(this.root.context, R.color.white))
+                        nameTv.setTextColor(ContextCompat.getColor(this.root.context, R.color.black))
+                        imageBg.background =
+                            ContextCompat.getDrawable(this.root.context, R.drawable.bg_gray_f2f_rounded_100dp)
+                    }
+                }
             }
-            notifyDataSetChanged()
-        }
-        if (categoryName != category.name) {
-            holder.binding.categoryCardView.setCardBackgroundColor(Color.parseColor("#ffffff"))
-            holder.binding.nameTv.setTextColor(Color.parseColor("#000000"))
-            holder.binding.imageBg.background = ContextCompat.getDrawable(holder.binding.root.context, R.drawable.light_gray)
+            1 -> {
+                val view = holder.binding as ItemBrowseCategoryBinding
+                view.category = category
+                Glide
+                    .with(holder.itemView.context)
+                    .load(category.img_url)
+                    .placeholder(R.drawable.ic_placeholder)
+                    .into(view.categoryImg)
+                view.root.setOnClickListener {
+                    onCategoryClicked?.invoke(category.name)
+                }
+            }
         }
     }
 }
 
-class CategoryViewHolder(val binding: ItemCategoryBinding): RecyclerView.ViewHolder(binding.root)
-
-@BindingAdapter("categoryImageUrl")
-fun setImageUrl(imageView: ImageView, url: String?) {
-    imageView.load(url)
-}
+class CategoryViewHolder(val binding: ViewBinding): RecyclerView.ViewHolder(binding.root)

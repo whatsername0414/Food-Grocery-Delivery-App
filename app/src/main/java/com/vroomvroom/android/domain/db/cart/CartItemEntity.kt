@@ -10,16 +10,16 @@ data class CartItemEntity(
     @PrimaryKey(autoGenerate = true)
     val cartItemId: Int? = null,
     @Embedded
-    val merchant: MerchantEntity,
-    val product_id: String,
+    val cartMerchant: CartMerchantEntity,
+    val productId: String,
     val name: String,
-    val product_img_url: String?,
+    val productImgUrl: String?,
     val price: Double,
     val quantity: Int,
-    val special_instructions: String? = null
+    val specialInstructions: String? = null
 )
 
-data class MerchantEntity(
-    val merchant_id: String,
-    val merchant_name: String,
+data class CartMerchantEntity(
+    val merchantId: String,
+    val merchantName: String,
 )

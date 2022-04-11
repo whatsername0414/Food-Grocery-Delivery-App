@@ -15,8 +15,8 @@
         android:paddingEnd="4dp"
         android:background="@drawable/gray"
         android:text="@string/continue_with_facebook"
-        android:textSize="18sp"
-        android:textColor="@color/gray"
+        android:textSize="16sp"
+        android:textColor="@color/gray_a5a"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
@@ -28,9 +28,8 @@
             android:paddingStart="4dp"
             android:paddingEnd="4dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textColor="@color/gray"
+            android:textColor="@color/gray_a5a"
             android:background="@drawable/gray"
-            android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:text="@string/pending" />
@@ -42,7 +41,6 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            app:cardBackgroundColor="@color/light_gray"
             app:cardCornerRadius="16dp"
             app:cardElevation="0dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -53,7 +51,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="1dp"
-                android:background="@drawable/light_gray">
+                android:background="@drawable/bg_gray_ccc_rounded_16dp">
 
                 <View
                     android:id="@+id/imageView11"
@@ -72,7 +70,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/gray"
-                    android:textColor="@color/gray"
+                    android:textColor="@color/gray_a5a"
                     android:text="@string/continue_with_facebook"
                     app:layout_constraintStart_toEndOf="@+id/imageView11"
                     app:layout_constraintTop_toTopOf="parent"/>
@@ -86,7 +84,7 @@
                     android:layout_marginBottom="8dp"
                     android:background="@drawable/gray"
                     android:text="@string/cash_on_delivery"
-                    android:textColor="@color/gray"
+                    android:textColor="@color/gray_a5a"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/imageView11"
                     app:layout_constraintTop_toBottomOf="@+id/textView19"
@@ -100,7 +98,7 @@
                     android:layout_marginEnd="16dp"
                     android:background="@drawable/gray"
                     android:text="@string/forgot_password"
-                    android:textColor="@color/gray"
+                    android:textColor="@color/gray_a5a"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -131,8 +129,8 @@
             android:background="@drawable/gray"
             android:text="@string/change_address"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textSize="16sp"
-            android:textColor="@color/gray"
+            android:textSize="14sp"
+            android:textColor="@color/gray_a5a"
             app:layout_constraintEnd_toStartOf="@+id/subtotal"
             app:layout_constraintTop_toBottomOf="@+id/orderProductRv" />
 
@@ -143,8 +141,8 @@
             android:layout_marginEnd="16dp"
             android:background="@drawable/gray"
             android:text="@string/retry"
-            android:textSize="18sp"
-            android:textColor="@color/gray"
+            android:textSize="16sp"
+            android:textColor="@color/gray_a5a"
             app:layout_constraintBottom_toBottomOf="@+id/textView22"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/textView22" />

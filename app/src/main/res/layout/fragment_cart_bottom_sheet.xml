@@ -6,22 +6,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".view.ui.home.CartBottomSheetFragment">
 
-    <View
+    <include
         android:id="@+id/view"
-        android:layout_width="48dp"
-        android:layout_height="6dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/light_gray"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        layout="@layout/bottom_sheet_top_indicator_layout" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cartLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            android:textSize="24sp"
+            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -43,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/light_gray"
+            android:background="@drawable/bg_gray_f2f_rounded_100dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/merchantName" />
@@ -52,11 +44,8 @@
             android:id="@+id/cartItemRv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            android:nestedScrollingEnabled="true"
+            android:layout_margin="@dimen/dp_16"
+            android:overScrollMode="never"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toTopOf="@+id/view3"
             app:layout_constraintEnd_toEndOf="parent"
@@ -68,11 +57,10 @@
         <View
             android:id="@+id/view3"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/light_gray"
+            android:layout_height="@dimen/dp_1"
+            android:layout_marginHorizontal="@dimen/dp_16"
+            android:layout_marginBottom="@dimen/dp_8"
+            android:background="@drawable/bg_gray_f2f_rounded_100dp"
             app:layout_constraintBottom_toTopOf="@+id/textView5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -85,7 +73,6 @@
             android:layout_marginBottom="16dp"
             android:text="@string/subtotal"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textSize="16sp"
             app:layout_constraintBottom_toTopOf="@+id/btn_check_out"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -95,44 +82,36 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="32dp"
             android:layout_marginBottom="16dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textSize="16sp"
             app:layout_constraintBottom_toTopOf="@+id/btn_check_out"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:text="P344" />
+            tools:text="₱344" />
 
-        <com.google.android.material.button.MaterialButton
+        <android.widget.Button
             android:id="@+id/btn_check_out"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/btn_background"
-            android:text="@string/check_out"
+            android:layout_marginHorizontal="@dimen/margin_large"
+            android:layout_marginBottom="@dimen/dp_8"
+            android:background="@drawable/bg_red_a30_rounded_16dp"
+            android:text="@string/to_check_out"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="16sp"
-            app:backgroundTint="@color/maroon"
-            app:cornerRadius="16dp"
             app:layout_constraintBottom_toTopOf="@+id/btn_add_items"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <com.google.android.material.button.MaterialButton
+        <android.widget.Button
             android:id="@+id/btn_add_items"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/btn_background_gray"
+            android:layout_marginHorizontal="@dimen/margin_large"
+            android:layout_marginBottom="@dimen/dp_16"
+            android:background="@drawable/bg_white_fff_rounded_16dp_stroke_filled"
             android:text="@string/add_items"
             android:textAllCaps="false"
-            android:textColor="@color/maroon"
-            android:textSize="16sp"
-            app:backgroundTint="@color/light_gray"
-            app:cornerRadius="16dp"
+            android:textColor="@color/red_a30"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -142,7 +121,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:indeterminate="true"
-            android:indeterminateTint="@color/maroon"
+            android:indeterminateTint="@color/red_a30"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -159,7 +138,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view"
-        tools:visibility="gone">
+        android:visibility="gone">
 
         <View
             android:id="@+id/view6"
@@ -168,26 +147,24 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="32dp"
-            android:background="@drawable/light_gray" />
-
-        <ImageView
-            android:layout_width="128dp"
-            android:layout_height="128dp"
-            android:src="@drawable/empty_basket" />
+            android:background="@drawable/bg_gray_f2f_rounded_100dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/dp_8"
             android:text="@string/empty_cart"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:textAlignment="center"
+            android:drawablePadding="@dimen/dp_16"
+            app:drawableTopCompat="@drawable/ic_empty_cart" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="@string/empty_cart_detail"
+            android:text="@string/empty_cart_message"
             android:textAlignment="center"
             android:textSize="16sp" />
 
@@ -196,7 +173,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:backgroundTint="@color/maroon"
+            android:backgroundTint="@color/red_a30"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:text="@string/start_shopping"
@@ -208,9 +185,9 @@
             android:id="@+id/view7"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="16dp"
-            android:background="@drawable/light_gray" />
+            android:layout_marginHorizontal="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_32"
+            android:layout_marginBottom="@dimen/margin_xl"
+            android:background="@drawable/bg_gray_f2f_rounded_100dp" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
