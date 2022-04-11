@@ -1,20 +1,33 @@
 package com.vroomvroom.android.repository.local
 
-import com.vroomvroom.android.db.CartItem
-import com.vroomvroom.android.db.CartItemChoice
-import com.vroomvroom.android.db.CartItemDAO
-import javax.inject.Inject
+import androidx.lifecycle.LiveData
+import com.vroomvroom.android.domain.db.cart.CartItemChoiceEntity
+import com.vroomvroom.android.domain.db.cart.CartItemEntity
+import com.vroomvroom.android.domain.db.cart.CartItemWithChoice
+import com.vroomvroom.android.domain.db.user.UserEntity
+import com.vroomvroom.android.domain.db.user.UserLocationEntity
 
-class RoomRepository @Inject constructor(
-    private val cartItemDAO: CartItemDAO
-)  {
-    suspend fun insertCartItem(cartItem: CartItem): Long {
-        return cartItemDAO.insertCartItem(cartItem)
-    }
+interface RoomRepository {
+    //User
+    suspend fun insertUser(userEntity: UserEntity)
+    suspend fun updateUser(userEntity: UserEntity)
+    suspend fun deleteUser(userEntity: UserEntity)
+    fun getUser(): LiveData<List<UserEntity>>
 
-    suspend fun insertCartItemChoice(cartItemChoice: CartItemChoice) = cartItemDAO.insertChoice(cartItemChoice)
+    //UserLocation
+    suspend fun insertLocation(userLocationEntity: UserLocationEntity): Long
+    suspend fun updateLocation(userLocationEntity: UserLocationEntity)
+    suspend fun updateLocations(id: Int)
+    suspend fun deleteLocation(userLocationEntity: UserLocationEntity)
+    fun getUserLocation(): LiveData<List<UserLocationEntity>>
 
-    suspend fun deleteCartItem(cartItem: CartItem) = cartItemDAO.deleteCartItem(cartItem)
-
-    fun getAllCartItem() = cartItemDAO.getAllCartItem()
+    //Cart
+    suspend fun insertCartItem(cartItemEntity: CartItemEntity): Long
+    suspend fun insertCartItemChoice(cartItemChoiceEntity: CartItemChoiceEntity)
+    suspend fun updateCartItem(cartItemEntity: CartItemEntity)
+    suspend fun deleteCartItem(cartItemEntity: CartItemEntity)
+    suspend fun deleteCartItemChoice(cartItemChoiceEntity: CartItemChoiceEntity)
+    suspend fun deleteAllCartItem()
+    suspend fun deleteAllCartItemChoice()
+    fun getAllCartItem(): LiveData<List<CartItemWithChoice>>
 }

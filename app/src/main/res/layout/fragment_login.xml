@@ -6,16 +6,54 @@
     android:layout_height="match_parent"
     tools:context=".view.ui.auth.LoginFragment">
 
-    <LinearLayout
-        android:id="@+id/login_linear_layout"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/loginAppBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/app_bar_bg"
+        android:elevation="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/login_progress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:indeterminateTint="@color/maroon"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/login_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:theme="@style/ToolbarTheme"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
+        android:id="@+id/login_linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginAppBarLayout">
 
         <ImageView
             android:id="@+id/imageView2"
@@ -31,14 +69,14 @@
             android:layout_marginStart="32dp"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="32dp"
-            android:hint="Email"
-            app:boxStrokeColor="@color/maroon"
-            app:hintTextColor="@color/maroon"
-            app:helperTextTextColor="#fa0606"
+            android:hint="@string/email"
             app:boxCornerRadiusBottomEnd="15dp"
             app:boxCornerRadiusBottomStart="15dp"
             app:boxCornerRadiusTopEnd="15dp"
             app:boxCornerRadiusTopStart="15dp"
+            app:boxStrokeColor="@color/maroon"
+            app:helperTextTextColor="#fa0606"
+            app:hintTextColor="@color/maroon"
             app:startIconDrawable="@drawable/ic_person">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -55,111 +93,58 @@
             android:layout_marginStart="32dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"
-            android:hint="Password"
-            app:boxStrokeColor="@color/maroon"
-            app:hintTextColor="@color/maroon"
-            app:helperTextTextColor="#fa0606"
+            android:hint="@string/password"
             app:boxCornerRadiusBottomEnd="15dp"
             app:boxCornerRadiusBottomStart="15dp"
             app:boxCornerRadiusTopEnd="15dp"
             app:boxCornerRadiusTopStart="15dp"
-            app:startIconDrawable="@drawable/ic_lock"
-            app:endIconMode="password_toggle">
+            app:boxStrokeColor="@color/maroon"
+            app:endIconMode="password_toggle"
+            app:helperTextTextColor="#fa0606"
+            app:hintTextColor="@color/maroon"
+            app:startIconDrawable="@drawable/ic_lock">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/login_password_input_editText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword"/>
+                android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/loginButton"
+        <Button
+            android:id="@+id/btn_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="32dp"
             android:background="@drawable/btn_background"
-            app:backgroundTint="@color/maroon"
-            android:text="Login"
-            android:textSize="18sp"
-            />
+            android:text="@string/login"
+            android:textAllCaps="false"
+            android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/forgot_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="32dp"
-            android:text="Forgot Password?"
+            android:text="@string/forgot_password"
             android:textAlignment="center"
-            android:textColor="#0da2ff"
-            />
+            android:textColor="@color/teal_700" />
 
         <TextView
-            android:id="@+id/txSignUp"
+            android:id="@+id/txtSignUp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="32dp"
-            android:text="Don't have an account? Signup"
+            android:text="@string/don_t_have_an_account_signup"
             android:textAlignment="center"
-            android:textColor="#0da2ff"
-            android:textSize="16sp"/>
-
-    </LinearLayout>
-
-    <ProgressBar
-        android:id="@+id/progressbar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <LinearLayout
-        android:id="@+id/loginConnectionFailedNotice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/login_empty_text_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Sorry for the delay"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            android:textSize="18sp"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="We had some trouble connecting,\nbut should have you eat shortly"
-            android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            app:layout_constraintStart_toStartOf="@+id/register_empty_text_title"
-            app:layout_constraintTop_toBottomOf="@+id/register_empty_text_title" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/loginRetryButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="retry"
-            app:backgroundTint="@color/maroon"
-            app:layout_constraintEnd_toEndOf="@+id/register_empty_text_body"
-            app:layout_constraintStart_toStartOf="@+id/register_empty_text_body"
-            app:layout_constraintTop_toBottomOf="@+id/register_empty_text_body" />
+            android:textColor="@color/teal_700"
+            android:textSize="16sp" />
 
     </LinearLayout>
 

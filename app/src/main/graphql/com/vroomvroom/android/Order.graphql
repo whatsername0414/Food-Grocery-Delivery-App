@@ -1,0 +1,178 @@
+query Orders {
+    getOrders {
+        id
+        payment {
+            method
+            createdAt
+        }
+        customer {
+            phone_number
+            location {
+                address
+                city
+            }
+        }
+        merchant {
+            _id
+            name
+        }
+        order_detail {
+            delivery_fee
+            total_price
+            product {
+                id
+                product_id
+                product_img_url
+                name
+                price
+                quantity
+                option {
+                    name
+                    additional_price
+                    option_type
+                }
+            }
+        }
+        status
+        createdAt
+    }
+}
+
+query OrdersByStatus($status: String!) {
+    getOrdersByStatus(status: $status) {
+        id
+        payment {
+            method
+            createdAt
+        }
+        customer {
+            phone_number
+            location {
+                address
+                city
+            }
+        }
+        merchant {
+            _id
+            name
+        }
+        order_detail {
+            delivery_fee
+            total_price
+            product {
+                id
+                product_id
+                product_img_url
+                name
+                price
+                quantity
+                option {
+                    name
+                    additional_price
+                    option_type
+                }
+            }
+        }
+        status
+        createdAt
+    }
+}
+
+query Order($orderId: ID!) {
+    getOrder(orderId: $orderId) {
+        id
+        payment {
+            method
+            createdAt
+        }
+        customer {
+            name
+            phone_number
+            location {
+                address
+                city
+            }
+        }
+        merchant {
+            _id
+            name
+        }
+        order_detail {
+            delivery_fee
+            total_price
+            product {
+                id
+                product_id
+                product_img_url
+                name
+                price
+                quantity
+                option {
+                    name
+                    additional_price
+                    option_type
+                }
+            }
+        }
+        status
+        createdAt
+    }
+}
+
+query ordersStatus {
+    getOrdersStatus {
+        pending {
+            status
+            id
+            notified
+        }
+        confirmed {
+            id
+            status
+            notified
+        }
+        to_receive {
+            id
+            status
+            notified
+        }
+        delivered {
+            id
+            status
+            notified
+        }
+    }
+}
+
+mutation CreateOrder($orderInput: OrderInput!) {
+    createOrder(orderInput: $orderInput) {
+        id
+        payment {
+            method
+            createdAt
+        }
+        order_detail {
+            delivery_fee
+            total_price
+            product {
+                id
+                product_id
+                name
+                product_img_url
+                instructions
+                price
+                quantity
+                option {
+                    name
+                    additional_price
+                    option_type
+                }
+            }
+        }
+        status
+    }
+}
+
+mutation updateOrderNotified($orderId: ID!) {
+    updateOrderNotified(orderId: $orderId)
+}
