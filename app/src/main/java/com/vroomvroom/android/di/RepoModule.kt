@@ -1,6 +1,7 @@
 package com.vroomvroom.android.di
 
 import android.content.Context
+import androidx.core.app.NotificationCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
@@ -12,6 +13,7 @@ import com.google.android.gms.location.LocationServices
 import com.vroomvroom.android.domain.db.Database
 import com.vroomvroom.android.repository.local.UserPreferences
 import com.vroomvroom.android.utils.Constants.CART_ITEM_TABLE
+import com.vroomvroom.android.utils.Constants.CHANNEL_ID
 import com.vroomvroom.android.utils.Constants.PREFERENCES_STORE_NAME
 import dagger.Module
 import dagger.Provides
@@ -42,6 +44,11 @@ object RepoModule {
         app.preferencesDataStoreFile(PREFERENCES_STORE_NAME)
     })
 
+    @Singleton
+    @Provides
+    fun provideNotificationBuilder(@ApplicationContext app: Context): NotificationCompat.Builder {
+        return NotificationCompat.Builder(app, CHANNEL_ID)
+    }
 
     @Singleton
     @Provides
@@ -49,9 +56,10 @@ object RepoModule {
         val interceptor = Interceptor { chain ->
             val token = runBlocking { preferences.token.first() }
             val request = chain.request().newBuilder()
-                .addHeader("Authorization", "Bearer $token")
-                .build()
-            chain.proceed(request)
+            if (!token.isNullOrBlank()) {
+                request.addHeader("Authorization", "Bearer $token")
+            }
+            chain.proceed(request.build())
         }
         return OkHttpClient.Builder()
             .addInterceptor(interceptor)
@@ -62,7 +70,7 @@ object RepoModule {
     @Provides
     fun provideApolloClient(okHttpClient: OkHttpClient): ApolloClient {
         return ApolloClient.builder()
-            .serverUrl("http://192.168.1.2:5000/")
+            .serverUrl("http://192.168.1.3:5000/")
             .okHttpClient(okHttpClient)
             .build()
     }

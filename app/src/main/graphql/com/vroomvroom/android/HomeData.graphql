@@ -8,11 +8,13 @@ query Category {
 
 query Merchants($category: String!) {
     getMerchantsByCategory(category: $category) {
-        id
+        _id
         name
         img_url
         categories
-        rating
+        rates
+        ratings
+        favorite
         opening
         isOpen
     }

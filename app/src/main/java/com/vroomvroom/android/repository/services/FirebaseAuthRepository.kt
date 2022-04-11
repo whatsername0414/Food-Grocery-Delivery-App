@@ -9,6 +9,7 @@ import com.google.firebase.auth.PhoneAuthProvider
 import com.vroomvroom.android.view.state.ViewState
 
 interface FirebaseAuthRepository {
+    fun getCurrentUser(): FirebaseUser?
     fun getIdToken(onResult: (String?)->Unit)
     fun signInIntent(): Intent
     fun taskGoogleSignIn(data: Intent?, onResult: (ViewState<FirebaseUser>) -> Unit)

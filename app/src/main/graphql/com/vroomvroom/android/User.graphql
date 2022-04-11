@@ -7,6 +7,7 @@ query User {
         location {
             address
             city
+            additional_information
             coordinates
         }
     }
@@ -17,6 +18,7 @@ mutation UpdateUserLocation($location: LocationInput!) {
         location {
             address
             city
+            additional_information
             coordinates
         }
     }

@@ -2,7 +2,7 @@ package com.vroomvroom.android
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.vroomvroom.android.view.ui.main.HomeActivity
+import com.vroomvroom.android.view.ui.home.HomeActivity
 import com.vroomvroom.android.utils.Utils.startNewActivity
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 

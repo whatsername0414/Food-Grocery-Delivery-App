@@ -1,7 +1,11 @@
 package com.vroomvroom.android.repository.local
 
 import androidx.lifecycle.LiveData
-import com.vroomvroom.android.domain.db.*
+import com.vroomvroom.android.domain.db.cart.CartItemChoiceEntity
+import com.vroomvroom.android.domain.db.cart.CartItemEntity
+import com.vroomvroom.android.domain.db.cart.CartItemWithChoice
+import com.vroomvroom.android.domain.db.user.UserEntity
+import com.vroomvroom.android.domain.db.user.UserLocationEntity
 
 interface RoomRepository {
     //User
@@ -11,8 +15,10 @@ interface RoomRepository {
     fun getUser(): LiveData<List<UserEntity>>
 
     //UserLocation
-    suspend fun insertLocation(userLocationEntity: UserLocationEntity)
+    suspend fun insertLocation(userLocationEntity: UserLocationEntity): Long
     suspend fun updateLocation(userLocationEntity: UserLocationEntity)
+    suspend fun updateLocations(id: Int)
+    suspend fun deleteLocation(userLocationEntity: UserLocationEntity)
     fun getUserLocation(): LiveData<List<UserLocationEntity>>
 
     //Cart
