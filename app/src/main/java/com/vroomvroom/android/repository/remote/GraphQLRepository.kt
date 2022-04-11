@@ -1,18 +1,30 @@
 package com.vroomvroom.android.repository.remote
 
-import com.apollographql.apollo.api.Response
-import com.vroomvroom.android.HomeDataQuery
-import com.vroomvroom.android.LoginMutation
-import com.vroomvroom.android.RegisterMutation
-import com.vroomvroom.android.repository.UserPreferences
+import com.vroomvroom.android.*
+import com.vroomvroom.android.domain.db.user.UserLocationEntity
+import com.vroomvroom.android.domain.model.merchant.Merchants
+import com.vroomvroom.android.type.OrderInput
+import com.vroomvroom.android.view.state.ViewState
 
 interface GraphQLRepository {
 
-    suspend fun queryHomeData(): Response<HomeDataQuery.Data>
+    suspend fun queryCategory(): ViewState<CategoryQuery.Data>?
+    suspend fun queryMerchants(category: String): ViewState<Merchants>?
+    suspend fun queryMerchant(merchantId: String): ViewState<MerchantQuery.Data>?
+    suspend fun queryFavoriteMerchant(): ViewState<Merchants>?
+    suspend fun mutationFavorite(merchantId: String, direction: Int): ViewState<FavoriteMutation.Data>?
 
-    suspend fun queryMerchantByCategory(category: String): Response<HomeDataQuery.Data>
+    suspend fun queryOrders(): ViewState<OrdersQuery.Data>?
+    suspend fun queryOrdersByStatus(status: String): ViewState<OrdersByStatusQuery.Data>?
+    suspend fun queryOrder(orderId: String): ViewState<OrderQuery.Data>?
+    suspend fun queryOrdersStatus(): ViewState<OrdersStatusQuery.Data>?
+    suspend fun mutationCreateOrder(orderInput: OrderInput): ViewState<CreateOrderMutation.Data>?
+    suspend fun mutationUpdateOrderNotified(orderId: String): ViewState<UpdateOrderNotifiedMutation.Data>?
 
-    suspend fun mutationLogin(email:String, password:String): Response<LoginMutation.Data>
+    suspend fun queryUser(): ViewState<UserQuery.Data>?
+    suspend fun mutationRegister(): ViewState<RegisterMutation.Data>?
+    suspend fun mutationUpdateUserLocation(locationEntity: UserLocationEntity): ViewState<UpdateUserLocationMutation.Data>?
 
-    suspend fun mutationRegister(email:String, password:String, confirmPassword:String): Response<RegisterMutation.Data>
+    suspend fun mutationVerifyMobileNumber(number:String): ViewState<VerifyMobileNumberMutation.Data>?
+    suspend fun mutationOtpVerification(otp: String): ViewState<OtpVerificationMutation.Data>?
 }

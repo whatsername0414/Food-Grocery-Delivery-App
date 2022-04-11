@@ -1,10 +1,27 @@
+scalar Date
 type Product {
+  _id: ID!
   name: String!
-  product_img_url: String!
-  product_category: [String]!
-  price: Int!
+  product_img_url: String
+  price: Float!
   description: String
+  option: [ProductOption!]
   likes: Int
+}
+type ProductOption {
+  name: String!
+  required: Boolean!
+  choice: [OptionChoice!]!
+}
+type OptionChoice {
+  name: String!
+  additional_price: Float
+}
+type ProductSection {
+  _id: ID!
+  name: String!
+  #TODO update product list
+  products: [Product]!
 }
 type Category {
   id: ID!
@@ -12,49 +29,78 @@ type Category {
   img_url: String!
 }
 type Merchant {
-  id: ID!
+  _id: ID!
   name: String!
   img_url: String!
   categories: [String]!
-  product_categories: [String]!
-  products: [Product]
-  rating: Float
+  #TODO update product_sections
+  product_sections: [ProductSection]
+  rates: Int
+  ratings: Float
+  favorite: Boolean
+  location: [String!]
   opening: String!
+  closing: String!
   isOpen: Boolean!
 }
 type User {
   id: ID!
-  full_name: String!
+  name: String
   email: String!
-  deliveryInfo: [DeliveryInfo]!
-  token: String!
-  status: String!
-  createdAt: String!
+  phone_number: String
+  location: Location
+  createdAt: Date!
 }
-type DeliveryInfo {
-  id: ID!
-  address: String!
-  city: String!
-  phoneNumber: String!
+type Location {
+  address: String
+  city: String
+  additional_information: String
+  coordinates: [Float]!
 }
 type Order {
   id: ID!
-  customer: ID!
-  deliveryInfo: DeliveryInfo!
   payment: Payment!
-  products: [OrderProductDetail]!
+  customer: User!
+  merchant: Merchant!
+  order_detail: OrderDetail!
   status: String!
-  createdAt: String!
+  createdAt: Date!
 }
-type OrderProductDetail {
-  menuId: ID!
-  quantity: Int!
-  total_price: Int!
+type OrderDetail {
+  delivery_fee: Float!
+  total_price: Float!
+  product: [OrderProduct!]!
+}
+type OrderProduct {
+  id: ID!
+  product_id: ID!
+  name: String!,
+  product_img_url: String,
+  price: Float!,
+  quantity: Int!,
+  instructions: String,
+  option: [OrderProductOption],
+}
+type OrderProductOption {
+  name: String!,
+  additional_price: Float,
+  option_type: String!
 }
 type Payment {
-  id: ID!
+  reference: String,
   method: String!
-  createdAt: String!
+  createdAt: Date!
+}
+type OrdersStatus {
+  pending: [OrderStatusDetail],
+  confirmed: [OrderStatusDetail],
+  to_receive: [OrderStatusDetail],
+  delivered: [OrderStatusDetail]
+}
+type OrderStatusDetail {
+  id: String!,
+  status: String!,
+  notified: Boolean!
 }
 input MerchantInput {
   name: String!
@@ -72,57 +118,77 @@ input ProductInput {
   price: Int!
   description: String
 }
-input PlaceOrderInput {
-  landmarks: String!
-  address: String!
-  city: String!
-  phoneNumber: String!
+input OrderInput {
+  payment: PaymentInput!
+  merchant: ID!
+  order_detail: OrderDetailInput!
+}
+input PaymentInput {
+  reference: String,
   method: String!
-  menuId: ID!
-  quantity: Int!
-  total_price: Int!
-  status: String!
 }
-input DeliveryInfoInput {
-  address: String!
-  city: String!
-  phoneNumber: String!
+input OrderDetailInput {
+  delivery_fee: Float!
+  total_price: Float!
+  product: [OrderProductInput!]!
 }
-input RegisterInput {
-  email: String!
-  password: String!
-  confirmPassword: String!
+input OrderProductInput {
+  product_id: ID!
+  name: String!,
+  product_img_url: String,
+  price: Float!,
+  quantity: Int!,
+  instructions: String,
+  option: [OrderProductOptionInput],
+}
+input OrderProductOptionInput {
+  name: String!,
+  additional_price: Float,
+  option_type: String!
+}
+input MobileNumberInput {
+  number: String
+}
+input OtpVerificationInput {
+  otp: String
+}
+input LocationInput {
+  address: String
+  city: String
+  additional_information: String
+  coordinates: [Float]!
 }
 type Query {
-  getMerchants(category: String): [Merchant]
-  getMerchant(merchantId: String): Merchant
-  getOrders: [Order]
-  getCategories: [Category]
+  getUser: User!
+  getCategories: [Category!]!
+  getMerchantsByCategory(category: String!): [Merchant!]!
+  getMerchant(merchantId: String!): Merchant!
+  getFavoriteMerchants: [Merchant]!
+  getOrders: [Order]!
+  getOrdersByStatus(status: String!): [Order]!
+  getOrder(orderId: ID!): Order!
+  getOrdersStatus: OrdersStatus
 }
 type Mutation {
-  register(registerInput: RegisterInput): User!
-  login(email: String!, password: String): User!
+  register: User
+  updateLocation(location: LocationInput): User!
 
-  createMerchant(merchantInput: MerchantInput): Merchant!
+  mobileNUmber(number: String!): String!
+  otpVerification(otp: String!): User!
+
+  createMerchant(merchantInput: MerchantInput!): Merchant!
   deleteMerchant(merchantId: ID!): String!
-
-  deliveryInfo(deliveryInfoInput: DeliveryInfoInput): User!
-  deleteDeliveryInfo(deliveryInfoId: ID!): String!
+  updateFavorite(merchantId: ID!, direction: Int!): String!
 
   createCategory(name: String!, img_url: String!): Category!
   deleteCategory(categoryId: ID!): String!
 
-  placeOrder(placeOrderInput: PlaceOrderInput): Order!
+  createOrder(orderInput: OrderInput!): Order!
+  updateOrderNotified(orderId: ID!): String!
 
   likeProduct(productName: String!): String!
   rateMerchant(merchantId: ID!, rate: Int!): Merchant!
 }
 type Subscription {
   newOrder: Order!
-}
-
-schema {
-  query: Query
-  mutation: Mutation
-  subscription: Subscription
 }

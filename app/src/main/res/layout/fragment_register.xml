@@ -6,13 +6,52 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".view.ui.auth.RegisterFragment">
 
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/registerAppBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/app_bar_bg"
+        android:elevation="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/register_progress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:indeterminateTint="@color/maroon"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/register_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:theme="@style/ToolbarTheme"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
         android:id="@+id/register_linear_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:gravity="center"
         android:orientation="vertical"
-        android:gravity="center">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/registerAppBarLayout">
 
         <ImageView
             android:id="@+id/imageView4"
@@ -21,25 +60,24 @@
             app:srcCompat="@mipmap/logo" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/emailInputLayout"
+            android:id="@+id/registerEmailInputLayout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="32dp"
-            android:hint="Email"
+            android:hint="@string/email"
             app:boxCornerRadiusBottomEnd="15dp"
             app:boxCornerRadiusBottomStart="15dp"
             app:boxCornerRadiusTopEnd="15dp"
             app:boxCornerRadiusTopStart="15dp"
-            app:boxStrokeColor="@color/maroon"
             app:helperTextTextColor="#fa0606"
             app:hintTextColor="@color/maroon"
             app:startIconDrawable="@drawable/ic_person">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/emailInputEditText"
+                android:id="@+id/registerEmailInputEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress" />
@@ -53,7 +91,7 @@
             android:layout_marginStart="32dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"
-            android:hint="Password"
+            android:hint="@string/password"
             app:boxCornerRadiusBottomEnd="15dp"
             app:boxCornerRadiusBottomStart="15dp"
             app:boxCornerRadiusTopEnd="15dp"
@@ -79,7 +117,7 @@
             android:layout_marginStart="32dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"
-            android:hint="Confirm Password"
+            android:hint="@string/confirm_password"
             app:boxCornerRadiusBottomEnd="15dp"
             app:boxCornerRadiusBottomStart="15dp"
             app:boxCornerRadiusTopEnd="15dp"
@@ -98,81 +136,26 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
-            android:id="@+id/registerButton"
+            android:id="@+id/btn_register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"
-            android:background="@drawable/auth_btn_background"
-            android:text="Register"
-            android:textSize="18sp"
-            app:backgroundTint="@color/maroon" />
+            android:background="@drawable/btn_background"
+            android:text="@string/register"
+            android:textAllCaps="false"
+            android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/txLogin"
+            android:id="@+id/txtLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:text="Already have an account? Login"
+            android:text="@string/already_have_an_account_login"
             android:textAlignment="center"
-            android:textColor="#0da2ff"
-            android:textSize="16sp"
-            />
-
-    </LinearLayout>
-
-    <ProgressBar
-        android:id="@+id/progressbar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <LinearLayout
-        android:id="@+id/registerConnectionFailedNotice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/register_empty_text_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Sorry for the delay"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            android:textSize="24dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="visible" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="We had some trouble connecting,\nbut should have you eat shortly"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            app:layout_constraintStart_toStartOf="@+id/register_empty_text_title"
-            app:layout_constraintTop_toBottomOf="@+id/register_empty_text_title" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/registerRetryButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="retry"
-            android:layout_gravity="center"
-            app:backgroundTint="@color/maroon"
-            app:layout_constraintEnd_toEndOf="@+id/register_empty_text_body"
-            app:layout_constraintStart_toStartOf="@+id/register_empty_text_body"
-            app:layout_constraintTop_toBottomOf="@+id/register_empty_text_body" />
+            android:textColor="@color/teal_700"
+            android:textSize="16sp" />
 
     </LinearLayout>
 

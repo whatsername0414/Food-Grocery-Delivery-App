@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.ui.main.LocationFragment">
+    tools:context=".view.ui.location.LocationFragment">
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/linear_progress"
@@ -58,7 +58,7 @@
             android:layout_marginEnd="32dp"
             android:layout_marginStart="32dp"
             android:layout_marginTop="64dp"
-            android:background="@drawable/auth_btn_background"/>
+            android:background="@drawable/btn_background"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/bnt_enterLocation"

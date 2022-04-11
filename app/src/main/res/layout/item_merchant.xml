@@ -6,7 +6,7 @@
     <data>
         <variable
             name="merchant"
-            type="com.vroomvroom.android.HomeDataQuery.GetMerchant" />
+            type="com.vroomvroom.android.domain.model.merchant.MerchantData" />
     </data>
 
     <LinearLayout
@@ -38,10 +38,11 @@
 
                     <ImageView
                         android:id="@+id/img_restaurant"
-                        restaurantImageUrl="@{merchant.img_url}"
+                        merchantImageUrl="@{merchant.img_url}"
                         android:layout_width="match_parent"
                         android:layout_height="184dp"
                         android:scaleType="centerCrop"
+                        tools:src="@drawable/mcdo"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -56,14 +57,35 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/dark_background" />
+                        app:srcCompat="@drawable/dark_background"
+                        tools:visibility="invisible"/>
+
+                    <LinearLayout
+                        android:id="@+id/favoriteLayout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="@drawable/img_bg"
+                        android:gravity="center"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+                        <CheckBox
+                            android:id="@+id/checkbox_favorite"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_margin="4dp"
+                            android:background="@drawable/favorite_icon"
+                            android:button="@null"
+                            android:checked="@{merchant.favorite}" />
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/tv_opening"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="@{`Opens at ` + merchant.opening + `:00 am`}"
+                        android:text="@{`Opens at ` + merchant.opening + ` am`}"
                         android:textColor="@color/white"
                         android:textSize="16sp"
                         android:textStyle="bold"
@@ -78,9 +100,9 @@
                         android:layout_height="40dp"
                         android:layout_gravity="center"
                         android:layout_marginBottom="22dp"
-                        android:text="PREORDER"
+                        android:text="@string/preorder"
                         android:textSize="12sp"
-                        android:background="@drawable/btn_background"
+                        android:background="@drawable/left_curve_bg"
                         android:drawableEnd="@drawable/ic_arrow_right"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent" />
@@ -102,18 +124,18 @@
 
             <ImageView
                 android:id="@+id/imageView3"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="@+id/cardView"
                 app:layout_constraintTop_toBottomOf="@+id/textView2"
-                app:srcCompat="@drawable/ic_star_" />
+                app:srcCompat="@drawable/ic_star" />
 
             <TextView
                 android:id="@+id/rating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="@{String.valueOf(merchant.rating)}"
+                android:text="@{String.valueOf(merchant.ratings)}"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 app:layout_constraintBottom_toBottomOf="@+id/imageView3"
                 app:layout_constraintStart_toEndOf="@+id/imageView3"

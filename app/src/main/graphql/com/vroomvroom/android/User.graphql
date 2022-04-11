@@ -1,0 +1,25 @@
+query User {
+    getUser {
+        id
+        name
+        email
+        phone_number
+        location {
+            address
+            city
+            additional_information
+            coordinates
+        }
+    }
+}
+
+mutation UpdateUserLocation($location: LocationInput!) {
+    updateLocation(location: $location) {
+        location {
+            address
+            city
+            additional_information
+            coordinates
+        }
+    }
+}
