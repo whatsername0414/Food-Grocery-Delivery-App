@@ -179,7 +179,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(
         }
     }
 
-    private fun insertLocation(prevDestination: Int?) {
+    private fun saveAndDismiss(prevDestination: Int?) {
         newLatLng?.let { latLng ->
             locationViewModel.insertLocation(
                 userLocationBuilder(address = address, latLng = latLng)
@@ -203,7 +203,10 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(
                     getString(R.string.proceed)
                 ) { type ->
                     when (type) {
-                        ClickType.POSITIVE -> insertLocation(prevDestination)
+                        ClickType.POSITIVE -> {
+                            saveAndDismiss(prevDestination)
+                            dialog.dismiss()
+                        }
                         ClickType.NEGATIVE -> dialog.dismiss()
                     }
                 }
@@ -216,7 +219,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(
                         )
                     )
                 } else {
-                    insertLocation(prevDestination)
+                    saveAndDismiss(prevDestination)
                 }
             }
         } else {
@@ -289,7 +292,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(
     private fun onBackPressed() {
         requireActivity()
             .onBackPressedDispatcher
-            .addCallback(this, object : OnBackPressedCallback(true) {
+            .addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     if (binding.searchSuggestionRv.isVisible) {
                         binding.searchView.setQuery("", false)
