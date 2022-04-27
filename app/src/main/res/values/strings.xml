@@ -191,5 +191,5 @@
     <string name="placed_on">Placed on: %s</string>
     <string name="invalid_phone_number">Invalid phone number</string>
     <string name="cancel_successful">Cancel Successful</string>
-    <string name="mapbox_access_token">sk.eyJ1Ijoid2g0dHNlcm5hbWUiLCJhIjoiY2wxYXQxeWpnMjBwbTNra2FxOW8xa3BhOCJ9.1nNii4m14gdAxSOksaVKhA</string>
+    <string name="mapbox_access_token">sk.eyJ1Ijoid2g0dHNlcm5hbWUiLCJhIjoiY2wyZnRmM3ZsMGIwZzNjcnp3Y3o1ZTJnayJ9.q_8JuLr0P80Ycz3Gs-2Zfg</string>
 </resources>
