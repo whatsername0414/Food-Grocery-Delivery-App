@@ -39,13 +39,13 @@ class AddressesFragment : BaseFragment<FragmentAddressesBinding>(
         }
 
         adapter.onDeleteClicked = { address ->
-            locationViewModel.userLocation.observe(viewLifecycleOwner) { locations ->
-                if (address.currentUse && !locations.isNullOrEmpty()) {
-                    locationViewModel.updateLocation(locations.last().use())
-                }
-                if (locations.size > 1) {
-                    locationViewModel.deleteLocation(address)
-                }
+            val currentAddressList = adapter.currentList
+            val lastNotUseAddress = currentAddressList.last { !it.currentUse }
+            if (address.currentUse) {
+                locationViewModel.updateLocation(lastNotUseAddress.use())
+            }
+            if (currentAddressList.size > 1) {
+                locationViewModel.deleteLocation(address)
             }
         }
 
