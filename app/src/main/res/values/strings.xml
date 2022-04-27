@@ -11,9 +11,9 @@
     <string name="placed_order_message">Order placed successfully</string>
     <string name="creating_dialog_message">Creating order…</string>
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyDCtiSPULjYWEZ5Ly9bB1G3WRQrg6ubeDI</string>
-    <string name="maps_alert_dialog_proceed">Proceed Anyway</string>
     <string name="facebook_app_id">593283722014887</string>
     <string name="fb_login_protocol_scheme">fb593283722014887</string>
+    <string name="facebook_client_token">dd589d0b733000634328ead72eeec53b</string>
     <string name="special_instructions">Special Instructions</string>
     <string name="delivery_address">Delivery address</string>
     <string name="to_check_out">Go to checkout</string>
