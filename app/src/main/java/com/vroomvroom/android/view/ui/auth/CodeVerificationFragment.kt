@@ -52,7 +52,7 @@ class CodeVerificationFragment : BaseFragment<FragmentCodeVerificationBinding>(
         }
         authViewModel.messageIntent.observe(viewLifecycleOwner) { intent ->
             when (intent) {
-                is ViewState.Success -> getResult.launch(intent.result)
+                is ViewState.Success -> getResult.launch(intent.data)
                 is ViewState.Error -> {
                     Toast.makeText(
                         requireContext(), intent.exception.message, Toast.LENGTH_SHORT
@@ -71,7 +71,7 @@ class CodeVerificationFragment : BaseFragment<FragmentCodeVerificationBinding>(
                     binding.btnVerifyOtp.isEnabled = false
                 }
                 is ViewState.Success -> {
-                    val result = response.result.otpVerification
+                    val result = response.data.otpVerification
                     val user = UserEntity(
                         result.id,
                         result.name,

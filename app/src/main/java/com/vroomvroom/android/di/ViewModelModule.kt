@@ -3,6 +3,8 @@ package com.vroomvroom.android.di
 import android.content.BroadcastReceiver
 import com.vroomvroom.android.repository.local.RoomRepository
 import com.vroomvroom.android.repository.local.RoomRepositoryImpl
+import com.vroomvroom.android.repository.merchant.MerchantRepository
+import com.vroomvroom.android.repository.merchant.MerchantRepositoryImpl
 import com.vroomvroom.android.repository.remote.GraphQLRepository
 import com.vroomvroom.android.repository.remote.GraphQLRepositoryImpl
 import com.vroomvroom.android.repository.services.FirebaseAuthRepository
@@ -23,6 +25,10 @@ abstract class ViewModelModule {
     @Binds
     @ViewModelScoped
     abstract fun binRepository(repo: GraphQLRepositoryImpl): GraphQLRepository
+
+    @Binds
+    @ViewModelScoped
+    abstract fun bindMerchantRepository(repo: MerchantRepositoryImpl): MerchantRepository
 
     @Binds
     @ViewModelScoped

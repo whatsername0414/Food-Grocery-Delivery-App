@@ -1,6 +1,7 @@
 package com.vroomvroom.android.view.ui.home.adapter
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -10,29 +11,29 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
-import com.vroomvroom.android.CategoryQuery
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.ItemBrowseCategoryBinding
 import com.vroomvroom.android.databinding.ItemCategoryBinding
+import com.vroomvroom.android.domain.model.merchant.Category
 
-class CategoryDiffUtil: DiffUtil.ItemCallback<CategoryQuery.GetCategory>() {
+class CategoryDiffUtil: DiffUtil.ItemCallback<Category>() {
     override fun areItemsTheSame(
-        oldItem: CategoryQuery.GetCategory,
-        newItem: CategoryQuery.GetCategory
+        oldItem: Category,
+        newItem: Category
     ): Boolean {
         return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(
-        oldItem: CategoryQuery.GetCategory,
-        newItem: CategoryQuery.GetCategory
+        oldItem: Category,
+        newItem: Category
     ): Boolean {
         return oldItem == newItem
     }
 
 }
 
-class CategoryAdapter: ListAdapter<CategoryQuery.GetCategory, CategoryViewHolder>(CategoryDiffUtil()) {
+class CategoryAdapter: ListAdapter<Category, CategoryViewHolder>(CategoryDiffUtil()) {
 
     var onCategoryClicked: ((String?) -> Unit)? = null
     var itemViewType = 0
@@ -64,7 +65,7 @@ class CategoryAdapter: ListAdapter<CategoryQuery.GetCategory, CategoryViewHolder
                 view.category = category
                 Glide
                     .with(holder.itemView.context)
-                    .load(category.img_url)
+                    .load(category.imageUrl)
                     .placeholder(R.drawable.ic_placeholder)
                     .into(view.categoryImg)
 
@@ -100,7 +101,7 @@ class CategoryAdapter: ListAdapter<CategoryQuery.GetCategory, CategoryViewHolder
                 view.category = category
                 Glide
                     .with(holder.itemView.context)
-                    .load(category.img_url)
+                    .load(category.imageUrl)
                     .placeholder(R.drawable.ic_placeholder)
                     .into(view.categoryImg)
                 view.root.setOnClickListener {

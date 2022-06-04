@@ -6,7 +6,7 @@ import android.view.View
 import androidx.navigation.fragment.findNavController
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentAccountBinding
-import com.vroomvroom.android.domain.model.account.AccountOptionItem
+import com.vroomvroom.android.domain.model.account.AccountMenuOptionItem
 import com.vroomvroom.android.utils.ClickType
 import com.vroomvroom.android.view.ui.account.adapter.OptionAdapter
 import com.vroomvroom.android.view.ui.base.BaseFragment
@@ -20,7 +20,7 @@ class AccountFragment : BaseFragment<FragmentAccountBinding>(
     FragmentAccountBinding::inflate
 ) {
 
-    private val options = arrayListOf<AccountOptionItem>()
+    private val options = arrayListOf<AccountMenuOptionItem>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -96,17 +96,17 @@ class AccountFragment : BaseFragment<FragmentAccountBinding>(
         options.clear()
         binding.optionRv.adapter = OptionAdapter(getOptionItems(hasUser)) { type ->
             when (type) {
-                AccountOptionType.PROFILE ->
+                AccountMenuOptionType.PROFILE ->
                     findNavController().navigate(R.id.action_accountFragment_to_profileManagementFragment)
-                AccountOptionType.ADDRESSES ->
+                AccountMenuOptionType.ADDRESSES ->
                     findNavController().navigate(AccountFragmentDirections.actionAccountFragmentToAddressesFragment(null))
-                AccountOptionType.FAVORITES ->
+                AccountMenuOptionType.FAVORITES ->
                     findNavController().navigate(R.id.action_accountFragment_to_favoriteFragment)
-                AccountOptionType.ABOUT ->
+                AccountMenuOptionType.ABOUT ->
                     findNavController().navigate(R.id.action_accountFragment_to_aboutFragment)
-                AccountOptionType.LOGIN ->
+                AccountMenuOptionType.LOGIN ->
                     findNavController().navigate(R.id.action_accountFragment_to_authBottomSheetFragment)
-                AccountOptionType.LOGOUT ->
+                AccountMenuOptionType.LOGOUT ->
                     initAlertDialog(
                         getString(R.string.prompt),
                         getString(R.string.logout_confirmation_message),
@@ -117,36 +117,36 @@ class AccountFragment : BaseFragment<FragmentAccountBinding>(
         }
     }
 
-    private fun getOptionItems(hasUser: Boolean): List<AccountOptionItem> {
-        val profile = AccountOptionItem(
+    private fun getOptionItems(hasUser: Boolean): List<AccountMenuOptionItem> {
+        val profile = AccountMenuOptionItem(
             R.drawable.ic_profile,
             R.string.profile,
-            AccountOptionType.PROFILE
+            AccountMenuOptionType.PROFILE
         )
-        val addresses = AccountOptionItem(
+        val addresses = AccountMenuOptionItem(
             R.drawable.ic_location_outline,
             R.string.addresses,
-            AccountOptionType.ADDRESSES
+            AccountMenuOptionType.ADDRESSES
         )
-        val favorites = AccountOptionItem(
+        val favorites = AccountMenuOptionItem(
             R.drawable.ic_love,
             R.string.favorites,
-            AccountOptionType.FAVORITES
+            AccountMenuOptionType.FAVORITES
         )
-        val about = AccountOptionItem(
+        val about = AccountMenuOptionItem(
             R.drawable.ic_info,
             R.string.about,
-            AccountOptionType.ABOUT
+            AccountMenuOptionType.ABOUT
         )
-        val login = AccountOptionItem(
+        val login = AccountMenuOptionItem(
             R.drawable.ic_login,
             R.string.login_or_sign_up,
-            AccountOptionType.LOGIN
+            AccountMenuOptionType.LOGIN
         )
-        val logout = AccountOptionItem(
+        val logout = AccountMenuOptionItem(
             R.drawable.ic_logout,
             R.string.logout,
-            AccountOptionType.LOGOUT
+            AccountMenuOptionType.LOGOUT
         )
 
         if (hasUser) {

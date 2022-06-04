@@ -24,7 +24,7 @@ class BrowseFragment : BaseFragment<FragmentBrowseBinding>(
         binding.categoryRv.adapter = categoryAdapter
 
         if (mainViewModel.categories.value == null) {
-            mainViewModel.queryCategory("search")
+            mainViewModel.getCategories("search")
         }
         observeBrowseCategory()
 
@@ -57,7 +57,7 @@ class BrowseFragment : BaseFragment<FragmentBrowseBinding>(
                     }
                 }
                 is ViewState.Success -> {
-                    val category = response.result.getCategories
+                    val category = response.data
                     categoryAdapter.submitList(category)
                     binding.apply {
                         title.visibility = View.VISIBLE
@@ -77,7 +77,7 @@ class BrowseFragment : BaseFragment<FragmentBrowseBinding>(
                             visibility = View.GONE
                         }
                         binding.commonNoticeLayout.showNetworkError {
-                            mainViewModel.queryCategory("search")
+                            mainViewModel.getCategories("search")
                         }
                     }
                 }

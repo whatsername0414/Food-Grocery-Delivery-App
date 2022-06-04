@@ -81,14 +81,14 @@ class MerchantSearchFragment : BaseFragment<FragmentMerchantSearchBinding>(
 
         merchantAdapter.apply {
             onFavoriteClicked = { merchant, position, direction ->
-                homeViewModel.favorite(merchant._id, direction)
+                homeViewModel.favorite(merchant.id, direction)
                 observeFavorite(this, merchant, position, direction)
             }
         }
 
         merchantAdapter.onMerchantClicked = { merchant ->
             findNavController().navigate(
-                FavoriteFragmentDirections.actionGlobalToMerchantFragment(merchant._id)
+                FavoriteFragmentDirections.actionGlobalToMerchantFragment(merchant.id)
             )
         }
 
@@ -99,7 +99,7 @@ class MerchantSearchFragment : BaseFragment<FragmentMerchantSearchBinding>(
 
     private fun getAllSearch() {
         browseViewModel.getAllSearch { recentSearch ->
-            if (!recentSearch.isNullOrEmpty()) {
+            if (recentSearch.isNotEmpty()) {
                 isSearchRvVisible = true
                 binding.searchRv.visibility = View.VISIBLE
                 binding.title.apply {
@@ -117,7 +117,7 @@ class MerchantSearchFragment : BaseFragment<FragmentMerchantSearchBinding>(
         binding.searchView.apply {
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
-                    if (query?.length ?: 0 < 3) {
+                    if ((query?.length ?: 0) < 3) {
                         showShortToast(R.string.search_minimum)
                         return false
                     }
@@ -167,8 +167,8 @@ class MerchantSearchFragment : BaseFragment<FragmentMerchantSearchBinding>(
                     binding.merchantsShimmerLayout.startShimmer()
                 }
                 is ViewState.Success -> {
-                    val merchants = response.result.data
-                    if (merchants.isNullOrEmpty()) {
+                    val merchants = response.data.data
+                    if (merchants.isEmpty()) {
                         binding.commonNoticeLayout.showNotice(
                             R.drawable.ic_empty_result,
                             R.string.empty_result,
@@ -186,7 +186,7 @@ class MerchantSearchFragment : BaseFragment<FragmentMerchantSearchBinding>(
                             visibility = View.VISIBLE
                         }
                         binding.merchantRv.visibility = View.VISIBLE
-                        merchantAdapter.submitList(merchants)
+                        merchantAdapter.submitList(merchants.toMutableList())
                     }
                     binding.merchantsShimmerLayout.visibility = View.GONE
                     binding.merchantsShimmerLayout.stopShimmer()

@@ -12,14 +12,14 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.vroomvroom.android.MerchantQuery
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentProductBottomSheetBinding
 import com.vroomvroom.android.domain.db.cart.CartItemChoiceEntity
 import com.vroomvroom.android.domain.db.cart.CartItemEntity
 import com.vroomvroom.android.domain.db.cart.CartMerchantEntity
-import com.vroomvroom.android.domain.model.product.Option
-import com.vroomvroom.android.domain.model.product.Product
+import com.vroomvroom.android.domain.model.merchant.Merchant
+import com.vroomvroom.android.domain.model.merchant.Option
+import com.vroomvroom.android.domain.model.merchant.Product
 import com.vroomvroom.android.utils.ClickType
 import com.vroomvroom.android.utils.Utils.clearFocus
 import com.vroomvroom.android.view.ui.base.BaseBottomSheetFragment
@@ -52,7 +52,7 @@ class ProductBottomSheetFragment : BaseBottomSheetFragment<FragmentProductBottom
         val product = navArgs.product
         Glide
             .with(this)
-            .load(product.product_img_url)
+            .load(product.productImgUrl)
             .placeholder(R.drawable.ic_placeholder)
             .into(binding.bottomSheetProductImg)
 
@@ -108,7 +108,7 @@ class ProductBottomSheetFragment : BaseBottomSheetFragment<FragmentProductBottom
 
     private fun cartItemBuilder(
         product: Product,
-        currentMerchant: MerchantQuery.GetMerchant
+        currentMerchant: Merchant
     ): CartItemEntity {
         var choicePrice = 0.0
         homeViewModel.optionMap.forEach { (_, value) ->
@@ -117,14 +117,14 @@ class ProductBottomSheetFragment : BaseBottomSheetFragment<FragmentProductBottom
             }
         }
         val merchant = CartMerchantEntity(
-            merchantId = currentMerchant._id,
+            merchantId = currentMerchant.id,
             merchantName = currentMerchant.name
         )
         return CartItemEntity(
             cartMerchant = merchant,
             productId = product.id,
             name = product.name,
-            productImgUrl = product.product_img_url,
+            productImgUrl = product.productImgUrl,
             price = (product.price + choicePrice) * quantity,
             quantity = quantity,
             specialInstructions =
@@ -165,7 +165,7 @@ class ProductBottomSheetFragment : BaseBottomSheetFragment<FragmentProductBottom
                 homeViewModel.optionMap[optionType] =
                     CartItemChoiceEntity(
                         name = choice.name,
-                        additionalPrice = choice.additional_price,
+                        additionalPrice = choice.additionalPrice,
                         optionType = optionType
                     )
                 checkRequired()

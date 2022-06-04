@@ -11,7 +11,6 @@ import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentHomeBinding
 import com.vroomvroom.android.domain.db.user.UserLocationEntity
 import com.vroomvroom.android.domain.model.merchant.Merchant
-import com.vroomvroom.android.utils.Constants.ALL
 import com.vroomvroom.android.utils.Constants.BY_CATEGORY
 import com.vroomvroom.android.utils.Constants.SCROLL_THRESHOLD
 import com.vroomvroom.android.utils.Utils.safeNavigate
@@ -73,27 +72,27 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(
         categoryAdapter.onCategoryClicked = { category ->
             categoryClicked = true
             if (category != null) {
-                mainViewModel.queryMerchants(BY_CATEGORY, category)
+                mainViewModel.getMerchants(BY_CATEGORY, category)
                 binding.shopsTitle.text = category
 
             } else {
-                mainViewModel.queryMerchants(ALL, null)
+                mainViewModel.getMerchants()
                 binding.shopsTitle.text = getString(R.string.all_shops)
             }
         }
 
         merchantAdapter.onMerchantClicked = { merchant ->
             categoryClicked = false
-            if (merchant._id.isNotBlank()) {
+            if (merchant.id.isNotBlank()) {
                 findNavController().navigate(
-                    HomeFragmentDirections.actionHomeFragmentToMerchantFragment(merchant._id)
+                    HomeFragmentDirections.actionHomeFragmentToMerchantFragment(merchant.id)
                 )
             }
         }
 
         merchantAdapter.apply {
             onFavoriteClicked = { merchant, position, direction ->
-                homeViewModel.favorite(merchant._id, direction)
+                homeViewModel.favorite(merchant.id, direction)
                 observeFavorite(this, merchant, position, direction)
             }
         }
@@ -144,7 +143,7 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(
                 }
                 is ViewState.Success -> {
                     categoriesLoaded = true
-                    val category = response.result.getCategories
+                    val category = response.data
                     categoryAdapter.submitList(category)
                     binding.apply {
                         if (categoriesLoaded && merchantsLoaded) {
@@ -166,8 +165,8 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(
                         homeRvLinearLayout.visibility = View.VISIBLE
                     }
                     binding.commonNoticeLayout.showNetworkError {
-                        mainViewModel.queryCategory("main")
-                        mainViewModel.queryMerchants(ALL, null)
+                        mainViewModel.getCategories("main")
+                        mainViewModel.getMerchants()
                     }
                 }
             }
@@ -192,7 +191,7 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(
                     }
                     is ViewState.Success -> {
                         merchantsLoaded = true
-                        val merchants = response.result.data
+                        val merchants = response.data.data.toMutableList()
                         merchantAdapter.submitList(checkForChanges(merchants))
                         binding.apply {
                             if (categoryClicked) {
@@ -218,8 +217,8 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(
                             homeRvLinearLayout.visibility = View.GONE
                             fetchProgress.visibility = View.GONE
                             commonNoticeLayout.showNetworkError {
-                                mainViewModel.queryCategory("main")
-                                mainViewModel.queryMerchants(ALL, null)
+                                mainViewModel.getCategories("main")
+                                mainViewModel.getMerchants()
                             }
                         }
                     }
@@ -252,9 +251,9 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(
         }
     }
 
-    private fun checkForChanges(merchants: MutableList<Merchant?>): MutableList<Merchant?> {
+    private fun checkForChanges(merchants: MutableList<Merchant>): MutableList<Merchant> {
         mainActivityViewModel.favoritesChanges.forEach { (_, v) ->
-            val index = merchants.indexOf(merchants.find { it?._id == v._id })
+            val index = merchants.indexOf(merchants.find { it.id == v.id })
             merchants[index] = v
         }
         return merchants
@@ -281,16 +280,16 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(
                 override fun onAnimationEnd(animation: Animation?) {
                     if (mainViewModel.merchants.value == null &&
                         mainViewModel.categories.value == null) {
-                        mainViewModel.queryCategory("main")
-                        mainViewModel.queryMerchants(ALL, null)
+                        mainViewModel.getCategories("main")
+                        mainViewModel.getMerchants()
                     }
                 }
                 override fun onAnimationRepeat(animation: Animation?) {}
             })
         } else {
             if (mainViewModel.merchants.value == null && mainViewModel.categories.value == null) {
-                mainViewModel.queryCategory("main")
-                mainViewModel.queryMerchants(ALL, null)
+                mainViewModel.getCategories("main")
+                mainViewModel.getMerchants()
             }
         }
     }

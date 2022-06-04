@@ -55,7 +55,7 @@ class CartBottomSheetFragment : BaseBottomSheetFragment<FragmentCartBottomSheetB
         }
 
         binding.btnCheckOut.setOnClickListener {
-            homeViewModel.queryMerchant(homeViewModel.currentMerchantId)
+            homeViewModel.getMerchant(homeViewModel.currentMerchantId)
         }
     }
 
@@ -69,7 +69,7 @@ class CartBottomSheetFragment : BaseBottomSheetFragment<FragmentCartBottomSheetB
                 is ViewState.Success -> {
                     binding.cartProgress.visibility = View.GONE
                     binding.btnCheckOut.isEnabled = true
-                    val merchant = response.result.getMerchant
+                    val merchant = response.data
                     if (merchant.isOpen) {
                         findNavController().safeNavigate(
                             CartBottomSheetFragmentDirections
@@ -101,7 +101,7 @@ class CartBottomSheetFragment : BaseBottomSheetFragment<FragmentCartBottomSheetB
                     ) { type ->
                         when (type) {
                             ClickType.POSITIVE -> {
-                                homeViewModel.queryMerchant(homeViewModel.currentMerchantId)
+                                homeViewModel.getMerchant(homeViewModel.currentMerchantId)
                                 dialog.dismiss()
                             }
                             ClickType.NEGATIVE -> dialog.dismiss()

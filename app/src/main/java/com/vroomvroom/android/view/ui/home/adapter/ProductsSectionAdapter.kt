@@ -9,25 +9,28 @@ import androidx.recyclerview.widget.RecyclerView
 import com.vroomvroom.android.MerchantQuery
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.ItemProductSectionBinding
+import com.vroomvroom.android.domain.model.merchant.ProductSections
 import com.vroomvroom.android.utils.OnProductClickListener
 
-class ProductsDiffUtil: DiffUtil.ItemCallback<MerchantQuery.Product_section>() {
+class ProductsDiffUtil: DiffUtil.ItemCallback<ProductSections>() {
     override fun areItemsTheSame(
-        oldItem: MerchantQuery.Product_section,
-        newItem: MerchantQuery.Product_section
+        oldItem: ProductSections,
+        newItem: ProductSections
     ): Boolean {
-        return oldItem._id == newItem._id
+        return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(
-        oldItem: MerchantQuery.Product_section,
-        newItem: MerchantQuery.Product_section
+        oldItem: ProductSections,
+        newItem: ProductSections
     ): Boolean {
         return oldItem == newItem
     }
 }
 
-class ProductsSectionAdapter(private val listenerProduct: OnProductClickListener): ListAdapter<MerchantQuery.Product_section, ProductsSectionViewHolder>(ProductsDiffUtil()) {
+class ProductsSectionAdapter(
+    private val listenerProduct: OnProductClickListener
+): ListAdapter<ProductSections, ProductsSectionViewHolder>(ProductsDiffUtil()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductsSectionViewHolder {
         val binding: ItemProductSectionBinding = DataBindingUtil.inflate(

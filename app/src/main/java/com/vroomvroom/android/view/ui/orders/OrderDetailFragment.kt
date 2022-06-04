@@ -57,7 +57,7 @@ class OrderDetailFragment : BaseFragment<FragmentOrderDetailBinding>(
                 is ViewState.Success -> {
                     binding.commonNoticeLayout.hideNotice()
                     binding.orderDetailLayout.visibility = View.VISIBLE
-                    val order = response.result
+                    val order = response.data
                     ordersViewModel.merchantId = order.merchant._id
                     updateButtonModify(order)
                     updateViewsOnDataReady(order)

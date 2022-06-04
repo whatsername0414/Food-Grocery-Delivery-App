@@ -114,7 +114,7 @@ class OrdersFragment : BaseFragment<FragmentOrdersBinding>(
             when (response) {
                 is ViewState.Loading -> Unit
                 is ViewState.Success -> {
-                    val ordersStatus = response.result.getOrdersStatus
+                    val ordersStatus = response.data.getOrdersStatus
                     filterStatus(ordersStatus)
                 }
                 is ViewState.Error -> Unit

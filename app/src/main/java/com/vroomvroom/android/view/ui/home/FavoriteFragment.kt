@@ -35,13 +35,13 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(
 
         merchantAdapter.onMerchantClicked = { merchant ->
             navController.navigate(
-                FavoriteFragmentDirections.actionFavoriteFragmentToMerchantFragment(merchant._id)
+                FavoriteFragmentDirections.actionFavoriteFragmentToMerchantFragment(merchant.id)
             )
         }
 
         merchantAdapter.apply {
             onFavoriteClicked = { merchant, position, direction ->
-                homeViewModel.favorite(merchant._id, direction)
+                homeViewModel.favorite(merchant.id, direction)
                 observeFavorite(this, merchant, position, direction)
             }
         }
@@ -57,8 +57,8 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(
                     binding.favoriteShimmerLayout.startShimmer()
                 }
                 is ViewState.Success -> {
-                    val merchants = response.result.data
-                    if (merchants.isNullOrEmpty()) {
+                    val merchants = response.data.data
+                    if (merchants.isEmpty()) {
                         binding.commonNoticeLayout.showNotice(
                             R.drawable.ic_favorites,
                             R.string.empty_favorite,
@@ -69,7 +69,7 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(
                             findNavController().popBackStack()
                         }
                     } else {
-                        merchantAdapter.submitList(merchants)
+                        merchantAdapter.submitList(merchants.toMutableList())
                         binding.favoriteRv.visibility = View.VISIBLE
                     }
                     binding.favoriteShimmerLayout.visibility = View.GONE

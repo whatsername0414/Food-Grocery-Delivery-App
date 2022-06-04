@@ -1,6 +1,6 @@
 package com.vroomvroom.android.view.ui.account
 
-enum class AccountOptionType {
+enum class AccountMenuOptionType {
     PROFILE,
     ADDRESSES,
     FAVORITES,

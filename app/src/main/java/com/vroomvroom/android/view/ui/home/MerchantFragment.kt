@@ -14,10 +14,11 @@ import androidx.transition.Slide
 import androidx.transition.TransitionManager
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
-import com.vroomvroom.android.MerchantQuery
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentMerchantBinding
-import com.vroomvroom.android.domain.model.product.ProductMapper
+import com.vroomvroom.android.domain.model.merchant.Merchant
+import com.vroomvroom.android.domain.model.merchant.Product
+import com.vroomvroom.android.domain.model.merchant.ProductSections
 import com.vroomvroom.android.utils.OnProductClickListener
 import com.vroomvroom.android.utils.Utils.onReady
 import com.vroomvroom.android.utils.Utils.stringBuilder
@@ -28,7 +29,6 @@ import com.vroomvroom.android.view.ui.home.adapter.CartAdapter
 import com.vroomvroom.android.view.ui.home.adapter.ProductsSectionAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
@@ -36,7 +36,6 @@ class MerchantFragment : BaseFragment<FragmentMerchantBinding>(
     FragmentMerchantBinding::inflate
 ), OnProductClickListener {
 
-    @Inject lateinit var productMapper: ProductMapper
     private lateinit var linearLayoutManager: LinearLayoutManager
     private val productsSectionAdapter by lazy { ProductsSectionAdapter(this) }
     private val cartAdapter by lazy { CartAdapter() }
@@ -79,10 +78,9 @@ class MerchantFragment : BaseFragment<FragmentMerchantBinding>(
 
     }
 
-    override fun onClick(product: MerchantQuery.Product?) {
+    override fun onClick(product: Product?) {
         product?.let { prod ->
-            val navArgs = productMapper.mapToDomainModel(prod)
-            findNavController().navigate(MerchantFragmentDirections.actionMerchantFragmentToProductBottomSheetFragment(navArgs))
+            findNavController().navigate(MerchantFragmentDirections.actionMerchantFragmentToProductBottomSheetFragment(prod))
         }
 
     }
@@ -98,10 +96,10 @@ class MerchantFragment : BaseFragment<FragmentMerchantBinding>(
                     binding.merchantShimmerLayout.startShimmer()
                 }
                 is ViewState.Success -> {
-                    val merchant = response.result.getMerchant
+                    val merchant = response.data
                     mainActivityViewModel.merchant = merchant
-                    productsSectionAdapter.submitList(merchant.product_sections)
-                    initializeTabItem(merchant.product_sections)
+                    productsSectionAdapter.submitList(merchant.productSections)
+                    initializeTabItem(merchant.productSections)
                     dataBinder(merchant)
                     binding.commonNoticeLayout.hideNotice()
                     binding.merchantShimmerLayout.visibility = View.GONE
@@ -121,7 +119,7 @@ class MerchantFragment : BaseFragment<FragmentMerchantBinding>(
                     binding.merchantAppBar.visibility = View.GONE
                     binding.productSectionRv.visibility = View.GONE
                     binding.commonNoticeLayout.showNetworkError {
-                        homeViewModel.queryMerchant(args.id)
+                        homeViewModel.getMerchant(args.id)
                         observeMerchantLiveData()
                     }
                 }
@@ -148,7 +146,7 @@ class MerchantFragment : BaseFragment<FragmentMerchantBinding>(
     }
 
     @SuppressLint("SetTextI18n")
-    private fun dataBinder(merchant: MerchantQuery.GetMerchant) {
+    private fun dataBinder(merchant: Merchant) {
         binding.ctlMerchant.title = merchant.name
         binding.categoriesTv.text = merchant.categories.stringBuilder()
         binding.ratingBar.rating = merchant.ratings?.toFloat() ?: 0f
@@ -183,10 +181,10 @@ class MerchantFragment : BaseFragment<FragmentMerchantBinding>(
         }
     }
 
-    private fun initializeTabItem(products: List<MerchantQuery.Product_section?>?) {
+    private fun initializeTabItem(products: List<ProductSections>?) {
         binding.tlMerchant.removeAllTabs()
         products?.forEach { product ->
-            binding.tlMerchant.addTab(binding.tlMerchant.newTab().setText(product?.name))
+            binding.tlMerchant.addTab(binding.tlMerchant.newTab().setText(product.name))
         }
     }
 
@@ -242,7 +240,7 @@ class MerchantFragment : BaseFragment<FragmentMerchantBinding>(
         view?.animation?.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationStart(animation: Animation?) {}
             override fun onAnimationEnd(animation: Animation?) {
-                homeViewModel.queryMerchant(args.id)
+                homeViewModel.getMerchant(args.id)
             }
             override fun onAnimationRepeat(animation: Animation?) {}
         })

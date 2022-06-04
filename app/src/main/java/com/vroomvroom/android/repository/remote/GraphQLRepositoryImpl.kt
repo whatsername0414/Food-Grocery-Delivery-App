@@ -45,8 +45,8 @@ class GraphQLRepositoryImpl @Inject constructor(
         try {
             val response = graphQLServices.query(MerchantsQuery(query, filter.toInput())).await()
             response.data?.let { data ->
-                result = handleSuccess(
-                    withContext(Dispatchers.Default) { merchantsMapper.mapToDomainModel(data) })
+//                result = handleSuccess(
+//                    withContext(Dispatchers.Default) { merchantsMapper.mapToDomainModel(data) })
             }
         } catch (ae: ApolloException) {
             Log.e("GraphQLRepositoryImpl", "Error: ${ae.message}")

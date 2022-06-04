@@ -6,7 +6,7 @@
     <data>
         <variable
             name="choice"
-            type="com.vroomvroom.android.MerchantQuery.Choice" />
+            type="com.vroomvroom.android.domain.model.merchant.Choice" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

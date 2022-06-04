@@ -11,6 +11,7 @@ import androidx.room.Room
 import com.apollographql.apollo.ApolloClient
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.vroomvroom.android.BuildConfig
 import com.vroomvroom.android.domain.db.Database
 import com.vroomvroom.android.repository.local.UserPreferences
 import com.vroomvroom.android.utils.Constants.CART_ITEM_TABLE
@@ -25,6 +26,9 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
@@ -58,13 +62,26 @@ object RepoModule {
             val token = runBlocking { preferences.token.first() }
             val request = chain.request().newBuilder()
             if (!token.isNullOrBlank()) {
-                Log.d("Token", token)
                 request.addHeader("Authorization", "Bearer $token")
             }
             chain.proceed(request.build())
         }
+        val logger = HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        }
         return OkHttpClient.Builder()
+            .addInterceptor(logger)
             .addInterceptor(interceptor)
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun getRetrofitInstance(httpClient: OkHttpClient): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl("http://192.168.1.3:5000/api/v1/")
+            .client(httpClient)
+            .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 
@@ -72,7 +89,7 @@ object RepoModule {
     @Provides
     fun provideApolloClient(okHttpClient: OkHttpClient): ApolloClient {
         return ApolloClient.builder()
-            .serverUrl("http://192.168.1.7:5000/")
+            .serverUrl("http://192.168.1.3:8000/")
             .okHttpClient(okHttpClient)
             .build()
     }

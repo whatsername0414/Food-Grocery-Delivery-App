@@ -7,7 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.vroomvroom.android.*
 import com.vroomvroom.android.domain.db.cart.CartItemChoiceEntity
 import com.vroomvroom.android.domain.db.cart.CartItemEntity
+import com.vroomvroom.android.domain.model.merchant.Merchant
 import com.vroomvroom.android.repository.local.RoomRepository
+import com.vroomvroom.android.repository.merchant.MerchantRepository
 import com.vroomvroom.android.repository.remote.GraphQLRepository
 import com.vroomvroom.android.view.state.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,12 +22,13 @@ import javax.inject.Inject
 @ExperimentalCoroutinesApi
 @HiltViewModel
 class HomeViewModel @Inject constructor(
+    private val merchantRepository: MerchantRepository,
     private val graphQLRepository: GraphQLRepository,
     private val roomRepository: RoomRepository,
 ): ViewModel() {
 
-    private val _merchant by lazy { MutableLiveData<ViewState<MerchantQuery.Data>>() }
-    val merchant: LiveData<ViewState<MerchantQuery.Data>>
+    private val _merchant by lazy { MutableLiveData<ViewState<Merchant>>() }
+    val merchant: LiveData<ViewState<Merchant>>
         get() = _merchant
 
     private val _favorite by lazy { MutableLiveData<ViewState<FavoriteMutation.Data>>() }
@@ -37,10 +40,10 @@ class HomeViewModel @Inject constructor(
     var optionMap: MutableMap<String, CartItemChoiceEntity> = mutableMapOf()
     val isCartCardViewVisible by lazy { MutableLiveData(false) }
 
-    fun queryMerchant(merchantId: String){
+    fun getMerchant(merchantId: String){
         _merchant.postValue(ViewState.Loading)
         viewModelScope.launch(Dispatchers.IO) {
-            val response = graphQLRepository.queryMerchant(merchantId)
+            val response = merchantRepository.getMerchant(merchantId)
             response?.let { data ->
                 withContext(Dispatchers.Main) {
                     when (data) {

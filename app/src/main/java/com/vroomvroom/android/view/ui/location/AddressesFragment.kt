@@ -81,7 +81,7 @@ class AddressesFragment : BaseFragment<FragmentAddressesBinding>(
                     binding.progressIndicator.visibility = View.GONE
                     Toast.makeText(
                         requireContext(),
-                        response.result.updateDeliveryAddress,
+                        response.data.updateDeliveryAddress,
                         Toast.LENGTH_SHORT
                     ).show()
                     navController.popBackStack()

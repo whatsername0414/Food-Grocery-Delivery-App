@@ -6,7 +6,7 @@
     <data>
         <variable
             name="product"
-            type="com.vroomvroom.android.MerchantQuery.Product" />
+            type="com.vroomvroom.android.domain.model.merchant.Product" />
         <import type="android.view.View"/>
 
     </data>

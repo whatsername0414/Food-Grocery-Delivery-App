@@ -23,7 +23,6 @@ object Constants {
     const val REMOVE_FROM_FAVORITES = 0
 
     //Merchants Query Types
-    const val ALL = "All"
     const val BY_CATEGORY = "Category"
     const val FAVORITES = "Favorites"
     const val SEARCH = "Search"

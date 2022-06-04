@@ -1,8 +1,8 @@
 package com.vroomvroom.android.di
 
+import com.vroomvroom.android.domain.model.merchant.MerchantMapper
 import com.vroomvroom.android.domain.model.merchant.MerchantsMapper
 import com.vroomvroom.android.domain.model.order.*
-import com.vroomvroom.android.domain.model.product.ProductMapper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,8 +21,8 @@ object DomainModule {
 
     @Singleton
     @Provides
-    fun provideProductMapper(): ProductMapper {
-        return ProductMapper()
+    fun provideMerchantMapper(): MerchantMapper {
+        return MerchantMapper()
     }
 
     @Singleton

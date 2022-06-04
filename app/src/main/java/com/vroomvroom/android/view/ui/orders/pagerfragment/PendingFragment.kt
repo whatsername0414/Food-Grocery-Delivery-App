@@ -56,7 +56,7 @@ class PendingFragment : BaseFragment<FragmentPendingBinding>(
                     binding.shimmerLayout.visibility = View.VISIBLE
                 }
                 is ViewState.Success -> {
-                    val orders = response.result
+                    val orders = response.data
                     if (orders.isEmpty()) {
                         orderAdapter.submitList(emptyList())
                         binding.commonNoticeLayout.showEmptyOrder {

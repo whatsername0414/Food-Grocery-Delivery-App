@@ -6,12 +6,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.ItemAccountOptionBinding
-import com.vroomvroom.android.domain.model.account.AccountOptionItem
-import com.vroomvroom.android.view.ui.account.AccountOptionType
+import com.vroomvroom.android.domain.model.account.AccountMenuOptionItem
+import com.vroomvroom.android.view.ui.account.AccountMenuOptionType
 
 class OptionAdapter(
-    private val option: List<AccountOptionItem>,
-    private val listener: (optionType: AccountOptionType) -> Unit
+    private val option: List<AccountMenuOptionItem>,
+    private val listener: (optionType: AccountMenuOptionType) -> Unit
     ) : RecyclerView.Adapter<OptionAdapter.OptionViewHolder>(){
 
     class OptionViewHolder(val binding: ItemAccountOptionBinding): RecyclerView.ViewHolder(binding.root)

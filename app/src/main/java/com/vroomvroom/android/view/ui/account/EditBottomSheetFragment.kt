@@ -40,8 +40,8 @@ class EditBottomSheetFragment : BaseBottomSheetFragment<FragmentEditBottomSheetB
                 }
                 is ViewState.Success -> {
                     authViewModel.updateUserName(
-                        response.result.updateName.id,
-                        response.result.updateName.name!!
+                        response.data.updateName.id,
+                        response.data.updateName.name!!
                     )
                     findNavController().popBackStack()
                 }

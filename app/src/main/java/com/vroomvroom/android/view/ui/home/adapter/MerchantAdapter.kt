@@ -1,9 +1,6 @@
 package com.vroomvroom.android.view.ui.home.adapter
 
 import android.annotation.SuppressLint
-import android.text.format.DateUtils
-import android.text.format.DateUtils.FORMAT_SHOW_TIME
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,8 +19,8 @@ import com.vroomvroom.android.utils.Utils.stringBuilder
 import com.vroomvroom.android.utils.Utils.timeFormatter
 
 class MerchantDiffUtil(
-    private val oldList: List<Merchant?>,
-    private val newList: List<Merchant?>
+    private val oldList: List<Merchant>,
+    private val newList: List<Merchant>
 ) : DiffUtil.Callback() {
     override fun getOldListSize(): Int {
         return oldList.size
@@ -34,7 +31,7 @@ class MerchantDiffUtil(
     }
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldList[oldItemPosition]?._id == newList[newItemPosition]?._id
+        return oldList[oldItemPosition].id == newList[newItemPosition].id
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
@@ -46,7 +43,7 @@ class MerchantDiffUtil(
 class MerchantAdapter: RecyclerView.Adapter<MerchantViewHolder>() {
 
     private var currentUser: UserEntity? = null
-    private var oldList = mutableListOf<Merchant?>()
+    private var oldList = mutableListOf<Merchant>()
     var onMerchantClicked: ((Merchant) -> Unit)? = null
     var onFavoriteClicked: ((
         Merchant,
@@ -68,43 +65,41 @@ class MerchantAdapter: RecyclerView.Adapter<MerchantViewHolder>() {
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: MerchantViewHolder, position: Int) {
         val merchant = oldList[position]
-        merchant?.let { data ->
-            holder.binding.tvOpening.text = timeFormatter(data.opening)
-            holder.binding.merchant = data
-            Glide
-                .with(holder.itemView.context)
-                .load(data.img_url)
-                .placeholder(R.drawable.ic_placeholder)
-                .into(holder.binding.merchantImg)
+        holder.binding.tvOpening.text = timeFormatter(merchant.opening)
+        holder.binding.merchant = merchant
+        Glide
+            .with(holder.itemView.context)
+            .load(merchant.img_url)
+            .placeholder(R.drawable.ic_placeholder)
+            .into(holder.binding.merchantImg)
 
-            if (currentUser != null) {
-                holder.binding.favoriteLayout.visibility = View.VISIBLE
-                holder.binding.checkboxFavorite.apply {
-                    this.setSafeOnClickListener {
-                        setOnFavoriteClick(data, position, isChecked)
-                    }
+        if (currentUser != null) {
+            holder.binding.favoriteLayout.visibility = View.VISIBLE
+            holder.binding.checkboxFavorite.apply {
+                this.setSafeOnClickListener {
+                    setOnFavoriteClick(merchant, position, isChecked)
                 }
-            } else {
-                holder.binding.favoriteLayout.visibility = View.GONE
             }
+        } else {
+            holder.binding.favoriteLayout.visibility = View.GONE
+        }
 
-            holder.binding.restaurantCategories.text = data.categories.stringBuilder()
-            if (data.isOpen) {
-                holder.binding.closedBg.visibility = View.GONE
-                holder.binding.tvOpening.visibility = View.GONE
-                holder.binding.preorderBtn.visibility = View.GONE
-                holder.binding.cardView.isClickable = true
-                holder.binding.cardView.setOnClickListener {
-                    onMerchantClicked?.invoke(data)
-                }
-            } else {
-                holder.binding.closedBg.visibility = View.VISIBLE
-                holder.binding.tvOpening.visibility = View.VISIBLE
-                holder.binding.preorderBtn.visibility = View.VISIBLE
-                holder.binding.cardView.isClickable = false
-                holder.binding.preorderBtn.setOnClickListener {
-                    onMerchantClicked?.invoke(data)
-                }
+        holder.binding.restaurantCategories.text = merchant.categories.stringBuilder()
+        if (merchant.isOpen) {
+            holder.binding.closedBg.visibility = View.GONE
+            holder.binding.tvOpening.visibility = View.GONE
+            holder.binding.preorderBtn.visibility = View.GONE
+            holder.binding.cardView.isClickable = true
+            holder.binding.cardView.setOnClickListener {
+                onMerchantClicked?.invoke(merchant)
+            }
+        } else {
+            holder.binding.closedBg.visibility = View.VISIBLE
+            holder.binding.tvOpening.visibility = View.VISIBLE
+            holder.binding.preorderBtn.visibility = View.VISIBLE
+            holder.binding.cardView.isClickable = false
+            holder.binding.preorderBtn.setOnClickListener {
+                onMerchantClicked?.invoke(merchant)
             }
         }
     }
@@ -117,7 +112,7 @@ class MerchantAdapter: RecyclerView.Adapter<MerchantViewHolder>() {
         currentUser = user
     }
 
-    fun submitList(newList: MutableList<Merchant?>) {
+    fun submitList(newList: MutableList<Merchant>) {
         val diffUtil = MerchantDiffUtil(oldList, newList)
         val diffResult = DiffUtil.calculateDiff(diffUtil)
         oldList = newList

@@ -182,7 +182,7 @@
         tools:layout="@layout/fragment_product_bottom_sheet">
         <argument
             android:name="Product"
-            app:argType="com.vroomvroom.android.domain.model.product.Product" />
+            app:argType="com.vroomvroom.android.domain.model.merchant.Product" />
     </dialog>
     <fragment
         android:id="@+id/merchantInfoFragment"

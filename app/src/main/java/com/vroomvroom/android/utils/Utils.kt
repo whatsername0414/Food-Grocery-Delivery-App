@@ -36,7 +36,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.vmadalin.easypermissions.EasyPermissions
 import com.vroomvroom.android.R
 import com.vroomvroom.android.domain.db.user.UserLocationEntity
-import java.io.IOException
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -226,7 +226,7 @@ object Utils {
         setOnClickListener(safeClickListener)
     }
 
-    fun bitmapDescriptorFromVector(app: Context, vectorResId: Int): BitmapDescriptor? {
+    private fun bitmapDescriptorFromVector(app: Context, vectorResId: Int): BitmapDescriptor? {
         return ContextCompat.getDrawable(app, vectorResId)?.run {
             setBounds(0, 0, intrinsicWidth, intrinsicHeight)
             val bitmap = Bitmap.createBitmap(intrinsicWidth, intrinsicHeight, Bitmap.Config.ARGB_8888)
@@ -243,4 +243,25 @@ object Utils {
         }
         return ""
     }
+
+    fun parseStringToTime(string: String, pattern: String): Long {
+        try {
+            SimpleDateFormat(pattern, Locale.US).parse(string)?.let {
+                return it.time
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return 0L
+    }
+
+    fun isOpen(opening: Int, closing: Int): Boolean {
+        val now = Calendar.HOUR_OF_DAY * 60 + Calendar.MINUTE
+        if (now in (opening / 60)..(closing / 60)) {
+            return true
+        }
+        return false
+    }
+
+    const val DEFAULT_SERVER_TIME_FORMAT: String = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
 }

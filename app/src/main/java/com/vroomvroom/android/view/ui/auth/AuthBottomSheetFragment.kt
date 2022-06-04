@@ -86,7 +86,7 @@ class AuthBottomSheetFragment : BaseBottomSheetFragment<FragmentAuthBottomSheetB
                     binding.progressIndicator.visibility = View.VISIBLE
                 }
                 is ViewState.Success -> {
-                    val result = response.result.register
+                    val result = response.data.register
                     result?.let {
                         val user = UserEntity(
                             it.id,
