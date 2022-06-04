@@ -1,5 +1,6 @@
 package com.vroomvroom.android.view.ui.home
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
@@ -8,6 +9,8 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.PolylineOptions
+import com.google.maps.android.SphericalUtil
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentCheckoutBinding
 import com.vroomvroom.android.domain.db.user.UserLocationEntity
@@ -17,7 +20,10 @@ import com.vroomvroom.android.domain.model.order.OrderInputMapper
 import com.vroomvroom.android.domain.model.order.Payment
 import com.vroomvroom.android.utils.ClickType
 import com.vroomvroom.android.utils.Constants
+import com.vroomvroom.android.utils.Constants.CASH_ON_DELIVERY
+import com.vroomvroom.android.utils.Constants.GCASH
 import com.vroomvroom.android.utils.Utils.setMap
+import com.vroomvroom.android.utils.Utils.setMapWithTwoPoint
 import com.vroomvroom.android.view.state.ViewState
 import com.vroomvroom.android.view.ui.base.BaseFragment
 import com.vroomvroom.android.view.ui.home.adapter.CheckoutAdapter
@@ -27,6 +33,7 @@ import com.vroomvroom.android.view.ui.widget.ReceiptDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
@@ -58,7 +65,7 @@ class CheckoutFragment : BaseFragment<FragmentCheckoutBinding> (
         observePaymentMethod()
         observeOrderLiveData()
 
-        binding.btnEditAddress.setOnClickListener {
+        binding.editLocation.setOnClickListener {
             navController.navigate(
                 CheckoutFragmentDirections
                     .actionCheckoutFragmentToAddressesFragment(null)
@@ -129,9 +136,11 @@ class CheckoutFragment : BaseFragment<FragmentCheckoutBinding> (
                     getString(R.string.place_order,
                         "%.2f".format(checkoutViewModel.subtotal + 49))
                 binding.btnPlaceOrder.setOnClickListener {
-                    checkoutViewModel.mutationCreateOrder(
-                        orderInputMapper.mapToDomainModel(orderInputBuilder())
-                    )
+                   locationEntity?.let {
+                       checkoutViewModel.mutationCreateOrder(
+                           orderInputMapper.mapToDomainModel(orderInputBuilder(it))
+                       )
+                   }
                 }
             }
         }
@@ -162,30 +171,30 @@ class CheckoutFragment : BaseFragment<FragmentCheckoutBinding> (
         }
     }
 
-    private fun orderInputBuilder(): Order {
-        val cartItems = homeViewModel.cartItem.value!!
-        val merchant = cartItems.first().cartItemEntity.cartMerchant
+    private fun orderInputBuilder(locationEntity: UserLocationEntity): Order {
+        val cartItems = homeViewModel.cartItem.value
+        val merchant = cartItems?.first()?.cartItemEntity?.cartMerchant
         return orderInputBuilder.builder(
             Payment(
-                mainActivityViewModel.paymentMethod.value ?: "Cash On Delivery",
+                mainActivityViewModel.paymentMethod.value ?: CASH_ON_DELIVERY,
                 null
             ),
             49.00,
             checkoutViewModel.subtotal,
-            merchant.merchantId,
-            locationEntity!!,
-            cartItems
+            merchant?.merchantId.orEmpty(),
+            locationEntity,
+            cartItems ?: emptyList()
         )
     }
 
     private fun observePaymentMethod() {
         mainActivityViewModel.paymentMethod.observe(viewLifecycleOwner) { method ->
             when (method) {
-                "Cash On Delivery" -> {
+                CASH_ON_DELIVERY -> {
                     binding.imgMethod.setImageResource(R.drawable.ic_money)
                     binding.paymentMethod.text = method
                 }
-                "GCash" -> {
+                GCASH -> {
                     binding.imgMethod.setImageResource(R.drawable.ic_gcash)
                     binding.paymentMethod.text = method
                 }
@@ -205,7 +214,52 @@ class CheckoutFragment : BaseFragment<FragmentCheckoutBinding> (
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
         observeLocation()
+        map?.uiSettings?.isZoomControlsEnabled = true
+        val currentPosition = map?.cameraPosition
+
+        // Add a marker in Sydney and move the camera
+
+        // Add a marker in Sydney and move the camera
+        val sydney1 =
+            LatLng(locationEntity?.latitude ?: 0.0, locationEntity?.longitude ?: 0.0)
+        val sydney2 = LatLng(13.3571962,123.7297614)
+
+        map?.setMapWithTwoPoint(requireContext(), sydney1, sydney2)
+        this.showCurvedPolyline(sydney1, sydney2)
     }
+
+    private fun showCurvedPolyline(p1: LatLng, p2: LatLng, k: Double = 0.5) {
+        //Calculate distance and heading between two points
+        val d = SphericalUtil.computeDistanceBetween(p1, p2)
+        val h = SphericalUtil.computeHeading(p1, p2)
+
+        //Midpoint position
+        val p = SphericalUtil.computeOffset(p1, d * 0.5, h)
+
+        //Apply some mathematics to calculate position of the circle center
+        val x = (1 - k * k) * d * 0.5 / (2 * k)
+        val r = (1 + k * k) * d * 0.5 / (2 * k)
+        val c = SphericalUtil.computeOffset(p, x, h + 90.0)
+
+        //Polyline options
+        val options = PolylineOptions()
+
+        //Calculate heading between circle center and two points
+        val h1 = SphericalUtil.computeHeading(c, p1)
+        val h2 = SphericalUtil.computeHeading(c, p2)
+
+        //Calculate positions of points on circle border and add them to polyline options
+        val numPoints = 100
+        val step = (h2 - h1) / numPoints
+        for (i in 0 until numPoints) {
+            val pi = SphericalUtil.computeOffset(c, r, h1 + i * step)
+            options.add(pi)
+        }
+
+        //Draw polyline
+        map?.addPolyline(options.width(10f).color(Color.MAGENTA).geodesic(false))
+    }
+
 
     private fun updateLocationViews(locationEntity: UserLocationEntity) {
         val coordinates = LatLng(locationEntity.latitude, locationEntity.longitude)
@@ -226,9 +280,11 @@ class CheckoutFragment : BaseFragment<FragmentCheckoutBinding> (
         ) { type ->
             when (type) {
                 ClickType.POSITIVE -> {
-                    checkoutViewModel.mutationCreateOrder(
-                        orderInputMapper.mapToDomainModel(orderInputBuilder())
-                    )
+                    locationEntity?.let {
+                        checkoutViewModel.mutationCreateOrder(
+                            orderInputMapper.mapToDomainModel(orderInputBuilder(it))
+                        )
+                    }
                 }
                 ClickType.NEGATIVE -> dialog.dismiss()
             }

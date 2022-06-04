@@ -1,6 +1,7 @@
 package com.vroomvroom.android.di
 
 import android.content.Context
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
@@ -57,6 +58,7 @@ object RepoModule {
             val token = runBlocking { preferences.token.first() }
             val request = chain.request().newBuilder()
             if (!token.isNullOrBlank()) {
+                Log.d("Token", token)
                 request.addHeader("Authorization", "Bearer $token")
             }
             chain.proceed(request.build())
@@ -70,7 +72,7 @@ object RepoModule {
     @Provides
     fun provideApolloClient(okHttpClient: OkHttpClient): ApolloClient {
         return ApolloClient.builder()
-            .serverUrl("http://192.168.1.20:5000/")
+            .serverUrl("http://192.168.1.7:5000/")
             .okHttpClient(okHttpClient)
             .build()
     }

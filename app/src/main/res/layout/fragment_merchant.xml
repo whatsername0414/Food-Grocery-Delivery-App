@@ -17,7 +17,6 @@
         android:elevation="@dimen/dp_4"
         android:visibility="gone"
         tools:visibility="visible"
-        android:fitsSystemWindows="true"
         android:theme="@style/ThemeOverlay.MaterialComponents.ActionBar">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -25,7 +24,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:fitsSystemWindows="true"
             app:expandedTitleTextAppearance="@style/Toolbar.TitleTextExpanded"
             app:collapsedTitleTextAppearance="@style/Toolbar.TitleText"
             app:contentScrim="?attr/colorOnPrimary"
@@ -70,8 +68,7 @@
                     android:layout_marginTop="8dp"
                     android:background="@drawable/bg_white_fff_rounded_100dp"
                     android:padding="6dp"
-                    android:src="@drawable/ic_arrow_left"
-                    app:layout_collapseMode="pin" />
+                    android:src="@drawable/ic_arrow_left"/>
 
                 <ImageView
                     android:id="@+id/btn_info"
@@ -82,8 +79,7 @@
                     android:layout_marginEnd="16dp"
                     android:background="@drawable/bg_white_fff_rounded_100dp"
                     android:padding="6dp"
-                    android:src="@drawable/ic_info"
-                    app:layout_collapseMode="pin" />
+                    android:src="@drawable/ic_info"/>
             </androidx.appcompat.widget.Toolbar>
 
             <androidx.constraintlayout.widget.ConstraintLayout

@@ -31,6 +31,7 @@ import com.vroomvroom.android.utils.Constants.DELIVERY_RANGE_CITIES
 import com.vroomvroom.android.utils.Utils.createLocationRequest
 import com.vroomvroom.android.utils.Utils.hasLocationPermission
 import com.vroomvroom.android.utils.Utils.requestLocationPermission
+import com.vroomvroom.android.utils.Utils.safeNavigate
 import com.vroomvroom.android.utils.Utils.setSafeOnClickListener
 import com.vroomvroom.android.utils.Utils.userLocationBuilder
 import com.vroomvroom.android.view.ui.base.BaseFragment
@@ -186,7 +187,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(
             )
         }
         if (prevDestination == R.id.locationFragment) {
-            navController.navigate(R.id.action_mapsFragment_to_homeFragment)
+            navController.safeNavigate(R.id.action_mapsFragment_to_homeFragment)
         } else {
             navController.popBackStack()
         }

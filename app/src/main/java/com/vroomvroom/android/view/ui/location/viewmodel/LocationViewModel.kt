@@ -85,16 +85,16 @@ class LocationViewModel @Inject constructor(
         )
     }
 
+    fun removeLocationUpdates() {
+        fusedLocationProviderClient.removeLocationUpdates(locationCallback)
+    }
+
     fun initMapBoxDirectionClient(mapBoxAccessToken: String) {
         locationRepository.initMapBoxDirectionClient(mapBoxAccessToken)
     }
 
     fun getDirection() {
         locationRepository.getDirection(_coordinates)
-    }
-
-    fun removeLocationUpdates() {
-        fusedLocationProviderClient.removeLocationUpdates(locationCallback)
     }
 
     fun insertLocation(userLocationEntity: UserLocationEntity) {

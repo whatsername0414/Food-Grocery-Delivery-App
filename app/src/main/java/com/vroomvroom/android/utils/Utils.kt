@@ -9,7 +9,6 @@ import android.content.IntentSender
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.location.Address
-import android.location.Geocoder
 import android.os.SystemClock
 import android.text.TextUtils
 import android.text.format.DateUtils
@@ -18,7 +17,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -65,9 +63,10 @@ object Utils {
         }
     }
 
-    fun NavController.safeNavigate(direction: NavDirections) {
-        currentDestination?.getAction(direction.actionId)?.run {
-            navigate(direction)
+    fun NavController.safeNavigate(direction: Any) {
+        val action = if (direction is NavDirections) direction.actionId else direction
+        currentDestination?.getAction(action as Int)?.run {
+            navigate(action)
         }
     }
 
@@ -200,6 +199,14 @@ object Utils {
         this?.uiSettings?.setAllGesturesEnabled(false)
         this?.addMarker(MarkerOptions().position(coordinates).icon(bitmapDescriptorFromVector(app, R.drawable.ic_location)))
         this?.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinates, 15.8f))
+    }
+
+    fun GoogleMap?.setMapWithTwoPoint(app: Context, position1: LatLng, position2: LatLng) {
+        this?.mapType = GoogleMap.MAP_TYPE_NORMAL
+        this?.uiSettings?.setAllGesturesEnabled(false)
+        this?.addMarker(MarkerOptions().position(position1).icon(bitmapDescriptorFromVector(app, R.drawable.ic_location)))
+        this?.addMarker(MarkerOptions().position(position2).icon(bitmapDescriptorFromVector(app, R.drawable.ic_location)))
+        this?.moveCamera(CameraUpdateFactory.newLatLngZoom(position1, 15.8f))
     }
 
     fun RecyclerView.onReady(isReady: () -> Unit) {

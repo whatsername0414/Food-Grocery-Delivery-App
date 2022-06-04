@@ -1,7 +1,6 @@
 package com.vroomvroom.android
 
 import android.app.Application
-import com.facebook.FacebookSdk;
 import com.mapbox.android.core.location.LocationEngineProvider
 import com.mapbox.search.MapboxSearchSdk
 import dagger.hilt.android.HiltAndroidApp

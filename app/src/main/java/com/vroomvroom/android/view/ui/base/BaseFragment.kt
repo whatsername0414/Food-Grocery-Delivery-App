@@ -180,9 +180,4 @@ abstract class BaseFragment<VB: ViewBinding> (
         }
         snackBar.show()
     }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
 }

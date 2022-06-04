@@ -28,7 +28,7 @@ class AuthBottomSheetFragment : BaseBottomSheetFragment<FragmentAuthBottomSheetB
 ) {
 
     private lateinit var getSignInWithGoogle : ActivityResultLauncher<Intent>
-    private var currentLoginChoice: String = "Google Sign In"
+    private var currentLoginChoice = SignIntType.GOOGLE
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -56,14 +56,14 @@ class AuthBottomSheetFragment : BaseBottomSheetFragment<FragmentAuthBottomSheetB
             isCancelable = false
             binding.progressIndicator.visibility = View.VISIBLE
             getSignInWithGoogle.launch(authViewModel.signInIntent)
-            currentLoginChoice = "Google Sign In"
+            currentLoginChoice = SignIntType.GOOGLE
         }
 
         binding.btnFacebook.setOnClickListener {
             isCancelable = false
             binding.progressIndicator.visibility = View.VISIBLE
             authViewModel.facebookLogIn(this)
-            currentLoginChoice = "Facebook Sign In"
+            currentLoginChoice = SignIntType.FACEBOOK
         }
     }
 
@@ -138,10 +138,13 @@ class AuthBottomSheetFragment : BaseBottomSheetFragment<FragmentAuthBottomSheetB
                         when (type) {
                             ClickType.POSITIVE -> {
                                 binding.progressIndicator.visibility = View.VISIBLE
-                                if (currentLoginChoice == "Google Sign In")  {
-                                    getSignInWithGoogle.launch(authViewModel.signInIntent)
-                                } else {
-                                    authViewModel.facebookLogIn(this)
+                                when (currentLoginChoice) {
+                                    SignIntType.GOOGLE -> {
+                                        getSignInWithGoogle.launch(authViewModel.signInIntent)
+                                    }
+                                    SignIntType.FACEBOOK -> {
+                                        authViewModel.facebookLogIn(this)
+                                    }
                                 }
                             }
                             ClickType.NEGATIVE -> dialog.dismiss()

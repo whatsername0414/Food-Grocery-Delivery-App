@@ -18,6 +18,7 @@ import com.vroomvroom.android.databinding.FragmentLocationBinding
 import com.vroomvroom.android.utils.Utils.createLocationRequest
 import com.vroomvroom.android.utils.Utils.hasLocationPermission
 import com.vroomvroom.android.utils.Utils.requestLocationPermission
+import com.vroomvroom.android.utils.Utils.safeNavigate
 import com.vroomvroom.android.utils.Utils.userLocationBuilder
 import com.vroomvroom.android.view.ui.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -84,7 +85,7 @@ class LocationFragment : BaseFragment<FragmentLocationBinding>(
         }
 
         binding.bntEnterLocation.setOnClickListener {
-            findNavController().navigate(R.id.action_locationFragment_to_mapsFragment)
+            findNavController().safeNavigate(R.id.action_locationFragment_to_mapsFragment)
         }
     }
 

@@ -64,13 +64,24 @@
 
             </androidx.cardview.widget.CardView>
 
+            <ImageView
+                android:id="@+id/imageView13"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_location_outline"
+                app:layout_constraintBottom_toBottomOf="@+id/checkoutCity"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/checkoutAddress" />
+
             <TextView
                 android:id="@+id/checkoutAddress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_8"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                 android:textSize="16sp"
-                app:layout_constraintStart_toEndOf="@+id/btn_editAddress"
+                app:layout_constraintStart_toEndOf="@+id/imageView13"
                 app:layout_constraintTop_toBottomOf="@+id/cardView2"
                 tools:text="Tomas Cabiles St" />
 
@@ -78,19 +89,20 @@
                 android:id="@+id/checkoutCity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toEndOf="@+id/btn_editAddress"
+                android:layout_marginStart="@dimen/dp_8"
+                app:layout_constraintStart_toEndOf="@+id/imageView13"
                 app:layout_constraintTop_toBottomOf="@+id/checkoutAddress"
                 tools:text="Tabaco City" />
 
-            <ImageButton
-                android:id="@+id/btn_editAddress"
+            <ImageView
+                android:id="@+id/edit_location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:src="@drawable/ic_edit_location"
-                app:layout_constraintBottom_toBottomOf="@+id/checkoutCity"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/checkoutAddress" />
+                android:layout_marginEnd="@dimen/dp_24"
+                android:src="@drawable/ic_pen"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cardView2" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline8"

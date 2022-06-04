@@ -22,11 +22,15 @@ object Constants {
     const val ADD_TO_FAVORITES = 1
     const val REMOVE_FROM_FAVORITES = 0
 
-    //MerchantsQueryTypes
+    //Merchants Query Types
     const val ALL = "All"
     const val BY_CATEGORY = "Category"
     const val FAVORITES = "Favorites"
     const val SEARCH = "Search"
+
+    //Payment Types
+    const val CASH_ON_DELIVERY = "Cash On Delivery"
+    const val GCASH = "GCash"
 
     //Notification Types
     const val CONFIRMED = "Confirmed"

@@ -9,6 +9,7 @@ import com.vroomvroom.android.MerchantQuery
 import com.vroomvroom.android.domain.model.merchant.Merchant
 import com.vroomvroom.android.domain.model.merchant.Merchants
 import com.vroomvroom.android.repository.remote.GraphQLRepository
+import com.vroomvroom.android.utils.Constants.CASH_ON_DELIVERY
 import com.vroomvroom.android.view.state.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -31,7 +32,7 @@ class MainViewModel @Inject constructor(
         get() = _merchants
 
     lateinit var merchant: MerchantQuery.GetMerchant
-    val paymentMethod by lazy { MutableLiveData("Cash On Delivery") }
+    val paymentMethod by lazy { MutableLiveData(CASH_ON_DELIVERY) }
     val isHomeScrolled by lazy { MutableLiveData(false) }
     val shouldBackToTop by lazy { MutableLiveData(false) }
     val isRefreshed by lazy { MutableLiveData(false) }
