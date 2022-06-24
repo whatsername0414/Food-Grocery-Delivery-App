@@ -1,16 +1,16 @@
 package com.vroomvroom.android.view.ui.account
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentAccountBinding
-import com.vroomvroom.android.domain.model.account.AccountMenuOptionItem
+import com.vroomvroom.android.data.model.account.AccountMenuOptionItem
 import com.vroomvroom.android.utils.ClickType
+import com.vroomvroom.android.utils.Utils.safeNavigate
 import com.vroomvroom.android.view.ui.account.adapter.OptionAdapter
 import com.vroomvroom.android.view.ui.base.BaseFragment
-import com.vroomvroom.android.view.ui.widget.CommonAlertDialog
+import com.vroomvroom.android.view.ui.common.CommonAlertDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -24,16 +24,11 @@ class AccountFragment : BaseFragment<FragmentAccountBinding>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         observeUser()
-
-        authViewModel.token.observe(viewLifecycleOwner) { token ->
-            Log.d("AccountFragment", token.toString())
-        }
     }
 
     private fun observeUser() {
-        authViewModel.userRecord.observe(viewLifecycleOwner) { user ->
+        authViewModel.user.observe(viewLifecycleOwner) { user ->
             if (user != null) {
                 initOptionAdapter(true)
                 binding.accountIcon.visibility = View.GONE
@@ -57,6 +52,7 @@ class AccountFragment : BaseFragment<FragmentAccountBinding>(
                 authViewModel.deleteUserRecord()
                 authViewModel.clearDataStore()
                 locationViewModel.deleteAllAddress()
+                findNavController().safeNavigate(R.id.action_accountFragment_to_locationFragment)
 
             } else {
                 initAlertDialog(
@@ -108,7 +104,7 @@ class AccountFragment : BaseFragment<FragmentAccountBinding>(
                     findNavController().navigate(R.id.action_accountFragment_to_authBottomSheetFragment)
                 AccountMenuOptionType.LOGOUT ->
                     initAlertDialog(
-                        getString(R.string.prompt),
+                        getString(R.string.logout),
                         getString(R.string.logout_confirmation_message),
                         getString(R.string.no),
                         getString(R.string.yes)

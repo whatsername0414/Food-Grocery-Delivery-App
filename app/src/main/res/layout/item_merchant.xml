@@ -6,7 +6,7 @@
     <data>
         <variable
             name="merchant"
-            type="com.vroomvroom.android.domain.model.merchant.Merchant" />
+            type="com.vroomvroom.android.data.model.merchant.Merchant" />
     </data>
 
     <LinearLayout

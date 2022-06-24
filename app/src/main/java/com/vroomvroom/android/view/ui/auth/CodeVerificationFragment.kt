@@ -5,17 +5,18 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentCodeVerificationBinding
-import com.vroomvroom.android.domain.db.user.Phone
-import com.vroomvroom.android.domain.db.user.UserEntity
 import com.vroomvroom.android.utils.ClickType
+import com.vroomvroom.android.utils.Constants
 import com.vroomvroom.android.utils.Utils.hideSoftKeyboard
+import com.vroomvroom.android.utils.Utils.safeNavigate
 import com.vroomvroom.android.view.state.ViewState
 import com.vroomvroom.android.view.ui.base.BaseFragment
-import com.vroomvroom.android.view.ui.widget.CommonAlertDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.util.regex.Pattern
@@ -25,17 +26,43 @@ import java.util.regex.Pattern
 class CodeVerificationFragment : BaseFragment<FragmentCodeVerificationBinding>(
     FragmentCodeVerificationBinding::inflate
 ) {
+    private val args: CodeVerificationFragmentArgs by navArgs()
+    private lateinit var savedStateHandle: SavedStateHandle
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.otpVerificationProgress.visibility = View.GONE
         navController = findNavController()
         binding.appBarLayout.toolbar.setupToolbar()
+        navController.previousBackStackEntry?.savedStateHandle?.let {
+            savedStateHandle = it
+        }
+        prevDestinationId = navController.previousBackStackEntry?.destination?.id ?: -1
 
+        authViewModel.registerBroadcastReceiver()
         observeMessageIntent()
         observeOtpVerificationResult()
         binding.btnVerifyOtp.setOnClickListener {
             verifyOtp()
+        }
+
+        binding.resend.setOnClickListener {
+            dialog.show(
+                title = getString(R.string.prompt),
+                message = getString(R.string.confirm_number),
+                leftButtonTitle = getString(R.string.change),
+                rightButtonTitle = getString(R.string.confirm)
+            ) { type ->
+                when (type) {
+                    ClickType.POSITIVE -> {
+                        dialog.dismiss()
+                        authViewModel.registerPhoneNumber(args.number)
+                    }
+                    ClickType.NEGATIVE -> {
+                        dialog.dismiss()
+                        navController.popBackStack()
+                    }
+                }
+            }
         }
     }
 
@@ -64,37 +91,36 @@ class CodeVerificationFragment : BaseFragment<FragmentCodeVerificationBinding>(
     }
 
     private fun observeOtpVerificationResult() {
-        authViewModel.otpVerificationResult.observe(viewLifecycleOwner) { response ->
+        authViewModel.isPhoneNumberVerified.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is ViewState.Loading -> {
-                    binding.otpVerificationProgress.visibility = View.VISIBLE
+                    loadingDialog.show(getString(R.string.loading))
                     binding.btnVerifyOtp.isEnabled = false
                 }
                 is ViewState.Success -> {
-                    val result = response.data.otpVerification
-                    val user = UserEntity(
-                        result.id,
-                        result.name,
-                        result.email,
-                        Phone(result.phone?.number, result.phone?.verified!!)
+                    loadingDialog.dismiss()
+                    initDialog(
+                        getString(R.string.congratulations),
+                        getString(R.string.verified_phone_message),
+                        getString(R.string.ok),
+                        getString(R.string.ok)
                     )
-                    authViewModel.updateUserRecord(user)
-                    navController.navigate(R.id.action_codeVerificationFragment_to_checkoutFragment)
+                    if (prevDestinationId == R.id.checkoutFragment) {
+                        navController.safeNavigate(R.id.action_codeVerificationFragment_to_checkoutFragment)
+                    } else {
+                        savedStateHandle[Constants.SUCCESS] = true
+                        navController.popBackStack()
+                    }
                 }
                 is ViewState.Error -> {
-                    binding.otpVerificationProgress.visibility = View.GONE
+                    loadingDialog.dismiss()
                     binding.btnVerifyOtp.isEnabled = true
-                    if (response.exception.message == "Bad Request") {
-                        initAlertDialog(
-                            getString(R.string.verification_error),
-                            getString(R.string.verification_error_message)
-                        )
-                    } else {
-                        initAlertDialog(
-                            getString(R.string.network_error),
-                            getString(R.string.network_error_message)
-                        )
-                    }
+                    initDialog(
+                        getString(R.string.verification_failed),
+                        response.exception.message.orEmpty(),
+                        getString(R.string.ok),
+                        getString(R.string.retry)
+                    )
                 }
             }
         }
@@ -113,24 +139,27 @@ class CodeVerificationFragment : BaseFragment<FragmentCodeVerificationBinding>(
         requireActivity().hideSoftKeyboard()
         val otp = binding.otpEditTxt.text.toString()
         if (otp.isNotBlank()) {
-            authViewModel.mutationOtpVerification(otp)
+            authViewModel.verifyOtp(otp)
         }
     }
 
-    private fun initAlertDialog(title: String, message: String) {
-        val dialog = CommonAlertDialog(
-            requireActivity()
-        )
+    private fun initDialog(
+        title: String,
+        message: String,
+        leftButtonTitle: String,
+        rightButtonTitle: String
+    ) {
         dialog.show(
-            title,
-            message,
-            getString(R.string.cancel),
-            getString(R.string.retry),
-            false
+            title = title,
+            message = message,
+            leftButtonTitle = leftButtonTitle,
+            rightButtonTitle = rightButtonTitle,
+            isButtonLeftVisible = false,
+            isCancellable = false
         ) { type ->
             when (type) {
                 ClickType.POSITIVE -> dialog.dismiss()
-                ClickType.NEGATIVE -> Unit
+                ClickType.NEGATIVE -> dialog.dismiss()
             }
         }
     }

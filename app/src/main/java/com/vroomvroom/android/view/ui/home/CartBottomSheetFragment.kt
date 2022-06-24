@@ -6,14 +6,14 @@ import android.view.View
 import androidx.navigation.fragment.findNavController
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentCartBottomSheetBinding
-import com.vroomvroom.android.domain.db.cart.CartItemWithChoice
+import com.vroomvroom.android.data.model.cart.CartItemWithOptions
 import com.vroomvroom.android.utils.ClickType
 import com.vroomvroom.android.utils.Utils.safeNavigate
 import com.vroomvroom.android.utils.Utils.timeFormatter
 import com.vroomvroom.android.view.state.ViewState
 import com.vroomvroom.android.view.ui.base.BaseBottomSheetFragment
 import com.vroomvroom.android.view.ui.home.adapter.CartAdapter
-import com.vroomvroom.android.view.ui.widget.CommonAlertDialog
+import com.vroomvroom.android.view.ui.common.CommonAlertDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -76,7 +76,7 @@ class CartBottomSheetFragment : BaseBottomSheetFragment<FragmentCartBottomSheetB
                                 .actionCartBottomSheetFragmentToCheckoutFragment())
                     } else {
                         dialog.show(
-                            getString(R.string.prompt),
+                            getString(R.string.closed),
                             getString(R.string.closed_alert_label, timeFormatter(merchant.opening)),
                             getString(R.string.cancel),
                             getString(R.string.okay),
@@ -123,10 +123,10 @@ class CartBottomSheetFragment : BaseBottomSheetFragment<FragmentCartBottomSheetB
             } else {
                 cartAdapter.submitList(items)
                 items.forEach { item ->
-                    subTotal += item.cartItemEntity.price
+                    subTotal += item.cartItem.price
                 }
-                homeViewModel.currentMerchantId = items.first().cartItemEntity.cartMerchant.merchantId
-                binding.merchantName.text = items.first().cartItemEntity.cartMerchant.merchantName
+                homeViewModel.currentMerchantId = items.first().cartItem.cartMerchant.merchantId
+                binding.merchantName.text = items.first().cartItem.cartMerchant.merchantName
                 binding.subtotalTv.text = "₱${"%.2f".format(subTotal)}"
                 binding.cartLayout.visibility = View.VISIBLE
                 binding.emptyCartLayout.visibility = View.GONE
@@ -134,20 +134,20 @@ class CartBottomSheetFragment : BaseBottomSheetFragment<FragmentCartBottomSheetB
         }
     }
 
-    private fun initAlertDialog(cartItemWithChoice: CartItemWithChoice) {
+    private fun initAlertDialog(cartItemWithOptions: CartItemWithOptions) {
         val dialog = CommonAlertDialog(
             requireActivity()
         )
         dialog.show(
             getString(R.string.cart_delete_title),
-            getString(R.string.cart_delete_message, cartItemWithChoice.cartItemEntity.name),
+            getString(R.string.cart_delete_message, cartItemWithOptions.cartItem.name),
             getString(R.string.cancel),
             getString(R.string.cart_delete_button)
         ) { type ->
             when (type) {
                 ClickType.POSITIVE -> {
-                    homeViewModel.deleteCartItem(cartItemWithChoice.cartItemEntity)
-                    cartItemWithChoice.choiceEntities?.let {
+                    homeViewModel.deleteCartItem(cartItemWithOptions.cartItem)
+                    cartItemWithOptions.cartItemOptions?.let {
                         homeViewModel.deleteAllCartItemChoice()
                     }
                     dialog.dismiss()

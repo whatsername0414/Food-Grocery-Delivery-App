@@ -2,7 +2,6 @@ package com.vroomvroom.android.view.ui.account
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -39,6 +38,8 @@ class WebViewFragment : BaseFragment<FragmentWebViewBinding>(
 
     private fun setupWebView(url: String) {
         binding.apply {
+            val setting = webView.settings
+            setting.domStorageEnabled = true
             webView.setupDefaultWebViewSettings()
             webView.webViewClient = object : WebViewClient() {
 

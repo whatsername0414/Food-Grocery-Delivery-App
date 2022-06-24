@@ -6,7 +6,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.ItemAccountOptionBinding
-import com.vroomvroom.android.domain.model.account.AccountMenuOptionItem
+import com.vroomvroom.android.data.model.account.AccountMenuOptionItem
 import com.vroomvroom.android.view.ui.account.AccountMenuOptionType
 
 class OptionAdapter(

@@ -36,7 +36,7 @@ import com.vroomvroom.android.utils.Utils.setSafeOnClickListener
 import com.vroomvroom.android.utils.Utils.userLocationBuilder
 import com.vroomvroom.android.view.ui.base.BaseFragment
 import com.vroomvroom.android.view.ui.location.adapter.SuggestionAdapter
-import com.vroomvroom.android.view.ui.widget.CommonAlertDialog
+import com.vroomvroom.android.view.ui.common.CommonAlertDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -93,9 +93,8 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(
         super.onViewCreated(view, savedInstanceState)
 
         locationViewModel.initMapBoxDirectionClient(getString(R.string.mapbox_access_token))
-        onBackPressed()
         initSearchView()
-        observeAddressAndError()
+        observeAddress()
         searchEngine = MapboxSearchSdk.getSearchEngine()
 
         suggestionAdapter.onSuggestionClicked = { suggestion ->
@@ -107,6 +106,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(
             if (hasFocus) {
                 binding.btnContinue.visibility = View.GONE
                 binding.searchSuggestionRv.visibility = View.VISIBLE
+                binding.searchView.queryHint = getString(R.string.search_location)
             } else {
                 binding.searchSuggestionRv.visibility = View.GONE
                 binding.btnContinue.visibility = View.VISIBLE
@@ -119,6 +119,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(
         val prevDestination = navController.previousBackStackEntry?.destination?.id
 
         observeCurrentLocation()
+        onBackPressed()
         loadingDialog.show(getString(R.string.init_map))
 
         val connectivityManager = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -156,7 +157,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(
         binding.searchView.apply {
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
-                    if (query?.length ?: 0 < 3) {
+                    if ((query?.length ?: 0) < 3) {
                         showShortToast(R.string.search_minimum)
                         return false
                     }
@@ -255,9 +256,14 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(
         }
     }
 
-    private fun observeAddressAndError() {
+    private fun observeAddress() {
         locationViewModel.address.observe(viewLifecycleOwner) { res ->
             address = res
+            val stringBuilder = StringBuilder()
+                .append(if (address?.thoroughfare != null) "${address?.thoroughfare}, " else "")
+                .append(if (address?.locality != null) "${address?.locality}" else "")
+
+            binding.searchView.queryHint = stringBuilder
         }
 
         locationViewModel.geoCoderError.observe(viewLifecycleOwner) { error ->
@@ -291,8 +297,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(
     }
 
     private fun onBackPressed() {
-        requireActivity()
-            .onBackPressedDispatcher
+        requireActivity().onBackPressedDispatcher
             .addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     if (binding.searchSuggestionRv.isVisible) {
@@ -301,8 +306,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(
                         findNavController().popBackStack()
                     }
                 }
-            }
-            )
+            })
     }
 
     override fun onRequestPermissionsResult(

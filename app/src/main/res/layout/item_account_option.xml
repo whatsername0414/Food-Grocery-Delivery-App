@@ -6,7 +6,7 @@
     <data>
         <variable
             name="option"
-            type="com.vroomvroom.android.domain.model.account.AccountMenuOptionItem" />
+            type="com.vroomvroom.android.data.model.account.AccountMenuOptionItem" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

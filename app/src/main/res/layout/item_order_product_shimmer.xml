@@ -47,7 +47,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/gray"
-                    android:text="@string/didn_t_receive_the_otp_resend"
+                    android:text="@string/empty_favorite_detail"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:textColor="@color/gray_a5a"
                     android:textSize="16sp"

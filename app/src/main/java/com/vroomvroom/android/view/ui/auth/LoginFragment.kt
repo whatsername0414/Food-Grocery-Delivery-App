@@ -5,6 +5,7 @@ import android.view.View
 import androidx.navigation.fragment.findNavController
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentLoginBinding
+import com.vroomvroom.android.utils.ClickType
 import com.vroomvroom.android.utils.Utils.hideSoftKeyboard
 import com.vroomvroom.android.utils.Utils.isEmailValid
 import com.vroomvroom.android.view.state.ViewState
@@ -20,11 +21,12 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.loginProgress.visibility = View.GONE
         navController = findNavController()
         binding.appBarLayout.toolbar.setupToolbar()
 
         observeNewLoggedInUser()
+        observeToken()
+        observeGetUser()
 
         binding.forgotPassword.setOnClickListener {
             navController.navigate(R.id.action_loginFragment_to_passwordResetFragment)
@@ -41,25 +43,78 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
             val emailAddress = binding.loginEmailInputEditText.text.toString()
             val password = binding.loginPasswordInputEditText.text.toString()
             if (emailAddress.isEmailValid()) {
-                binding.loginProgress.visibility = View.VISIBLE
                 authViewModel.logInWithEmailAndPassword(emailAddress, password)
             } else binding.loginEmailInputLayout.helperText = "Invalid email"
+        }
+    }
+
+    private fun observeGetUser() {
+        accountViewModel.isGetUserSuccessful.observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is ViewState.Loading -> Unit
+                is ViewState.Success -> {
+                    loadingDialog.dismiss()
+                    navController.popBackStack()
+                }
+                is ViewState.Error -> {
+                    accountViewModel.getUser()
+                    loadingDialog.dismiss()
+                    dialog.show(
+                        getString(R.string.network_error),
+                        getString(R.string.unsaved_error),
+                        getString(R.string.cancel),
+                        getString(R.string.retry),
+                        isButtonLeftVisible = false,
+                        isCancellable = false
+                    ) { type ->
+                        when (type) {
+                            ClickType.POSITIVE -> {
+                                accountViewModel.getUser()
+                                dialog.dismiss()
+                            }
+                            ClickType.NEGATIVE -> Unit
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun observeToken() {
+        authViewModel.token.observe(viewLifecycleOwner) { token ->
+            if (token != null) {
+                accountViewModel.getUser()
+            }
         }
     }
 
     private fun observeNewLoggedInUser() {
         authViewModel.newLoggedInUser.observe(viewLifecycleOwner) { result ->
             when (result) {
+                is ViewState.Loading -> {
+                    loadingDialog.show(getString(R.string.loading))
+                }
                 is ViewState.Success -> {
-                    requireActivity().hideSoftKeyboard()
-                    navController.popBackStack()
+                    authViewModel.saveIdToken()
                 }
                 is ViewState.Error -> {
-                    binding.loginProgress.visibility = View.GONE
-                    binding.loginPasswordInputLayout.isHelperTextEnabled = true
-                    binding.loginEmailInputLayout.isHelperTextEnabled = true
+                    loadingDialog.dismiss()
+                    dialog.show(
+                        getString(R.string.login_failed),
+                        result.exception.message.orEmpty(),
+                        getString(R.string.ok),
+                        getString(R.string.ok),
+                        isButtonLeftVisible = false,
+                        isCancellable = false
+                    ) { type ->
+                        when (type) {
+                            ClickType.POSITIVE -> {
+                                dialog.dismiss()
+                            }
+                            ClickType.NEGATIVE -> Unit
+                        }
+                    }
                 }
-                else -> Unit
             }
         }
     }

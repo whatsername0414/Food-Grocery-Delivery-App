@@ -4,23 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
     tools:context=".view.ui.auth.RegisterFragment">
 
     <include
         android:id="@+id/appBarLayout"
         layout="@layout/item_appbar_layout"/>
-
-    <com.google.android.material.progressindicator.LinearProgressIndicator
-        android:id="@+id/register_progress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:indeterminateTint="@color/red_a30"
-        android:elevation="18dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -61,7 +50,7 @@
                 android:textColor="@color/red_a30"
                 android:visibility="gone"
                 app:drawableStartCompat="@drawable/ic_warning"
-                tools:text="@string/login_error_message"
+                tools:text="@string/invalid_password"
                 tools:visibility="visible" />
 
             <com.google.android.material.textfield.TextInputLayout
@@ -150,7 +139,6 @@
                 android:layout_marginVertical="@dimen/margin_large"
                 android:text="@string/already_have_an_account_login"
                 android:textAlignment="center"
-                android:textColor="@color/red_a30"
                 android:textSize="16sp" />
 
         </LinearLayout>

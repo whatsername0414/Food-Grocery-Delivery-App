@@ -6,7 +6,7 @@
     <data>
         <variable
             name="review"
-            type="com.vroomvroom.android.domain.model.merchant.Review" />
+            type="com.vroomvroom.android.data.model.merchant.Review" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="32dp"
-            android:text="@{review.review ?? `No review`}"
+            android:text="@{review.comment ?? `No review`}"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

@@ -6,7 +6,7 @@
     <data>
         <variable
             name="category"
-            type="com.vroomvroom.android.domain.model.merchant.Category" />
+            type="com.vroomvroom.android.data.model.merchant.Category" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

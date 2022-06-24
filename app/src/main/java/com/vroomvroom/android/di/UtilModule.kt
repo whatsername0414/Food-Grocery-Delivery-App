@@ -3,6 +3,7 @@ package com.vroomvroom.android.di
 import android.content.Context
 import android.location.Geocoder
 import androidx.core.app.NotificationCompat
+import com.vroomvroom.android.PushNotificationService
 import com.vroomvroom.android.utils.NotificationManager
 import dagger.Module
 import dagger.Provides
@@ -25,6 +26,12 @@ object UtilModule {
         builder: NotificationCompat.Builder
     ): NotificationManager {
         return NotificationManager(app, builder)
+    }
+
+    @Singleton
+    @Provides
+    fun providePushNotificationService(): PushNotificationService {
+        return PushNotificationService()
     }
 
     @Singleton

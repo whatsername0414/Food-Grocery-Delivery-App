@@ -58,14 +58,14 @@ class FirebaseAuthRepositoryImpl @Inject constructor(
 
     override fun signInIntent()  = googleSignInClient.signInIntent
 
-    override fun taskGoogleSignIn(data: Intent?, onResult: (ViewState<FirebaseUser>) -> Unit) {
+    override fun googleSignIn(data: Intent?, onResult: (ViewState<FirebaseUser>) -> Unit) {
         val task = GoogleSignIn.getSignedInAccountFromIntent(data)
         val exception = task.exception
         if (task.isSuccessful) {
             try {
                 // Google Sign In was successful, authenticate with Firebase
-                val account = task.getResult(ApiException::class.java)!!
-                firebaseAuthWithGoogle(account.idToken!!, onResult)
+                val account = task.getResult(ApiException::class.java)
+                firebaseAuthWithGoogle(account?.idToken.orEmpty(), onResult)
             } catch (e: ApiException) {
                 onResult(handleException(401))
                 Log.w("FirebaseAuthBaseRepository", "Google sign in failed", e)
@@ -150,11 +150,7 @@ class FirebaseAuthRepositoryImpl @Inject constructor(
                     }
                 } else {
                     val exception = task.exception?.message
-                    exception?.let {
-                        if (it.contains("password")) {
-                            onResult(handleException(403))
-                        } else onResult(handleException(404))
-                    }
+                    onResult(handleException(401, exception))
                     Log.w("FirebaseAuthRepositoryImpl", "signInWithEmail:failure", task.exception)
                 }
             }

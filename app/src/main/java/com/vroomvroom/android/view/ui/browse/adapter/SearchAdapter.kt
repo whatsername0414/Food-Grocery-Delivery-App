@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.ItemSearchBinding
-import com.vroomvroom.android.domain.db.search.SearchEntity
+import com.vroomvroom.android.data.model.search.SearchEntity
 import com.vroomvroom.android.utils.ClickType
 
 class SearchDiffUtil: DiffUtil.ItemCallback<SearchEntity>() {

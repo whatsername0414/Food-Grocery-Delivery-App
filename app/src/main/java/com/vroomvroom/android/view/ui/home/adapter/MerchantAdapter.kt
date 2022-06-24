@@ -6,44 +6,33 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.ItemMerchantBinding
-import com.vroomvroom.android.domain.db.user.UserEntity
-import com.vroomvroom.android.domain.model.merchant.Merchant
+import com.vroomvroom.android.data.model.user.UserEntity
+import com.vroomvroom.android.data.model.merchant.Merchant
 import com.vroomvroom.android.utils.Constants.ADD_TO_FAVORITES
 import com.vroomvroom.android.utils.Constants.REMOVE_FROM_FAVORITES
 import com.vroomvroom.android.utils.Utils.setSafeOnClickListener
 import com.vroomvroom.android.utils.Utils.stringBuilder
 import com.vroomvroom.android.utils.Utils.timeFormatter
 
-class MerchantDiffUtil(
-    private val oldList: List<Merchant>,
-    private val newList: List<Merchant>
-) : DiffUtil.Callback() {
-    override fun getOldListSize(): Int {
-        return oldList.size
+class MerchantDiffUtil : DiffUtil.ItemCallback<Merchant>() {
+    override fun areItemsTheSame(oldItem: Merchant, newItem: Merchant): Boolean {
+        return oldItem.id == newItem.id
     }
 
-    override fun getNewListSize(): Int {
-        return newList.size
-    }
-
-    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldList[oldItemPosition].id == newList[newItemPosition].id
-    }
-
-    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldList[oldItemPosition] == newList[newItemPosition]
+    override fun areContentsTheSame(oldItem: Merchant, newItem: Merchant): Boolean {
+        return oldItem == newItem
     }
 
 }
 
-class MerchantAdapter: RecyclerView.Adapter<MerchantViewHolder>() {
+class MerchantAdapter: ListAdapter<Merchant, MerchantViewHolder>(MerchantDiffUtil()) {
 
-    private var currentUser: UserEntity? = null
-    private var oldList = mutableListOf<Merchant>()
+    private var currentUserEntity: UserEntity? = null
     var onMerchantClicked: ((Merchant) -> Unit)? = null
     var onFavoriteClicked: ((
         Merchant,
@@ -64,7 +53,7 @@ class MerchantAdapter: RecyclerView.Adapter<MerchantViewHolder>() {
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: MerchantViewHolder, position: Int) {
-        val merchant = oldList[position]
+        val merchant = getItem(position)
         holder.binding.tvOpening.text = timeFormatter(merchant.opening)
         holder.binding.merchant = merchant
         Glide
@@ -73,7 +62,7 @@ class MerchantAdapter: RecyclerView.Adapter<MerchantViewHolder>() {
             .placeholder(R.drawable.ic_placeholder)
             .into(holder.binding.merchantImg)
 
-        if (currentUser != null) {
+        if (currentUserEntity != null) {
             holder.binding.favoriteLayout.visibility = View.VISIBLE
             holder.binding.checkboxFavorite.apply {
                 this.setSafeOnClickListener {
@@ -104,19 +93,8 @@ class MerchantAdapter: RecyclerView.Adapter<MerchantViewHolder>() {
         }
     }
 
-    override fun getItemCount(): Int {
-        return oldList.size
-    }
-
-    fun setUser(user: UserEntity?) {
-        currentUser = user
-    }
-
-    fun submitList(newList: MutableList<Merchant>) {
-        val diffUtil = MerchantDiffUtil(oldList, newList)
-        val diffResult = DiffUtil.calculateDiff(diffUtil)
-        oldList = newList
-        diffResult.dispatchUpdatesTo(this)
+    fun setUser(userEntity: UserEntity?) {
+        currentUserEntity = userEntity
     }
 
     private fun setOnFavoriteClick(data: Merchant, position: Int, isChecked: Boolean) {

@@ -1,8 +1,7 @@
 package com.vroomvroom.android.di
 
-import com.vroomvroom.android.domain.model.merchant.MerchantMapper
-import com.vroomvroom.android.domain.model.merchant.MerchantsMapper
-import com.vroomvroom.android.domain.model.order.*
+import com.vroomvroom.android.data.model.merchant.MerchantMapper
+import com.vroomvroom.android.data.model.user.UserMapper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,43 +14,14 @@ object DomainModule {
 
     @Singleton
     @Provides
-    fun provideMerchantsMapper(): MerchantsMapper {
-        return MerchantsMapper()
-    }
-
-    @Singleton
-    @Provides
     fun provideMerchantMapper(): MerchantMapper {
         return MerchantMapper()
     }
 
     @Singleton
     @Provides
-    fun provideOrderInputMapper(): OrderInputMapper {
-        return OrderInputMapper()
-    }
-
-    @Singleton
-    @Provides
-    fun provideOrdersResponseMapper(): OrdersResponseMapper {
-        return OrdersResponseMapper()
-    }
-    @Singleton
-    @Provides
-    fun provideOrderResponseMapper(): OrderResponseMapper {
-        return OrderResponseMapper()
-    }
-
-    @Singleton
-    @Provides
-    fun provideLocationInputMapper(): LocationInputMapper {
-        return LocationInputMapper()
-    }
-
-    @Singleton
-    @Provides
-    fun provideOrderBuilder(): OrderInputBuilder {
-        return OrderInputBuilder()
+    fun provideUserMapper(): UserMapper {
+        return UserMapper()
     }
 
 }

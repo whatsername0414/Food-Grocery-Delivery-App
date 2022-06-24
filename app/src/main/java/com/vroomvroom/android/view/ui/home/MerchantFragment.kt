@@ -16,9 +16,9 @@ import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentMerchantBinding
-import com.vroomvroom.android.domain.model.merchant.Merchant
-import com.vroomvroom.android.domain.model.merchant.Product
-import com.vroomvroom.android.domain.model.merchant.ProductSections
+import com.vroomvroom.android.data.model.merchant.Merchant
+import com.vroomvroom.android.data.model.merchant.Product
+import com.vroomvroom.android.data.model.merchant.ProductSections
 import com.vroomvroom.android.utils.OnProductClickListener
 import com.vroomvroom.android.utils.Utils.onReady
 import com.vroomvroom.android.utils.Utils.stringBuilder
@@ -26,7 +26,7 @@ import com.vroomvroom.android.utils.Utils.timeFormatter
 import com.vroomvroom.android.view.state.ViewState
 import com.vroomvroom.android.view.ui.base.BaseFragment
 import com.vroomvroom.android.view.ui.home.adapter.CartAdapter
-import com.vroomvroom.android.view.ui.home.adapter.ProductsSectionAdapter
+import com.vroomvroom.android.view.ui.home.adapter.ProductSectionAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -37,7 +37,7 @@ class MerchantFragment : BaseFragment<FragmentMerchantBinding>(
 ), OnProductClickListener {
 
     private lateinit var linearLayoutManager: LinearLayoutManager
-    private val productsSectionAdapter by lazy { ProductsSectionAdapter(this) }
+    private val productSectionAdapter by lazy { ProductSectionAdapter(this) }
     private val cartAdapter by lazy { CartAdapter() }
     private val args: MerchantFragmentArgs by navArgs()
     private var isUserScrolling: Boolean = false
@@ -51,7 +51,7 @@ class MerchantFragment : BaseFragment<FragmentMerchantBinding>(
 
 
         //Tesla soon
-        binding.productSectionRv.adapter = productsSectionAdapter
+        binding.productSectionRv.adapter = productSectionAdapter
 
         //private functions
         observeMerchantLiveData()
@@ -78,11 +78,9 @@ class MerchantFragment : BaseFragment<FragmentMerchantBinding>(
 
     }
 
-    override fun onClick(product: Product?) {
-        product?.let { prod ->
-            findNavController().navigate(MerchantFragmentDirections.actionMerchantFragmentToProductBottomSheetFragment(prod))
-        }
-
+    override fun onClick(product: Product) {
+        findNavController().navigate(
+            MerchantFragmentDirections.actionMerchantFragmentToProductBottomSheetFragment(product))
     }
 
     private fun observeMerchantLiveData() {
@@ -98,7 +96,7 @@ class MerchantFragment : BaseFragment<FragmentMerchantBinding>(
                 is ViewState.Success -> {
                     val merchant = response.data
                     mainActivityViewModel.merchant = merchant
-                    productsSectionAdapter.submitList(merchant.productSections)
+                    productSectionAdapter.submitList(merchant.productSections)
                     initializeTabItem(merchant.productSections)
                     dataBinder(merchant)
                     binding.commonNoticeLayout.hideNotice()
@@ -132,7 +130,7 @@ class MerchantFragment : BaseFragment<FragmentMerchantBinding>(
             if (items.isNotEmpty()) {
                 var subTotal = 0.0
                 items.forEach { item ->
-                    subTotal += item.cartItemEntity.price
+                    subTotal += item.cartItem.price
                 }
                 binding.btnToggleCart.text =
                     getString(R.string.cart_fab_detail, items.size, "%.2f".format(subTotal))

@@ -4,22 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".view.ui.auth.LoginFragment">
 
     <include
         android:id="@+id/appBarLayout"
         layout="@layout/item_appbar_layout"/>
-
-    <com.google.android.material.progressindicator.LinearProgressIndicator
-        android:id="@+id/login_progress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:elevation="18dp"
-        android:indeterminateTint="@color/red_a30"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -57,7 +47,7 @@
                 android:drawablePadding="@dimen/dp_16"
                 android:background="@drawable/bg_red_ffc_rounded_16dp"
                 android:gravity="start|center"
-                tools:text="@string/login_error_message"
+                tools:text="@string/invalid_email_address"
                 android:textColor="@color/red_a30"
                 android:visibility="gone"
                 tools:visibility="visible"
@@ -80,7 +70,8 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/login_email_input_editText"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:focusable="true"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -104,6 +95,7 @@
                     android:id="@+id/login_password_input_editText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:focusable="true"
                     android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -137,8 +129,7 @@
                 android:layout_marginHorizontal="@dimen/margin_large"
                 android:text="@string/don_t_have_an_account_signup"
                 android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                android:textColor="@color/red_a30" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"/>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

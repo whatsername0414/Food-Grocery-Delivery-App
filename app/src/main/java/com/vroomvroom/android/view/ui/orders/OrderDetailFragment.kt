@@ -1,15 +1,18 @@
 package com.vroomvroom.android.view.ui.orders
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentOrderDetailBinding
-import com.vroomvroom.android.domain.model.order.OrderResponse
-import com.vroomvroom.android.utils.Constants.CANCEL_SUCCESSFUL
+import com.vroomvroom.android.data.model.order.OrderDto
+import com.vroomvroom.android.utils.Constants.SUCCESS
 import com.vroomvroom.android.utils.Constants.FORMAT_DD_MMM_YYYY_HH_MM_SS
-import com.vroomvroom.android.utils.Utils.parseTimeToString
+import com.vroomvroom.android.utils.Utils.formatStringToDate
+import com.vroomvroom.android.utils.Utils.safeNavigate
 import com.vroomvroom.android.view.state.ViewState
 import com.vroomvroom.android.view.ui.base.BaseFragment
 import com.vroomvroom.android.view.ui.orders.adapter.OrderProductAdapter
@@ -29,7 +32,7 @@ class OrderDetailFragment : BaseFragment<FragmentOrderDetailBinding>(
         navController = findNavController()
         val currentBackStackEntry = navController.currentBackStackEntry
         val savedStateHandle = currentBackStackEntry?.savedStateHandle
-        savedStateHandle?.getLiveData<Boolean>(CANCEL_SUCCESSFUL)
+        savedStateHandle?.getLiveData<Boolean>(SUCCESS)
             ?.observe(currentBackStackEntry) { isCancelled ->
                 if (isCancelled) navController.popBackStack()
             }
@@ -38,11 +41,20 @@ class OrderDetailFragment : BaseFragment<FragmentOrderDetailBinding>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.appBarLayout.toolbar.setupToolbar()
-
-        ordersViewModel.queryOrder(args.orderId)
+        binding.appBarLayout.toolbar.apply {
+            setupToolbar()
+            setNavigationOnClickListener {
+                if (prevDestinationId == R.id.commonCompleteFragment) {
+                    navController.safeNavigate(R.id.action_orderDetailFragment_to_homeFragment)
+                } else {
+                    navController.popBackStack()
+                }
+            }
+        }
+        ordersViewModel.getOrder(args.id)
         observeOrder()
         observeReviewed()
+        onBackPressed()
 
     }
 
@@ -58,13 +70,13 @@ class OrderDetailFragment : BaseFragment<FragmentOrderDetailBinding>(
                     binding.commonNoticeLayout.hideNotice()
                     binding.orderDetailLayout.visibility = View.VISIBLE
                     val order = response.data
-                    ordersViewModel.merchantId = order.merchant._id
+                    ordersViewModel.merchantId = order.merchant.id
                     updateButtonModify(order)
                     updateViewsOnDataReady(order)
                     binding.orderMerchantLayout.setOnClickListener {
                         navController.navigate(
                             OrderDetailFragmentDirections.actionGlobalToMerchantFragment(
-                                order.merchant._id
+                                order.merchant.id
                             )
                         )
                     }
@@ -74,14 +86,14 @@ class OrderDetailFragment : BaseFragment<FragmentOrderDetailBinding>(
                     binding.shimmerLayout.visibility = View.GONE
                     binding.shimmerLayout.stopShimmer()
                     binding.commonNoticeLayout.showNetworkError {
-                        ordersViewModel.queryOrder(args.orderId)
+                        ordersViewModel.getOrder(args.id)
                     }
                 }
             }
         }
     }
 
-    private fun updateButtonModify(order: OrderResponse) {
+    private fun updateButtonModify(order: OrderDto) {
         when (order.status) {
             "Pending" -> {
                 binding.btnModifyOrder.text = getString(R.string.cancel)
@@ -131,7 +143,7 @@ class OrderDetailFragment : BaseFragment<FragmentOrderDetailBinding>(
         )
     }
 
-    private fun updateViewsOnDataReady(order: OrderResponse) {
+    private fun updateViewsOnDataReady(order: OrderDto) {
         binding.order = order
         binding.subTotalTv.text =
             getString(R.string.peso, "%.2f".format(order.orderDetail.totalPrice))
@@ -142,8 +154,21 @@ class OrderDetailFragment : BaseFragment<FragmentOrderDetailBinding>(
         binding.orderProductRv.adapter = OrderProductAdapter(order.orderDetail.product)
         binding.placedDate.text =
             getString(R.string.placed_on,
-                parseTimeToString(order.created_at.toLong(), FORMAT_DD_MMM_YYYY_HH_MM_SS))
+                formatStringToDate(order.createdAt, FORMAT_DD_MMM_YYYY_HH_MM_SS))
         binding.shimmerLayout.visibility = View.GONE
         binding.shimmerLayout.stopShimmer()
+    }
+
+    private fun onBackPressed() {
+        requireActivity().onBackPressedDispatcher
+            .addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (prevDestinationId == R.id.commonCompleteFragment) {
+                        navController.safeNavigate(R.id.action_orderDetailFragment_to_homeFragment)
+                    } else {
+                        navController.popBackStack()
+                    }
+                }
+            })
     }
 }

@@ -1,12 +1,16 @@
 package com.vroomvroom.android.view.ui.auth
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import com.vroomvroom.android.R
+import com.vroomvroom.android.data.model.user.LocationEntity
 import com.vroomvroom.android.databinding.FragmentRegisterBinding
+import com.vroomvroom.android.utils.ClickType
 import com.vroomvroom.android.utils.Utils.hideSoftKeyboard
 import com.vroomvroom.android.utils.Utils.isEmailValid
+import com.vroomvroom.android.utils.Utils.safeNavigate
 import com.vroomvroom.android.view.state.ViewState
 import com.vroomvroom.android.view.ui.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -18,14 +22,19 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(
     FragmentRegisterBinding::inflate
 ) {
 
+    private var currentLocation: LocationEntity? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.registerProgress.visibility = View.GONE
 
         navController = findNavController()
         binding.appBarLayout.toolbar.setupToolbar()
+        prevDestinationId = navController.previousBackStackEntry?.destination?.id ?: -1
 
+        observeLocation()
+        observeToken()
         observeNewLogInUser()
+        observeRegisterUser()
 
         binding.txtLogin.setOnClickListener {
             navController.popBackStack()
@@ -37,7 +46,7 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(
             val confirmPassword = binding.registerConfirmPasswordInputEditText.text.toString()
             if (emailAddress.isEmailValid()) {
                 if (password == confirmPassword) {
-                    binding.registerProgress.visibility = View.VISIBLE
+                    loadingDialog.show(getString(R.string.loading))
                     binding.errorTv.visibility = View.GONE
                     authViewModel.registerWithEmailAndPassword(emailAddress, password)
                 } else {
@@ -51,16 +60,67 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(
         }
     }
 
+    private fun observeLocation() {
+        locationViewModel.userLocation.observe(viewLifecycleOwner) { locations ->
+            currentLocation = locations?.firstOrNull { it.currentUse }
+        }
+    }
+
+    private fun observeToken() {
+        authViewModel.token.observe(viewLifecycleOwner) { token ->
+            if (token != null) {
+                Log.d("CurrentLocation", currentLocation.toString())
+                currentLocation?.let { authViewModel.register(it) }
+            }
+        }
+    }
+
+    private fun observeRegisterUser() {
+        authViewModel.isRegistered.observe(viewLifecycleOwner) { response ->
+            when (response) {
+                is ViewState.Loading -> Unit
+                is ViewState.Success -> {
+                    loadingDialog.dismiss()
+                    if (prevDestinationId == R.id.checkoutFragment) {
+                        navController.safeNavigate(R.id.action_registerFragment_to_checkoutFragment)
+                    } else {
+                        navController.safeNavigate(R.id.action_registerFragment_to_homeFragment)
+                    }
+                }
+                is ViewState.Error -> {
+                    loadingDialog.dismiss()
+                    dialog.show(
+                        getString(R.string.network_error),
+                        getString(R.string.unsaved_error),
+                        getString(R.string.cancel),
+                        getString(R.string.retry),
+                        isButtonLeftVisible = false,
+                        isCancellable = false
+                    ) { type ->
+                        when (type) {
+                            ClickType.POSITIVE -> {
+                                loadingDialog.show(getString(R.string.loading))
+                                currentLocation?.let { authViewModel.register(it) }
+                                dialog.dismiss()
+                            }
+                            ClickType.NEGATIVE -> Unit
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private fun observeNewLogInUser() {
         authViewModel.newLoggedInUser.observe(viewLifecycleOwner) { result ->
             when (result) {
                 is ViewState.Success -> {
+                    authViewModel.saveIdToken()
                     binding.errorTv.visibility = View.GONE
                     requireActivity().hideSoftKeyboard()
-                    navController.navigate(R.id.action_registerFragment_to_checkoutFragment)
                 }
                 is ViewState.Error -> {
-                    binding.registerProgress.visibility = View.GONE
+                    loadingDialog.dismiss()
                     binding.errorTv.visibility = View.VISIBLE
                     binding.errorTv.text = result.exception.message
                 }

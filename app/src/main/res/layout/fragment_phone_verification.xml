@@ -5,22 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/white"
     tools:context=".view.ui.auth.PhoneVerificationFragment">
 
     <include
         android:id="@+id/appBarLayout"
         layout="@layout/item_appbar_layout"/>
-
-    <com.google.android.material.progressindicator.LinearProgressIndicator
-        android:id="@+id/phone_verification_progress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:indeterminateTint="@color/red_a30"
-        android:elevation="18dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -43,7 +33,7 @@
             android:layout_marginTop="@dimen/dp_8"
             android:text="@string/verification"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            android:textSize="24sp"
+            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -51,7 +41,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:text="@string/we_will_send_you_an_otp_on_this_mobile_number" />
 
         <TextView

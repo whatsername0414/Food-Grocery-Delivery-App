@@ -8,7 +8,7 @@ import com.vroomvroom.android.databinding.FragmentReviewBottomSheetBinding
 import com.vroomvroom.android.utils.ClickType
 import com.vroomvroom.android.view.state.ViewState
 import com.vroomvroom.android.view.ui.base.BaseBottomSheetFragment
-import com.vroomvroom.android.view.ui.widget.CommonAlertDialog
+import com.vroomvroom.android.view.ui.common.CommonAlertDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -27,13 +27,13 @@ class ReviewBottomSheetFragment : BaseBottomSheetFragment<FragmentReviewBottomSh
 
         binding.btnSubmit.setOnClickListener {
             val rate = binding.ratingBar.rating.toInt()
-            val review = binding.inputEditText.text?.toString()
-            ordersViewModel.mutationReview(args.merchantId, args.orderId, rate, review)
+            val comment = binding.inputEditText.text?.toString().orEmpty()
+            ordersViewModel.createReview(args.orderId, args.merchantId, rate, comment)
         }
     }
 
     private fun observeReviewLiveData() {
-        ordersViewModel.review.observe(viewLifecycleOwner) { response ->
+        ordersViewModel.isReviewCreated.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is ViewState.Loading -> {
                     isCancelable = false
@@ -67,8 +67,8 @@ class ReviewBottomSheetFragment : BaseBottomSheetFragment<FragmentReviewBottomSh
             when (type) {
                 ClickType.POSITIVE -> {
                     val rate = binding.ratingBar.rating.toInt()
-                    val review = binding.inputEditText.text?.toString()
-                    ordersViewModel.mutationReview(args.merchantId, args.orderId, rate, review)
+                    val comment = binding.inputEditText.text?.toString().orEmpty()
+                    ordersViewModel.createReview(args.orderId, args.merchantId, rate, comment)
                     dialog.dismiss()
                 }
                 ClickType.NEGATIVE -> dialog.dismiss()

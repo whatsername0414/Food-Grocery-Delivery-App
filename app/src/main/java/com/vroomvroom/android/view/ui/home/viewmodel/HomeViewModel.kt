@@ -4,40 +4,35 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vroomvroom.android.*
-import com.vroomvroom.android.domain.db.cart.CartItemChoiceEntity
-import com.vroomvroom.android.domain.db.cart.CartItemEntity
-import com.vroomvroom.android.domain.model.merchant.Merchant
-import com.vroomvroom.android.repository.local.RoomRepository
+import com.vroomvroom.android.data.model.cart.CartItemEntity
+import com.vroomvroom.android.data.model.merchant.Merchant
+import com.vroomvroom.android.data.model.merchant.Option
+import com.vroomvroom.android.repository.cart.CartRepository
 import com.vroomvroom.android.repository.merchant.MerchantRepository
-import com.vroomvroom.android.repository.remote.GraphQLRepository
 import com.vroomvroom.android.view.state.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-@ExperimentalCoroutinesApi
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val merchantRepository: MerchantRepository,
-    private val graphQLRepository: GraphQLRepository,
-    private val roomRepository: RoomRepository,
+    private val cartRepository: CartRepository,
 ): ViewModel() {
 
     private val _merchant by lazy { MutableLiveData<ViewState<Merchant>>() }
     val merchant: LiveData<ViewState<Merchant>>
         get() = _merchant
 
-    private val _favorite by lazy { MutableLiveData<ViewState<FavoriteMutation.Data>>() }
-    val favorite: LiveData<ViewState<FavoriteMutation.Data>>
-        get() = _favorite
+    private val _isPutFavoriteSuccessful by lazy { MutableLiveData<ViewState<Boolean>>() }
+    val isPutFavoriteSuccessful: LiveData<ViewState<Boolean>>
+        get() = _isPutFavoriteSuccessful
 
-    val cartItem = roomRepository.getAllCartItem()
+    val cartItem = cartRepository.getAllCartItem()
     lateinit var currentMerchantId: String
-    var optionMap: MutableMap<String, CartItemChoiceEntity> = mutableMapOf()
+    var choseOptions = mutableMapOf<String, Option>()
     val isCartCardViewVisible by lazy { MutableLiveData(false) }
 
     fun getMerchant(merchantId: String){
@@ -62,21 +57,19 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun favorite(merchantId: String, direction: Int) {
+    fun updateFavorite(id: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val response = graphQLRepository.mutationFavorite(merchantId, direction)
-            response?.let { data ->
-                withContext(Dispatchers.Main) {
-                    when (data) {
-                        is ViewState.Success -> {
-                            _favorite.postValue(data)
-                        }
-                        is ViewState.Error -> {
-                            _favorite.postValue(data)
-                        }
-                        else -> {
-                            _favorite.postValue(data)
-                        }
+            val response = merchantRepository.updateFavorite(id)
+            response.let { data ->
+                when (data) {
+                    is ViewState.Success -> {
+                        _isPutFavoriteSuccessful.postValue(data)
+                    }
+                    is ViewState.Error -> {
+                        _isPutFavoriteSuccessful.postValue(data)
+                    }
+                    else -> {
+                        _isPutFavoriteSuccessful.postValue(data)
                     }
                 }
             }
@@ -85,43 +78,35 @@ class HomeViewModel @Inject constructor(
 
     fun insertCartItem(cartItemEntity: CartItemEntity) {
         viewModelScope.launch(Dispatchers.IO) {
-            val id = roomRepository.insertCartItem(cartItemEntity)
-            if (optionMap.isNotEmpty()) {
-                optionMap.forEach { (_, value) ->
-                    val cartItemChoice = CartItemChoiceEntity(
-                        name = value.name,
-                        additionalPrice = value.additionalPrice,
-                        optionType = value.optionType,
-                        cartItemId = id.toInt()
-                    )
-                    roomRepository.insertCartItemChoice(cartItemChoice)
-                }
+            cartRepository.insertCartItem(cartItemEntity)
+            if (choseOptions.isNotEmpty()) {
+                cartRepository.insertCartItemOptions(choseOptions)
             }
         }
     }
 
     fun updateCartItem(cartItemEntity: CartItemEntity) {
         viewModelScope.launch(Dispatchers.IO) {
-            roomRepository.updateCartItem(cartItemEntity)
+            cartRepository.updateCartItem(cartItemEntity)
         }
 
     }
 
     fun deleteCartItem(cartItemEntity: CartItemEntity) {
         viewModelScope.launch(Dispatchers.IO) {
-            roomRepository.deleteCartItem(cartItemEntity)
+            cartRepository.deleteCartItem(cartItemEntity)
         }
     }
 
     fun deleteAllCartItem() {
         viewModelScope.launch(Dispatchers.IO) {
-            roomRepository.deleteAllCartItem()
+            cartRepository.deleteAllCartItem()
             deleteAllCartItemChoice()
         }
     }
     fun deleteAllCartItemChoice() {
         viewModelScope.launch(Dispatchers.IO) {
-            roomRepository.deleteAllCartItemChoice()
+            cartRepository.deleteAllCartItemOption()
         }
     }
 }

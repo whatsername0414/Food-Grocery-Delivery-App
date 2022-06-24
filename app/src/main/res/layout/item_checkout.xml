@@ -6,7 +6,7 @@
     <data>
         <variable
             name="cartItem"
-            type="com.vroomvroom.android.domain.db.cart.CartItemEntity" />
+            type="com.vroomvroom.android.data.model.cart.CartItemEntity" />
         <import type="android.view.View"/>
     </data>
 

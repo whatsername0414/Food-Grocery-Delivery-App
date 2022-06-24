@@ -7,9 +7,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentMerchantSearchBinding
-import com.vroomvroom.android.domain.db.search.SearchEntity
+import com.vroomvroom.android.data.model.search.SearchEntity
 import com.vroomvroom.android.utils.ClickType
-import com.vroomvroom.android.utils.Constants
 import com.vroomvroom.android.utils.Utils.showSoftKeyboard
 import com.vroomvroom.android.view.state.ViewState
 import com.vroomvroom.android.view.ui.base.BaseFragment
@@ -37,7 +36,7 @@ class MerchantSearchFragment : BaseFragment<FragmentMerchantSearchBinding>(
         initSearchView()
         observeMerchantsLiveData()
 
-        binding.merchantRv.adapter = merchantAdapter.apply {setUser(authViewModel.userRecord.value)}
+        binding.merchantRv.adapter = merchantAdapter.apply {setUser(authViewModel.user.value)}
         binding.searchRv.adapter = searchAdapter
 
         val args = args.searchTerm
@@ -46,7 +45,7 @@ class MerchantSearchFragment : BaseFragment<FragmentMerchantSearchBinding>(
             binding.searchView.setQuery(args, false)
             binding.title.visibility = View.GONE
             binding.searchView.clearFocus()
-            mainViewModel.queryMerchants(Constants.SEARCH, args)
+            mainViewModel.getMerchants(null, currentSearchTerm)
         } else {
             getAllSearch()
         }
@@ -61,7 +60,7 @@ class MerchantSearchFragment : BaseFragment<FragmentMerchantSearchBinding>(
                     binding.merchantsShimmerLayout.visibility = View.GONE
                     binding.merchantsShimmerLayout.stopShimmer()
                     binding.searchView.clearFocus()
-                    mainViewModel.queryMerchants(Constants.SEARCH, searchTerm)
+                    mainViewModel.getMerchants(null, searchTerm)
                 }
                 ClickType.POSITIVE -> {
                     browseViewModel.deleteSearch(search)
@@ -81,7 +80,7 @@ class MerchantSearchFragment : BaseFragment<FragmentMerchantSearchBinding>(
 
         merchantAdapter.apply {
             onFavoriteClicked = { merchant, position, direction ->
-                homeViewModel.favorite(merchant.id, direction)
+                homeViewModel.updateFavorite(merchant.id)
                 observeFavorite(this, merchant, position, direction)
             }
         }
@@ -125,7 +124,7 @@ class MerchantSearchFragment : BaseFragment<FragmentMerchantSearchBinding>(
                     binding.merchantsShimmerLayout.visibility = View.GONE
                     binding.merchantsShimmerLayout.stopShimmer()
                     currentSearchTerm = query
-                    mainViewModel.queryMerchants(Constants.SEARCH, query)
+                    mainViewModel.getMerchants(null, query)
                     clearFocus()
                     val date = System.currentTimeMillis()
                     browseViewModel.insertSearch(SearchEntity(query ?: "", true, date))
@@ -167,7 +166,7 @@ class MerchantSearchFragment : BaseFragment<FragmentMerchantSearchBinding>(
                     binding.merchantsShimmerLayout.startShimmer()
                 }
                 is ViewState.Success -> {
-                    val merchants = response.data.data
+                    val merchants = response.data
                     if (merchants.isEmpty()) {
                         binding.commonNoticeLayout.showNotice(
                             R.drawable.ic_empty_result,
@@ -197,7 +196,7 @@ class MerchantSearchFragment : BaseFragment<FragmentMerchantSearchBinding>(
                     binding.merchantsShimmerLayout.stopShimmer()
                     if (!isSearchRvVisible) {
                         binding.commonNoticeLayout.showNetworkError {
-                            mainViewModel.queryMerchants(Constants.SEARCH, currentSearchTerm)
+                            mainViewModel.getMerchants(null, currentSearchTerm)
                         }
                     }
                 }

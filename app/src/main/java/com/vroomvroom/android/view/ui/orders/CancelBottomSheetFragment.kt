@@ -9,10 +9,10 @@ import androidx.navigation.fragment.navArgs
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentCancelBottomSheetBinding
 import com.vroomvroom.android.utils.ClickType
-import com.vroomvroom.android.utils.Constants.CANCEL_SUCCESSFUL
+import com.vroomvroom.android.utils.Constants.SUCCESS
 import com.vroomvroom.android.view.state.ViewState
 import com.vroomvroom.android.view.ui.base.BaseBottomSheetFragment
-import com.vroomvroom.android.view.ui.widget.CommonAlertDialog
+import com.vroomvroom.android.view.ui.common.CommonAlertDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -40,29 +40,46 @@ class CancelBottomSheetFragment : BaseBottomSheetFragment<FragmentCancelBottomSh
     }
 
     private fun observeCancelled() {
-        ordersViewModel.cancelled.observe(viewLifecycleOwner) { response ->
+        ordersViewModel.isCancelled.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is ViewState.Loading -> {
                     binding.btnConfirm.isEnabled = false
                     binding.progressIndicator.visibility = View.VISIBLE
                 }
                 is ViewState.Success -> {
-                    showShortToast(R.string.cancel_successful)
-                    mainActivityViewModel.isRefreshed.postValue(true)
-                    savedStateHandle[CANCEL_SUCCESSFUL] = true
-                    findNavController().popBackStack()
+                    handleSuccess()
                 }
                 is ViewState.Error -> {
                     isCancelable = true
                     binding.btnConfirm.isEnabled = true
                     binding.progressIndicator.visibility = View.GONE
-                    initAlertDialog()
+                    handleFailed()
                 }
             }
         }
     }
 
-    private fun initAlertDialog() {
+    private fun handleSuccess() {
+        mainActivityViewModel.isRefreshed.postValue(true)
+        savedStateHandle[SUCCESS] = true
+        val dialog = CommonAlertDialog(requireActivity())
+        dialog.show(
+            getString(R.string.cancelled_title),
+            getString(R.string.cancelled_message),
+            getString(R.string.ok),
+            getString(R.string.ok),
+            false
+        ) { type ->
+            when (type) {
+                ClickType.POSITIVE -> {
+                    dialog.dismiss()
+                }
+                ClickType.NEGATIVE -> Unit
+            }
+        }
+    }
+
+    private fun handleFailed() {
         val dialog = CommonAlertDialog(requireActivity())
         dialog.show(
             getString(R.string.network_error),
@@ -84,6 +101,6 @@ class CancelBottomSheetFragment : BaseBottomSheetFragment<FragmentCancelBottomSh
         isCancelable = false
         val checkRbId = binding.radioGroup.checkedRadioButtonId
         val reason = binding.root.findViewById<RadioButton>(checkRbId).text.toString()
-        ordersViewModel.mutationCancelOrder(args.orderId, reason)
+        ordersViewModel.cancelOrder(args.orderId, reason)
     }
 }

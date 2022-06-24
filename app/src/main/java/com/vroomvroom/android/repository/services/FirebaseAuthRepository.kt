@@ -14,7 +14,7 @@ interface FirebaseAuthRepository {
     fun removeAuthStateListener(listener: FirebaseAuth.AuthStateListener)
     fun getIdToken(onResult: (String?)->Unit)
     fun signInIntent(): Intent
-    fun taskGoogleSignIn(data: Intent?, onResult: (ViewState<FirebaseUser>) -> Unit)
+    fun googleSignIn(data: Intent?, onResult: (ViewState<FirebaseUser>) -> Unit)
     fun firebaseAuthWithGoogle(idToken: String, onResult: (ViewState<FirebaseUser>) -> Unit)
     fun facebookLogin(fragment: BottomSheetDialogFragment, onResult: (ViewState<FirebaseUser>) -> Unit)
     fun handleFacebookAccessToken(token: AccessToken, onResult: (ViewState<FirebaseUser>) -> Unit)

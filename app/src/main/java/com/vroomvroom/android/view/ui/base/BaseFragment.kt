@@ -6,19 +6,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.Toolbar
 import androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.snackbar.Snackbar
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.CommonNoticeLayoutBinding
-import com.vroomvroom.android.domain.model.merchant.Merchant
+import com.vroomvroom.android.data.model.merchant.Merchant
 import com.vroomvroom.android.utils.Constants
 import com.vroomvroom.android.view.state.ViewState
 import com.vroomvroom.android.view.ui.account.viewmodel.AccountViewModel
@@ -28,7 +31,8 @@ import com.vroomvroom.android.view.ui.home.adapter.MerchantAdapter
 import com.vroomvroom.android.view.ui.home.viewmodel.HomeViewModel
 import com.vroomvroom.android.view.ui.location.viewmodel.LocationViewModel
 import com.vroomvroom.android.view.ui.orders.viewmodel.OrdersViewModel
-import com.vroomvroom.android.view.ui.widget.LoadingDialog
+import com.vroomvroom.android.view.ui.common.CommonAlertDialog
+import com.vroomvroom.android.view.ui.common.LoadingDialog
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.lang.IllegalArgumentException
 
@@ -38,7 +42,7 @@ abstract class BaseFragment<VB: ViewBinding> (
 ) : Fragment() {
 
     val mainActivityViewModel by activityViewModels<MainViewModel>()
-    val authViewModel by activityViewModels<AuthViewModel>()
+    val authViewModel by viewModels<AuthViewModel>()
 
     val mainViewModel by viewModels<MainViewModel>()
     val locationViewModel by viewModels<LocationViewModel>()
@@ -47,13 +51,17 @@ abstract class BaseFragment<VB: ViewBinding> (
     val homeViewModel by viewModels<HomeViewModel>()
     val browseViewModel by viewModels<BrowseViewModel>()
 
+    val dialog by lazy { CommonAlertDialog(requireActivity()) }
     val loadingDialog by lazy { LoadingDialog(requireActivity()) }
+
+    var onBackPressed: (() -> Unit)? = null
 
     private var _binding: VB? = null
     val binding: VB
         get() = _binding as VB
 
     lateinit var navController: NavController
+    var prevDestinationId: Int = -1
     private lateinit var snackBar: Snackbar
 
 
@@ -74,25 +82,30 @@ abstract class BaseFragment<VB: ViewBinding> (
         position: Int,
         direction: Int
     ) {
-        homeViewModel.favorite.observe(viewLifecycleOwner) { response ->
+        homeViewModel.isPutFavoriteSuccessful.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is ViewState.Loading -> Unit
                 is ViewState.Success -> {
-                    if (direction == Constants.ADD_TO_FAVORITES) {
-                        showShortSnackBar("Added to favorites")
-                        merchant.favorite = true
-                        merchantAdapter.notifyItemChanged(position, merchant)
+                    if (response.data) {
+                        if (direction == Constants.ADD_TO_FAVORITES) {
+                            showShortSnackBar("Added to favorites")
+                            merchant.favorite = true
+                            merchantAdapter.notifyItemChanged(position, merchant)
+                        } else {
+                            showShortSnackBar("Removed from favorites")
+                            merchant.favorite = false
+                            merchantAdapter.notifyItemChanged(position, merchant)
+                        }
                     } else {
-                        showShortSnackBar("Removed from favorites")
-                        merchant.favorite = false
-                        merchantAdapter.notifyItemChanged(position, merchant)
+                        showShortToast(R.string.general_error_message)
+                        merchantAdapter.notifyItemChanged(position)
                     }
-                    homeViewModel.favorite.removeObservers(viewLifecycleOwner)
+                    homeViewModel.isPutFavoriteSuccessful.removeObservers(viewLifecycleOwner)
                 }
                 is ViewState.Error -> {
                     showShortToast(R.string.general_error_message)
                     merchantAdapter.notifyItemChanged(position)
-                    homeViewModel.favorite.removeObservers(viewLifecycleOwner)
+                    homeViewModel.isPutFavoriteSuccessful.removeObservers(viewLifecycleOwner)
                 }
             }
         }
@@ -179,5 +192,12 @@ abstract class BaseFragment<VB: ViewBinding> (
             snackBarView.translationY = - (400 / requireContext().resources.displayMetrics.density)
         }
         snackBar.show()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (this::navController.isInitialized) {
+            prevDestinationId = navController.previousBackStackEntry?.destination?.id ?: -1
+        }
     }
 }

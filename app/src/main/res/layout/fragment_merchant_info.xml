@@ -6,13 +6,12 @@
     <data>
         <variable
             name="merchant"
-            type="com.vroomvroom.android.domain.model.merchant.Merchant" />
+            type="com.vroomvroom.android.data.model.merchant.Merchant" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:background="@color/white"
         tools:context=".view.ui.home.MerchantInfoFragment">
 

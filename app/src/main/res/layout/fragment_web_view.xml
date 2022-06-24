@@ -28,14 +28,4 @@
         android:indeterminateTint="@color/red_a30"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <View
-        android:layout_width="0dp"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/white"
-        android:clickable="true"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/web_view"
-        android:focusable="true" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

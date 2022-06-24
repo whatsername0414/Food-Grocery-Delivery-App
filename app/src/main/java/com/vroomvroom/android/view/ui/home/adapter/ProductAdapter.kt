@@ -1,6 +1,5 @@
 package com.vroomvroom.android.view.ui.home.adapter
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -8,12 +7,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.ItemProductBinding
-import com.vroomvroom.android.domain.model.merchant.Product
+import com.vroomvroom.android.data.model.merchant.Product
 import com.vroomvroom.android.utils.OnProductClickListener
 
 class ProductAdapter(
     private val product: List<Product?>,
-    private val listenerProduct: OnProductClickListener
+    private val listener: OnProductClickListener
     ) : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>(){
 
     class ProductViewHolder(val binding: ItemProductBinding): RecyclerView.ViewHolder(binding.root)
@@ -28,7 +27,6 @@ class ProductAdapter(
         return ProductViewHolder(binding)
     }
 
-    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
         val product = product[position]
         holder.binding.product = product
@@ -39,10 +37,13 @@ class ProductAdapter(
             .placeholder(R.drawable.ic_placeholder)
             .into(holder.binding.orderProductImage)
 
-        holder.binding.productPrice.text = "₱${"%.2f".format(product?.price)}"
+        holder.binding.productPrice.text = holder.itemView.context.getString(
+            R.string.peso, "%.2f".format(product?.price))
 
         holder.binding.root.setOnClickListener {
-            listenerProduct.onClick(product)
+            product?.let {
+                listener.onClick(it)
+            }
         }
     }
 

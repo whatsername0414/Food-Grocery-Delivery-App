@@ -3,15 +3,14 @@ package com.vroomvroom.android.view.ui.home
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentHomeBinding
-import com.vroomvroom.android.domain.db.user.UserLocationEntity
-import com.vroomvroom.android.domain.model.merchant.Merchant
-import com.vroomvroom.android.utils.Constants.BY_CATEGORY
+import com.vroomvroom.android.data.model.user.LocationEntity
 import com.vroomvroom.android.utils.Constants.SCROLL_THRESHOLD
 import com.vroomvroom.android.utils.Utils.safeNavigate
 import com.vroomvroom.android.view.state.ViewState
@@ -47,6 +46,7 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(
         observeRoomCartItem()
         viewTreeObserver()
         shouldBackToTopObserver()
+        setupAnimationListener()
 
         binding.categoryRv.adapter = categoryAdapter
         binding.merchantRv. adapter = merchantAdapter
@@ -72,7 +72,7 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(
         categoryAdapter.onCategoryClicked = { category ->
             categoryClicked = true
             if (category != null) {
-                mainViewModel.getMerchants(BY_CATEGORY, category)
+                mainViewModel.getMerchants(category, null)
                 binding.shopsTitle.text = category
 
             } else {
@@ -92,14 +92,14 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(
 
         merchantAdapter.apply {
             onFavoriteClicked = { merchant, position, direction ->
-                homeViewModel.favorite(merchant.id, direction)
+                homeViewModel.updateFavorite(merchant.id)
                 observeFavorite(this, merchant, position, direction)
             }
         }
     }
 
     private fun observeUser() {
-        authViewModel.userRecord.observe(viewLifecycleOwner) { user ->
+        authViewModel.user.observe(viewLifecycleOwner) { user ->
             if (user != null) {
                 binding.favorite.visibility = View.VISIBLE
                 merchantAdapter.setUser(user)
@@ -122,7 +122,7 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(
             }
         }
     }
-    private fun updateLocationTextView(locationEntity: UserLocationEntity) {
+    private fun updateLocationTextView(locationEntity: LocationEntity) {
         binding.addressTv.text =
             locationEntity.address ?: getString(R.string.street_not_provided)
         binding.cityTv.text =
@@ -165,7 +165,7 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(
                         homeRvLinearLayout.visibility = View.VISIBLE
                     }
                     binding.commonNoticeLayout.showNetworkError {
-                        mainViewModel.getCategories("main")
+                        mainViewModel.getCategories(MAIN_CATEGORY)
                         mainViewModel.getMerchants()
                     }
                 }
@@ -191,8 +191,8 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(
                     }
                     is ViewState.Success -> {
                         merchantsLoaded = true
-                        val merchants = response.data.data.toMutableList()
-                        merchantAdapter.submitList(checkForChanges(merchants))
+                        val merchants = response.data
+                        merchantAdapter.submitList(merchants)
                         binding.apply {
                             if (categoryClicked) {
                                 fetchProgress.visibility = View.GONE
@@ -217,7 +217,7 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(
                             homeRvLinearLayout.visibility = View.GONE
                             fetchProgress.visibility = View.GONE
                             commonNoticeLayout.showNetworkError {
-                                mainViewModel.getCategories("main")
+                                mainViewModel.getCategories(MAIN_CATEGORY)
                                 mainViewModel.getMerchants()
                             }
                         }
@@ -251,14 +251,6 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(
         }
     }
 
-    private fun checkForChanges(merchants: MutableList<Merchant>): MutableList<Merchant> {
-        mainActivityViewModel.favoritesChanges.forEach { (_, v) ->
-            val index = merchants.indexOf(merchants.find { it.id == v.id })
-            merchants[index] = v
-        }
-        return merchants
-    }
-
     private fun observeRoomCartItem() {
         homeViewModel.cartItem.observe(viewLifecycleOwner) { items ->
             if (items.isNullOrEmpty()) {
@@ -272,25 +264,40 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(
         }
     }
 
-    override fun onResume() {
-        super.onResume()
+    private fun setupAnimationListener() {
         if (view?.animation != null) {
             view?.animation?.setAnimationListener(object : Animation.AnimationListener {
                 override fun onAnimationStart(animation: Animation?) {}
                 override fun onAnimationEnd(animation: Animation?) {
+                    if (mainActivityViewModel.shouldFetchMerchants) {
+                        mainViewModel.getMerchants()
+                        mainActivityViewModel.shouldFetchMerchants = false
+                        return
+                    }
                     if (mainViewModel.merchants.value == null &&
                         mainViewModel.categories.value == null) {
-                        mainViewModel.getCategories("main")
+                        mainViewModel.getCategories(MAIN_CATEGORY)
                         mainViewModel.getMerchants()
                     }
                 }
-                override fun onAnimationRepeat(animation: Animation?) {}
+                override fun onAnimationRepeat(animation: Animation?) {
+                    Log.d("HomeFragment", "Animation Repeat")
+                }
             })
         } else {
+            if (mainActivityViewModel.shouldFetchMerchants) {
+                mainViewModel.getMerchants()
+                mainActivityViewModel.shouldFetchMerchants = false
+                return
+            }
             if (mainViewModel.merchants.value == null && mainViewModel.categories.value == null) {
-                mainViewModel.getCategories("main")
+                mainViewModel.getCategories(MAIN_CATEGORY)
                 mainViewModel.getMerchants()
             }
         }
+    }
+
+    companion object {
+        const val MAIN_CATEGORY = "main"
     }
 }

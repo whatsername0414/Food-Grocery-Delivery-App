@@ -1,7 +1,6 @@
 package com.vroomvroom.android.view.ui.home.adapter
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -14,7 +13,7 @@ import com.bumptech.glide.Glide
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.ItemBrowseCategoryBinding
 import com.vroomvroom.android.databinding.ItemCategoryBinding
-import com.vroomvroom.android.domain.model.merchant.Category
+import com.vroomvroom.android.data.model.merchant.Category
 
 class CategoryDiffUtil: DiffUtil.ItemCallback<Category>() {
     override fun areItemsTheSame(
@@ -36,8 +35,11 @@ class CategoryDiffUtil: DiffUtil.ItemCallback<Category>() {
 class CategoryAdapter: ListAdapter<Category, CategoryViewHolder>(CategoryDiffUtil()) {
 
     var onCategoryClicked: ((String?) -> Unit)? = null
-    var itemViewType = 0
     private var categoryName: String? = null
+
+    override fun getItemViewType(position: Int): Int {
+        return if (getItem(position).type == "search") 1 else 0
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
         val layoutBinding1: ItemCategoryBinding = DataBindingUtil.inflate(
@@ -52,14 +54,14 @@ class CategoryAdapter: ListAdapter<Category, CategoryViewHolder>(CategoryDiffUti
             parent,
             false
         )
-        if (itemViewType == 1) return CategoryViewHolder(layoutBinding2)
+        if (viewType == 1) return CategoryViewHolder(layoutBinding2)
         return CategoryViewHolder(layoutBinding1)
     }
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         val category = getItem(position)
-        when (itemViewType) {
+        when (holder.itemViewType) {
             0 -> {
                 val view = holder.binding as ItemCategoryBinding
                 view.category = category

@@ -45,7 +45,7 @@
                 android:focusableInTouchMode="true"
                 app:iconifiedByDefault="false"
                 android:imeOptions="actionSearch"
-                app:queryHint="@string/search_for_shop_restaurant"
+                app:queryHint="@string/search_location"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.ItemReviewBinding
-import com.vroomvroom.android.domain.model.merchant.Review
+import com.vroomvroom.android.data.model.merchant.Review
 import com.vroomvroom.android.utils.Constants.FORMAT_DD_MMM_YYYY_HH_MM_SS
 import com.vroomvroom.android.utils.Utils.parseTimeToString
 

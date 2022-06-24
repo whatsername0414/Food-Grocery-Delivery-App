@@ -2,7 +2,7 @@ package com.vroomvroom.android.view.ui.browse.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vroomvroom.android.domain.db.search.SearchEntity
+import com.vroomvroom.android.data.model.search.SearchEntity
 import com.vroomvroom.android.repository.local.RoomRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -11,7 +11,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-@ExperimentalCoroutinesApi
 @HiltViewModel
 class BrowseViewModel @Inject constructor(
     private val roomRepository: RoomRepository

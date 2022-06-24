@@ -65,7 +65,7 @@
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/i_want_to_change_my_information"
+            android:text="@string/change_information"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:theme="@style/RadioButtonStyle" />
     </RadioGroup>

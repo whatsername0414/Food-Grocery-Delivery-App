@@ -9,10 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mapbox.search.result.SearchSuggestion
 import com.vroomvroom.android.R
-import com.vroomvroom.android.databinding.ItemSearchBinding
 import com.vroomvroom.android.databinding.ItemSuggestionBinding
-import com.vroomvroom.android.domain.db.search.SearchEntity
-import com.vroomvroom.android.utils.ClickType
 
 class SuggestionDiffUtil: DiffUtil.ItemCallback<SearchSuggestion>() {
     override fun areItemsTheSame(oldItem: SearchSuggestion, newItem: SearchSuggestion): Boolean {

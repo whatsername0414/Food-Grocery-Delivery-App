@@ -27,15 +27,13 @@ import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.model.BitmapDescriptor
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import com.google.android.gms.tasks.Task
 import com.google.android.material.textfield.TextInputEditText
+import com.google.maps.android.SphericalUtil
 import com.vmadalin.easypermissions.EasyPermissions
 import com.vroomvroom.android.R
-import com.vroomvroom.android.domain.db.user.UserLocationEntity
+import com.vroomvroom.android.data.model.user.LocationEntity
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -76,8 +74,8 @@ object Utils {
 
     fun Activity.hideSoftKeyboard() {
         currentFocus?.let {
-            val imm = ContextCompat.getSystemService(this, InputMethodManager::class.java)
-            imm?.hideSoftInputFromWindow(it.windowToken, InputMethodManager.HIDE_IMPLICIT_ONLY)
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(it.windowToken, 0)
         }
     }
 
@@ -163,8 +161,8 @@ object Utils {
         id: Int? = null,
         address: Address?,
         latLng: LatLng,
-    ): UserLocationEntity {
-        return UserLocationEntity(
+    ): LocationEntity {
+        return LocationEntity(
             id = id,
             address = address?.thoroughfare,
             city = address?.locality,
@@ -206,7 +204,6 @@ object Utils {
         this?.uiSettings?.setAllGesturesEnabled(false)
         this?.addMarker(MarkerOptions().position(position1).icon(bitmapDescriptorFromVector(app, R.drawable.ic_location)))
         this?.addMarker(MarkerOptions().position(position2).icon(bitmapDescriptorFromVector(app, R.drawable.ic_location)))
-        this?.moveCamera(CameraUpdateFactory.newLatLngZoom(position1, 15.8f))
     }
 
     fun RecyclerView.onReady(isReady: () -> Unit) {
@@ -255,13 +252,65 @@ object Utils {
         return 0L
     }
 
+    fun formatStringToDate(originalTime: String, pattern: String): String {
+        val form = SimpleDateFormat(DEFAULT_SERVER_TIME_FORMAT, Locale.US)
+        val date: Date?
+        var result = ""
+
+        try {
+            date = form.parse(originalTime)
+            result = SimpleDateFormat(pattern, Locale.US).format(date!!)
+
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
+        return result
+
+    }
+
     fun isOpen(opening: Int, closing: Int): Boolean {
-        val now = Calendar.HOUR_OF_DAY * 60 + Calendar.MINUTE
+        val cal = Calendar.getInstance()
+        val now = cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE)
         if (now in (opening / 60)..(closing / 60)) {
             return true
         }
-        return false
+        return true
     }
 
+    fun GoogleMap?.showCurvedPolyline(p1: LatLng, p2: LatLng, k: Double = 0.5, context: Context) {
+        //Calculate distance and heading between two points
+        val d = SphericalUtil.computeDistanceBetween(p1, p2)
+        val h = SphericalUtil.computeHeading(p1, p2)
+
+        //Midpoint position
+        val p = SphericalUtil.computeOffset(p1, d * 0.5, h)
+
+        //Apply some mathematics to calculate position of the circle center
+        val x = (1 - k * k) * d * 0.5 / (2 * k)
+        val r = (1 + k * k) * d * 0.5 / (2 * k)
+        val c = SphericalUtil.computeOffset(p, x, h + 90.0)
+
+        //Polyline options
+        val options = PolylineOptions()
+
+        //Calculate heading between circle center and two points
+        val h1 = SphericalUtil.computeHeading(c, p1)
+        val h2 = SphericalUtil.computeHeading(c, p2)
+
+        //Calculate positions of points on circle border and add them to polyline options
+        val numPoints = 100
+        val step = (h2 - h1) / numPoints
+        for (i in 0 until numPoints) {
+            val pi = SphericalUtil.computeOffset(c, r, h1 + i * step)
+            options.add(pi)
+        }
+
+        //Draw polyline
+        this?.addPolyline(options.width(10f)
+            .color(ContextCompat.getColor(context, R.color.red_a30))
+            .geodesic(false))
+    }
+
+    const val FORMAT_DD_MMM_YYYY_HH_MM_SS: String = "dd MMM yyyy HH:mm:ss"
     const val DEFAULT_SERVER_TIME_FORMAT: String = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
 }

@@ -12,8 +12,7 @@ import androidx.core.text.HtmlCompat.FROM_HTML_MODE_COMPACT
 import androidx.navigation.fragment.findNavController
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentAuthBottomSheetBinding
-import com.vroomvroom.android.domain.db.user.Phone
-import com.vroomvroom.android.domain.db.user.UserEntity
+import com.vroomvroom.android.data.model.user.LocationEntity
 import com.vroomvroom.android.utils.ClickType
 import com.vroomvroom.android.view.state.ViewState
 import com.vroomvroom.android.view.ui.base.BaseBottomSheetFragment
@@ -29,6 +28,7 @@ class AuthBottomSheetFragment : BaseBottomSheetFragment<FragmentAuthBottomSheetB
 
     private lateinit var getSignInWithGoogle : ActivityResultLauncher<Intent>
     private var currentLoginChoice = SignIntType.GOOGLE
+    private var currentLocation: LocationEntity? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -36,6 +36,7 @@ class AuthBottomSheetFragment : BaseBottomSheetFragment<FragmentAuthBottomSheetB
         binding.textView8.movementMethod = LinkMovementMethod.getInstance()
         binding.textView8.text = Html.fromHtml(getString(R.string.terms_and_policy), FROM_HTML_MODE_COMPACT)
 
+        observeLocation()
         observeToken()
         observeRegisterUser()
         observeNewLoggedInUser()
@@ -44,7 +45,7 @@ class AuthBottomSheetFragment : BaseBottomSheetFragment<FragmentAuthBottomSheetB
             ActivityResultContracts.StartActivityForResult()
         ) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-                authViewModel.taskGoogleSignIn(result.data)
+                authViewModel.googleSignIn(result.data)
             }
         }
 
@@ -53,15 +54,11 @@ class AuthBottomSheetFragment : BaseBottomSheetFragment<FragmentAuthBottomSheetB
         }
 
         binding.btnGoogle.setOnClickListener {
-            isCancelable = false
-            binding.progressIndicator.visibility = View.VISIBLE
             getSignInWithGoogle.launch(authViewModel.signInIntent)
             currentLoginChoice = SignIntType.GOOGLE
         }
 
         binding.btnFacebook.setOnClickListener {
-            isCancelable = false
-            binding.progressIndicator.visibility = View.VISIBLE
             authViewModel.facebookLogIn(this)
             currentLoginChoice = SignIntType.FACEBOOK
         }
@@ -71,34 +68,30 @@ class AuthBottomSheetFragment : BaseBottomSheetFragment<FragmentAuthBottomSheetB
         authViewModel.onActivityResult(requestCode, resultCode, data)
     }
 
+    private fun observeLocation() {
+        locationViewModel.userLocation.observe(viewLifecycleOwner) { locations ->
+            currentLocation = locations?.firstOrNull { it.currentUse }
+        }
+    }
+
     private fun observeToken() {
         authViewModel.token.observe(viewLifecycleOwner) { token ->
             if (token != null) {
-                authViewModel.register()
+                currentLocation?.let { authViewModel.register(it) }
             }
         }
     }
 
     private fun observeRegisterUser() {
-        authViewModel.user.observe(viewLifecycleOwner) { response ->
+        authViewModel.isRegistered.observe(viewLifecycleOwner) { response ->
             when (response) {
-                is ViewState.Loading -> {
-                    binding.progressIndicator.visibility = View.VISIBLE
-                }
+                is ViewState.Loading -> Unit
                 is ViewState.Success -> {
-                    val result = response.data.register
-                    result?.let {
-                        val user = UserEntity(
-                            it.id,
-                            it.name,
-                            it.email,
-                            Phone(it.phone?.number, it.phone?.verified ?: false)
-                        )
-                        authViewModel.insertUserRecord(user)
-                    }
+                    loadingDialog.dismiss()
                     findNavController().popBackStack()
                 }
                 is ViewState.Error -> {
+                    loadingDialog.dismiss()
                     dialog.show(
                         getString(R.string.network_error),
                         getString(R.string.unsaved_error),
@@ -109,7 +102,8 @@ class AuthBottomSheetFragment : BaseBottomSheetFragment<FragmentAuthBottomSheetB
                     ) { type ->
                         when (type) {
                             ClickType.POSITIVE -> {
-                                authViewModel.register()
+                                loadingDialog.show(getString(R.string.loading))
+                                currentLocation?.let { authViewModel.register(it) }
                                 dialog.dismiss()
                             }
                             ClickType.NEGATIVE -> Unit
@@ -123,12 +117,13 @@ class AuthBottomSheetFragment : BaseBottomSheetFragment<FragmentAuthBottomSheetB
     private fun observeNewLoggedInUser() {
         authViewModel.newLoggedInUser.observe(viewLifecycleOwner) { result ->
             when (result) {
-                is ViewState.Loading -> Unit
+                is ViewState.Loading -> {
+                    loadingDialog.show(getString(R.string.loading))
+                }
                 is ViewState.Success -> {
                     authViewModel.saveIdToken()
                 }
                 is ViewState.Error -> {
-                    binding.progressIndicator.visibility = View.GONE
                     dialog.show(
                         getString(R.string.auth_failed),
                         getString(R.string.network_error_message),
@@ -137,7 +132,6 @@ class AuthBottomSheetFragment : BaseBottomSheetFragment<FragmentAuthBottomSheetB
                     ) { type ->
                         when (type) {
                             ClickType.POSITIVE -> {
-                                binding.progressIndicator.visibility = View.VISIBLE
                                 when (currentLoginChoice) {
                                     SignIntType.GOOGLE -> {
                                         getSignInWithGoogle.launch(authViewModel.signInIntent)

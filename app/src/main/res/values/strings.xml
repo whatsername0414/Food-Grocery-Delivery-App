@@ -8,7 +8,8 @@
     <string name="maps_alert_dialog_cancel">Cancel</string>
     <string name="maps_alert_dialog_understood">Understood</string>
     <string name="maps_alert_dialog_proceed">Proceed</string>
-    <string name="placed_order_message">Order placed successfully</string>
+    <string name="placed_order_title">Success!</string>
+    <string name="placed_order_message">You have successfully placed order!</string>
     <string name="creating_dialog_message">Creating order…</string>
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyDCtiSPULjYWEZ5Ly9bB1G3WRQrg6ubeDI</string>
     <string name="facebook_app_id">593283722014887</string>
@@ -23,13 +24,14 @@
     <string name="street_not_provided">Street not provided</string>
     <string name="city_not_provided">City not provided</string>
     <string name="delivery">Delivery</string>
+    <string name="quantity">Quantity</string>
     <string name="cart">Cart</string>
     <string name="clear_cart">Clear Cart</string>
     <string name="proceed">Proceed</string>
     <string name="clear_cart_message">You have cart from different store.\nIf you continue your cart will be removed.</string>
     <string name="retry">Retry</string>
     <string name="cart_fab_detail">Item %1$d (₱%2$s)</string>
-    <string name="closed_alert_label">Store is closed. Please comeback \ntomorrow (%1$s am)</string>
+    <string name="closed_alert_label">Store is closed. Please comeback \ntomorrow (%1$s)</string>
     <string name="unsaved_error">Unable to save your information. Please try again</string>
     <string name="we_had_some_trouble_connecting_nbut_should_have_you_eat_shortly">We had some trouble connecting,\nbut should have you eat shortly.</string>
     <string name="sorry_for_the_delay">Sorry for the delay</string>
@@ -49,14 +51,14 @@
     <string name="add_a_payment_method">Add a payment method</string>
     <string name="checkout">Checkout</string>
     <string name="terms_and_policy">By continuing, you agree to our &lt;a href=\"https://vroomvroom.store/en/content/termsandconditions\"&gt;Terms and Conditions&lt;/a&gt; and &lt;a href=\"https://vroomvroom.store/en/page/admin/privacypolicy\"&gt;Privacy Policy&lt;/a&gt;.</string>
-    <string name="already_have_an_account_login">Already have an account? Login</string>
+    <string name="already_have_an_account_login">Already have an account? <font fgcolor="#A30000"><u>Log In</u></font></string>
     <string name="register">Register</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="password">Password</string>
     <string name="email_address">Email Address</string>
     <string name="login">Login</string>
     <string name="forgot_password">Forgot password?</string>
-    <string name="don_t_have_an_account_signup">Don\'t have an account? Signup</string>
+    <string name="don_t_have_an_account_signup">Don\'t have an account? <font fgcolor="#A30000"><u>Sign Up</u></font></string>
     <string name="reset_password">Reset Password</string>
     <string name="reset_email">Send reset email</string>
     <string name="cash_on_delivery">Cash On Delivery</string>
@@ -70,7 +72,7 @@
     <string name="generate_otp">Generate OTP</string>
     <string name="enter_the_otp_sent_to">We have sent you an OTP for\nphone number verification.</string>
     <string name="_041499">041499</string>
-    <string name="didn_t_receive_the_otp_resend">Didn\'t receive the OTP? Resend</string>
+    <string name="didn_t_receive_the_otp_resend">Didn\'t receive the OTP? <font fgcolor="#A30000"><u>Resend</u></font></string>
     <string name="verify">Verify OTP</string>
     <string name="enter_otp">Enter OTP</string>
     <string name="_4_8_12_rating">4.8 (12 rating)</string>
@@ -95,9 +97,11 @@
     <string name="profile">Profile</string>
     <string name="to_receive">To Receive</string>
     <string name="creating_order">Creating order…</string>
+    <string name="loading">Loading…</string>
     <string name="continue_shopping">Continue Shopping</string>
     <string name="dismiss">Dismiss</string>
     <string name="view_all">View All</string>
+    <string name="view_order">View Order</string>
     <string name="one">1</string>
     <string name="okay">Okay</string>
     <string name="ok">OK</string>
@@ -118,7 +122,7 @@
     <string name="favorites">Favorites</string>
     <string name="about">About</string>
     <string name="support">Support</string>
-    <string name="logout">Logout</string>
+    <string name="logout">Log Out</string>
     <string name="name">Name</string>
     <string name="mobile_number">Mobile Number</string>
     <string name="verified">Verified</string>
@@ -129,7 +133,7 @@
     <string name="remove">Remove</string>
     <string name="cancellation_reason">Cancellation Reason</string>
     <string name="change_payment_method">Change payment method</string>
-    <string name="i_want_to_change_my_information">I want to change my information</string>
+    <string name="change_information">I want to change my information</string>
     <string name="change_combine_order">Change/combine order</string>
     <string name="duplicate_order">Duplicate order</string>
     <string name="i_change_my_mind">I change my mind</string>
@@ -147,6 +151,7 @@
     <string name="share_your_thoughts">Share us your thoughts</string>
     <string name="submit">Submit</string>
     <string name="search_for_shop_restaurant">Search for shops &amp; restaurants</string>
+    <string name="search_location">Search location</string>
     <string name="all_categories">All Categories</string>
     <string name="terms_and_conditions">Terms &amp; Conditions</string>
     <string name="about_us">About Us</string>
@@ -158,10 +163,10 @@
     <string name="general_error_message">Something went wrong</string>
     <string name="network_error">Network Error</string>
     <string name="unable_to_load_data">Unable to load data</string>
-    <string name="verification_error">Verification Error</string>
+    <string name="verification_failed">Verification Failed</string>
     <string name="invalid_email_address">Invalid Email Address</string>
     <string name="invalid_password">Passwords don\'t match</string>
-    <string name="login_error_message">We can\'t seem to find your account</string>
+    <string name="login_failed">Login Failed</string>
     <string name="network_error_message">Please check your internet connection and try again.</string>
     <string name="verification_error_message">The code you entered is incorrect. Please try again</string>
     <string name="about_us_link">https://vroomvroom.store/en/content/aboutus</string>
@@ -170,7 +175,7 @@
     <string name="contact_us_link">https://vroomvroom.store/en/content/contactus</string>
     <string name="faqs_link">https://vroomvroom.store/en/content/Faqs</string>
     <string name="prompt">Prompt</string>
-    <string name="logout_confirmation_message">Are you sure you want \nto logout?</string>
+    <string name="logout_confirmation_message">Are you sure you want to logout?\n\nThis will delete all your local data including cart and address.</string>
     <string name="no">No</string>
     <string name="yes">Yes</string>
     <string name="recent_searches">Recent Searches</string>
@@ -179,6 +184,7 @@
     <string name="opening_until">Open until %s</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
+    <string name="closed">Closed</string>
     <string name="time">%s - %s</string>
     <string name="search_for">Search for \"%s\"</string>
     <string name="search_minimum">Search with minimum 3 characters</string>
@@ -188,8 +194,18 @@
     <string name="cart_delete_button">Delete</string>
     <string name="cart_delete_message">Are you sure you want to remove %s from cart?</string>
     <string name="peso">₱ %s</string>
+    <string name="required"><font fgcolor="#A30000">*&#160;</font>Required</string>
     <string name="placed_on">Placed on: %s</string>
     <string name="invalid_phone_number">Invalid phone number</string>
-    <string name="cancel_successful">Cancel Successful</string>
+    <string name="cancelled_title">Cancelled</string>
+    <string name="cancelled_message">You have successfully cancelled your order.</string>
+    <string name="updated_address_title">Address Updated</string>
+    <string name="updated_address_message">Order\'s delivery address has been updated.</string>
+    <string name="empty_name">Please input your name</string>
+    <string name="congratulations">Congratulations!</string>
+    <string name="verified_phone_message">You have successfully verified your mobile number!</string>
+    <string name="confirm_number">Please confirm if the number is correct</string>
+    <string name="change">Change</string>
+    <string name="empty_number_message">Please input phone number</string>
     <string name="mapbox_access_token">sk.eyJ1Ijoid2g0dHNlcm5hbWUiLCJhIjoiY2wyZnRmM3ZsMGIwZzNjcnp3Y3o1ZTJnayJ9.q_8JuLr0P80Ycz3Gs-2Zfg</string>
 </resources>

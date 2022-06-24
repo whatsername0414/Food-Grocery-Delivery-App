@@ -9,7 +9,6 @@ import com.google.android.gms.common.api.Status
 import com.vroomvroom.android.view.state.ViewState
 import javax.inject.Inject
 
-
 class SmsBroadcastReceiver @Inject constructor(): BroadcastReceiver() {
 
     var smsBroadcastReceiverListener: SmsBroadcastReceiverListener? = null

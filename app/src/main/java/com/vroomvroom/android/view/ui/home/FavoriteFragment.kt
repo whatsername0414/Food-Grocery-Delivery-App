@@ -6,7 +6,6 @@ import android.view.animation.Animation
 import androidx.navigation.fragment.findNavController
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentFavoriteBinding
-import com.vroomvroom.android.utils.Constants.FAVORITES
 import com.vroomvroom.android.view.state.ViewState
 import com.vroomvroom.android.view.ui.base.BaseFragment
 import com.vroomvroom.android.view.ui.home.adapter.MerchantAdapter
@@ -29,7 +28,7 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(
         binding.appBarLayout.toolbar.setupToolbar()
 
         merchantAdapter.apply {
-            setUser(authViewModel.userRecord.value)
+            setUser(authViewModel.user.value)
             binding.favoriteRv.adapter = this
         }
 
@@ -41,14 +40,15 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(
 
         merchantAdapter.apply {
             onFavoriteClicked = { merchant, position, direction ->
-                homeViewModel.favorite(merchant.id, direction)
+                homeViewModel.updateFavorite(merchant.id)
                 observeFavorite(this, merchant, position, direction)
+                mainActivityViewModel.shouldFetchMerchants = true
             }
         }
     }
 
     private fun observeFavoriteMerchant() {
-        mainViewModel.merchants.observe(viewLifecycleOwner) { response ->
+        mainViewModel.favorites.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is ViewState.Loading -> {
                     binding.favoriteRv.visibility = View.GONE
@@ -57,7 +57,7 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(
                     binding.favoriteShimmerLayout.startShimmer()
                 }
                 is ViewState.Success -> {
-                    val merchants = response.data.data
+                    val merchants = response.data
                     if (merchants.isEmpty()) {
                         binding.commonNoticeLayout.showNotice(
                             R.drawable.ic_favorites,
@@ -80,7 +80,7 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(
                     binding.favoriteShimmerLayout.stopShimmer()
                     binding.favoriteRv.visibility = View.GONE
                     binding.commonNoticeLayout.showNetworkError {
-                        mainViewModel.queryMerchants(FAVORITES, null)
+                        mainViewModel.getFavorites()
                     }
                 }
             }
@@ -89,12 +89,16 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(
 
     override fun onResume() {
         super.onResume()
-        view?.animation?.setAnimationListener(object : Animation.AnimationListener {
-            override fun onAnimationStart(animation: Animation?) {}
-            override fun onAnimationEnd(animation: Animation?) {
-                mainViewModel.queryMerchants(FAVORITES, null)
-            }
-            override fun onAnimationRepeat(animation: Animation?) {}
-        })
+        if (view?.animation != null) {
+            view?.animation?.setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationStart(animation: Animation?) {}
+                override fun onAnimationEnd(animation: Animation?) {
+                    mainViewModel.getFavorites()
+                }
+                override fun onAnimationRepeat(animation: Animation?) {}
+            })
+        } else {
+            mainViewModel.getFavorites()
+        }
     }
 }

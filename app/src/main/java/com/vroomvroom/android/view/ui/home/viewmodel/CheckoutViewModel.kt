@@ -4,35 +4,41 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vroomvroom.android.CreateOrderMutation
-import com.vroomvroom.android.UpdateUserLocationMutation
-import com.vroomvroom.android.domain.db.user.UserLocationEntity
-import com.vroomvroom.android.repository.remote.GraphQLRepository
-import com.vroomvroom.android.type.OrderInput
+import com.vroomvroom.android.data.model.cart.CartItemWithOptions
+import com.vroomvroom.android.data.model.order.Order
+import com.vroomvroom.android.data.model.order.Payment
+import com.vroomvroom.android.data.model.user.LocationEntity
+import com.vroomvroom.android.repository.order.OrderRepository
 import com.vroomvroom.android.view.state.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@ExperimentalCoroutinesApi
 @HiltViewModel
 class CheckoutViewModel @Inject constructor(
-    private val graphQLRepository: GraphQLRepository
+    private val orderRepository: OrderRepository
 ) : ViewModel() {
 
-    private val _order by lazy { MutableLiveData<ViewState<CreateOrderMutation.Data>>() }
-    val order: LiveData<ViewState<CreateOrderMutation.Data>>
+    private val _order by lazy { MutableLiveData<ViewState<String>>() }
+    val order: LiveData<ViewState<String>>
         get() = _order
     val isLocationConfirmed by lazy { MutableLiveData(false) }
     var subtotal = 0.0
     var isComputed = false
 
-    fun mutationCreateOrder(orderInput: OrderInput) {
+    fun createOrder(
+        merchantId: String,
+        payment: Payment,
+        deliveryFee: Double,
+        totalPrice: Double,
+        locationEntity: LocationEntity,
+        cartItems: List<CartItemWithOptions>
+    ) {
         _order.postValue(ViewState.Loading)
         viewModelScope.launch(Dispatchers.IO) {
-            val response = graphQLRepository.mutationCreateOrder(orderInput)
+            val response = orderRepository.createOrders(
+                merchantId, payment, deliveryFee, totalPrice, locationEntity, cartItems)
             response?.let { data ->
                 when (data) {
                     is ViewState.Success -> {

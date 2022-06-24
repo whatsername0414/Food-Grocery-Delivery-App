@@ -4,22 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
     tools:context=".view.ui.auth.CodeVerificationFragment">
 
     <include
         android:id="@+id/appBarLayout"
         layout="@layout/item_appbar_layout"/>
-
-    <com.google.android.material.progressindicator.LinearProgressIndicator
-        android:id="@+id/otp_verification_progress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:indeterminateTint="@color/red_a30"
-        android:elevation="18dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -81,11 +71,12 @@
             android:background="@drawable/bg_gray_f2f_rounded_100dp" />
 
         <TextView
+            android:id="@+id/resend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:text="@string/didn_t_receive_the_otp_resend"
-            android:textColor="@color/red_a30" />
+            android:textColor="@color/black" />
 
         <android.widget.Button
             android:id="@+id/btn_verify_otp"

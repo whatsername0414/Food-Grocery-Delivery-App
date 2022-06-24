@@ -24,38 +24,33 @@ class NotificationManager @Inject constructor(
     private val builder: NotificationCompat.Builder
     ) {
 
-    fun createNotification(status: String, activity: Class<HomeActivity>) {
+    fun createNotification(status: String) {
         val notificationId = (0..1000).random()
         when (status) {
             CONFIRMED -> {
                 setupNotification(
                     CONFIRMED,
                     context.getString(R.string.confirmed_notification_content),
-                    notificationId,
-                    activity
+                    notificationId
                 )
             }
             TO_RECEIVE -> {
                 setupNotification(
                     TO_RECEIVE,
                     context.getString(R.string.to_receive_notification_content),
-                    notificationId,
-                    activity
+                    notificationId
                 )
             }
         }
 
     }
 
-    private fun setupNotification(title: String,
-                                  content: String,
-                                  id: Int,
-                                  activity: Class<HomeActivity>) {
+    private fun setupNotification(title: String, content: String, id: Int) {
         val bundle = bundleOf("status" to title)
         val notification = builder
             .setContentTitle(title)
             .setContentText(content)
-            .setContentIntent(initPendingIntent(bundle, activity))
+            .setContentIntent(setupPendingIntent(bundle))
             .setAutoCancel(true)
             .setSmallIcon(R.drawable.ic_logo)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
@@ -79,11 +74,11 @@ class NotificationManager @Inject constructor(
         }
     }
 
-    private fun initPendingIntent(bundle: Bundle, activity: Class<HomeActivity>): PendingIntent {
+    private fun setupPendingIntent(bundle: Bundle): PendingIntent {
         return NavDeepLinkBuilder(context)
             .setGraph(R.navigation.nav_main)
             .setDestination(R.id.ordersFragment)
-            .setComponentName(activity)
+            .setComponentName(HomeActivity::class.java)
             .setArguments(bundle)
             .createPendingIntent()
     }

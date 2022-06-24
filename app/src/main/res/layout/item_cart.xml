@@ -6,7 +6,7 @@
     <data>
         <variable
             name="cartItemWithChoice"
-            type="com.vroomvroom.android.domain.db.cart.CartItemWithChoice" />
+            type="com.vroomvroom.android.data.model.cart.CartItemWithOptions" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -49,7 +49,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_8"
                     android:layout_marginHorizontal="@dimen/margin_small"
-                    android:text="@{cartItemWithChoice.cartItemEntity.name}"
+                    android:text="@{cartItemWithChoice.cartItem.name}"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                     android:textColor="@color/black"
                     android:textSize="16sp"
@@ -104,7 +104,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="@{Integer.valueOf(cartItemWithChoice.cartItemEntity.quantity).toString()}"
+                    android:text="@{Integer.valueOf(cartItemWithChoice.cartItem.quantity).toString()}"
                     android:textColor="@color/black"
                     android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="@+id/decreaseQuantity"

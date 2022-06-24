@@ -16,7 +16,8 @@ import com.vroomvroom.android.view.ui.auth.viewmodel.AuthViewModel
 import com.vroomvroom.android.view.ui.home.viewmodel.HomeViewModel
 import com.vroomvroom.android.view.ui.location.viewmodel.LocationViewModel
 import com.vroomvroom.android.view.ui.orders.viewmodel.OrdersViewModel
-import com.vroomvroom.android.view.ui.widget.CommonAlertDialog
+import com.vroomvroom.android.view.ui.common.CommonAlertDialog
+import com.vroomvroom.android.view.ui.common.LoadingDialog
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.lang.IllegalArgumentException
 
@@ -25,15 +26,16 @@ abstract class BaseBottomSheetFragment<VB: ViewBinding> (
     private val bindingInflater: (inflater: LayoutInflater) -> VB
 ) : BottomSheetDialogFragment() {
 
-    val locationViewModel by viewModels<LocationViewModel>()
     val mainActivityViewModel by activityViewModels<MainViewModel>()
-    val authViewModel by activityViewModels<AuthViewModel>()
 
+    val locationViewModel by viewModels<LocationViewModel>()
+    val authViewModel by viewModels<AuthViewModel>()
     val accountViewModel by viewModels<AccountViewModel>()
     val ordersViewModel by viewModels<OrdersViewModel>()
     val homeViewModel by viewModels<HomeViewModel>()
 
     val dialog by lazy { CommonAlertDialog(requireActivity()) }
+    val loadingDialog by lazy { LoadingDialog(requireActivity()) }
 
     private var _binding: VB? = null
     val binding: VB

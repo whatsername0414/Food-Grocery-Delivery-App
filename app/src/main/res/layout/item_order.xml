@@ -6,7 +6,7 @@
     <data>
         <variable
             name="order"
-            type="com.vroomvroom.android.domain.model.order.OrderResponse" />
+            type="com.vroomvroom.android.data.model.order.OrderDto" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

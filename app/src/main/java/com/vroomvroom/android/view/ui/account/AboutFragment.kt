@@ -2,10 +2,10 @@ package com.vroomvroom.android.view.ui.account
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentAboutBinding
-import com.vroomvroom.android.utils.Utils.safeNavigate
 import com.vroomvroom.android.view.ui.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -56,8 +56,11 @@ class AboutFragment : BaseFragment<FragmentAboutBinding>(
     }
 
     private fun navigateOnClick(title: String, url: String) {
-        navController.safeNavigate(
-            AboutFragmentDirections.actionAboutFragmentToWebViewFragment(title, url)
+        val bundle = bundleOf(
+            "title" to title,
+            "url" to url
         )
+
+        navController.navigate(R.id.action_aboutFragment_to_webViewFragment, bundle)
     }
 }

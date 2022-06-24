@@ -5,23 +5,24 @@ import android.location.Address
 import android.location.Geocoder
 import android.location.Location
 import android.os.Looper
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.maps.model.LatLng
-import com.vroomvroom.android.domain.db.user.UserLocationEntity
+import com.vroomvroom.android.data.model.user.LocationEntity
 import com.vroomvroom.android.repository.local.RoomRepository
 import com.vroomvroom.android.repository.services.LocationRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import java.io.IOException
 import javax.inject.Inject
 
-@ExperimentalCoroutinesApi
 @HiltViewModel
 class LocationViewModel @Inject constructor(
     private val geocoder: Geocoder,
@@ -42,7 +43,7 @@ class LocationViewModel @Inject constructor(
     val currentLocation by lazy { MutableLiveData<Location>() }
     val userLocation = roomRepository.getUserLocation()
 
-    var clickedAddress: UserLocationEntity? = null
+    var clickedAddress: LocationEntity? = null
 
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
@@ -97,26 +98,30 @@ class LocationViewModel @Inject constructor(
         locationRepository.getDirection(_coordinates)
     }
 
-    fun insertLocation(userLocationEntity: UserLocationEntity) {
-        updateLocations()
+    fun insertLocation(locationEntity: LocationEntity) {
         viewModelScope.launch(Dispatchers.IO) {
-            roomRepository.insertLocation(userLocationEntity)
+            if ((userLocation.value?.size ?: 0) > 0) {
+                val res = roomRepository.updateLocations()
+                if (res > 0) {
+                    roomRepository.insertLocation(locationEntity)
+                }
+            } else {
+                roomRepository.insertLocation(locationEntity)
+            }
         }
     }
-    fun updateLocation(userLocationEntity: UserLocationEntity) {
-        updateLocations()
+    fun updateLocation(locationEntity: LocationEntity) {
         viewModelScope.launch(Dispatchers.IO) {
-            roomRepository.updateLocation(userLocationEntity)
+            val res = roomRepository.updateLocations()
+            if (res > 0) {
+                roomRepository.updateLocation(locationEntity)
+            }
         }
     }
-    private fun updateLocations() {
+
+    fun deleteLocation(locationEntity: LocationEntity) {
         viewModelScope.launch(Dispatchers.IO) {
-            roomRepository.updateLocations()
-        }
-    }
-    fun deleteLocation(userLocationEntity: UserLocationEntity) {
-        viewModelScope.launch(Dispatchers.IO) {
-            roomRepository.deleteLocation(userLocationEntity)
+            roomRepository.deleteLocation(locationEntity)
         }
     }
     fun deleteAllAddress() {

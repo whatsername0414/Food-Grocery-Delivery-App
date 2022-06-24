@@ -6,7 +6,7 @@
     <data>
         <variable
             name="user"
-            type="com.vroomvroom.android.domain.db.user.UserEntity" />
+            type="com.vroomvroom.android.data.model.user.UserEntity" />
         <import type="android.view.View"/>
     </data>
 

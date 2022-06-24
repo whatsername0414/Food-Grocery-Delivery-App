@@ -20,7 +20,6 @@ class BrowseFragment : BaseFragment<FragmentBrowseBinding>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        categoryAdapter.itemViewType = 1
         binding.categoryRv.adapter = categoryAdapter
 
         if (mainViewModel.categories.value == null) {

@@ -1,18 +1,15 @@
 package com.vroomvroom.android.di
 
 import android.content.Context
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.room.Room
-import com.apollographql.apollo.ApolloClient
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.vroomvroom.android.BuildConfig
-import com.vroomvroom.android.domain.db.Database
+import com.vroomvroom.android.data.db.Database
 import com.vroomvroom.android.repository.local.UserPreferences
 import com.vroomvroom.android.utils.Constants.CART_ITEM_TABLE
 import com.vroomvroom.android.utils.Constants.CHANNEL_ID
@@ -29,6 +26,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -63,6 +61,8 @@ object RepoModule {
             val request = chain.request().newBuilder()
             if (!token.isNullOrBlank()) {
                 request.addHeader("Authorization", "Bearer $token")
+                    .addHeader("content-type", "application/json")
+                    .addHeader("Connection","close")
             }
             chain.proceed(request.build())
         }
@@ -70,6 +70,8 @@ object RepoModule {
             level = HttpLoggingInterceptor.Level.BODY
         }
         return OkHttpClient.Builder()
+            .readTimeout(30, TimeUnit.SECONDS)
+            .connectTimeout(30, TimeUnit.SECONDS)
             .addInterceptor(logger)
             .addInterceptor(interceptor)
             .build()
@@ -79,18 +81,9 @@ object RepoModule {
     @Singleton
     fun getRetrofitInstance(httpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("http://192.168.1.3:5000/api/v1/")
+            .baseUrl("http://192.168.1.7:5000/api/v1/")
             .client(httpClient)
             .addConverterFactory(GsonConverterFactory.create())
-            .build()
-    }
-
-    @Singleton
-    @Provides
-    fun provideApolloClient(okHttpClient: OkHttpClient): ApolloClient {
-        return ApolloClient.builder()
-            .serverUrl("http://192.168.1.3:8000/")
-            .okHttpClient(okHttpClient)
             .build()
     }
 

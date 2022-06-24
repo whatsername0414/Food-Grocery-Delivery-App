@@ -4,12 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vroomvroom.android.MerchantQuery
-import com.vroomvroom.android.domain.model.merchant.Category
-import com.vroomvroom.android.domain.model.merchant.Merchant
-import com.vroomvroom.android.domain.model.merchant.Merchants
+import com.vroomvroom.android.data.model.merchant.Category
+import com.vroomvroom.android.data.model.merchant.Merchant
 import com.vroomvroom.android.repository.merchant.MerchantRepository
-import com.vroomvroom.android.repository.remote.GraphQLRepository
 import com.vroomvroom.android.utils.Constants.CASH_ON_DELIVERY
 import com.vroomvroom.android.view.state.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,20 +15,22 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@ExperimentalCoroutinesApi
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val merchantRepository: MerchantRepository,
-    private val graphQLRepository: GraphQLRepository
 ): ViewModel() {
 
     private val _categories by lazy { MutableLiveData<ViewState<List<Category>>>() }
     val categories: LiveData<ViewState<List<Category>>>
         get() = _categories
 
-    private val _merchants by lazy { MutableLiveData<ViewState<Merchants>>() }
-    val merchants: LiveData<ViewState<Merchants>>
+    private val _merchants by lazy { MutableLiveData<ViewState<List<Merchant>>>() }
+    val merchants: LiveData<ViewState<List<Merchant>>>
         get() = _merchants
+
+    private val _favorites by lazy { MutableLiveData<ViewState<List<Merchant>>>() }
+    val favorites: LiveData<ViewState<List<Merchant>>>
+        get() = _favorites
 
     lateinit var merchant: Merchant
     val paymentMethod by lazy { MutableLiveData(CASH_ON_DELIVERY) }
@@ -39,7 +38,7 @@ class MainViewModel @Inject constructor(
     val shouldBackToTop by lazy { MutableLiveData(false) }
     val isRefreshed by lazy { MutableLiveData(false) }
     val reviewed by lazy { MutableLiveData(false) }
-    val favoritesChanges = mutableMapOf<Int, Merchant>()
+    var shouldFetchMerchants = false
     var isBottomBarVisible = false
     var prevDestination: Int? = null
 
@@ -83,20 +82,20 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun queryMerchants(query: String, filter: String?) {
-        _merchants.postValue(ViewState.Loading)
+    fun getFavorites() {
+        _favorites.postValue(ViewState.Loading)
         viewModelScope.launch(Dispatchers.IO) {
-            val response = graphQLRepository.queryMerchants(query, filter)
+            val response = merchantRepository.getFavorites()
             response?.let { data ->
                 when (data) {
                     is ViewState.Success -> {
-                        _merchants.postValue(data)
+                        _favorites.postValue(data)
                     }
                     is ViewState.Error -> {
-                        _merchants.postValue(data)
+                        _favorites.postValue(data)
                     }
                     else -> {
-                        _merchants.postValue(data)
+                        _favorites.postValue(data)
                     }
                 }
             }

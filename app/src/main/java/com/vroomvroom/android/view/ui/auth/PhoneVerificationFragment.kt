@@ -5,6 +5,7 @@ import android.view.View
 import androidx.navigation.fragment.findNavController
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentPhoneVerificationBinding
+import com.vroomvroom.android.utils.Constants
 import com.vroomvroom.android.utils.Utils.hideSoftKeyboard
 import com.vroomvroom.android.view.state.ViewState
 import com.vroomvroom.android.view.ui.base.BaseFragment
@@ -17,47 +18,63 @@ class PhoneVerificationFragment : BaseFragment<FragmentPhoneVerificationBinding>
     FragmentPhoneVerificationBinding::inflate
 ) {
 
-    private var isNavigated = false
+    private var number: String? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        navController = findNavController()
+        val currentBackStackEntry = navController.currentBackStackEntry
+        val savedStateHandle = currentBackStackEntry?.savedStateHandle
+        savedStateHandle?.getLiveData<Boolean>(Constants.SUCCESS)
+            ?.observe(currentBackStackEntry) { isCancelled ->
+                if (isCancelled) navController.popBackStack()
+            }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.phoneVerificationProgress.visibility = View.GONE
 
-        navController = findNavController()
         binding.appBarLayout.toolbar.setupToolbar()
 
         observeOtpGenerateConfirmation()
 
         binding.btnGetOtp.setOnClickListener {
             requireActivity().hideSoftKeyboard()
-            val editTextValue = binding.phoneNumberEditTxt.text.toString()
-            val number = "+63${editTextValue}"
-            authViewModel.mutationVerifyMobileNumber(number)
-            authViewModel.registerBroadcastReceiver()
+            val editTextValue = binding.phoneNumberEditTxt.text
+            if (editTextValue.isNullOrBlank()) {
+                showShortToast(getString(R.string.empty_number_message))
+                return@setOnClickListener
+            }
+            number = "+63${editTextValue}"
+            authViewModel.registerPhoneNumber(number.orEmpty())
         }
     }
 
     private fun observeOtpGenerateConfirmation() {
-        authViewModel.otpGenerateConfirmation.observe(viewLifecycleOwner) { response ->
+        authViewModel.isOtpSent.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is ViewState.Loading -> {
-                    binding.phoneVerificationProgress.visibility = View.VISIBLE
+                    loadingDialog.show(getString(R.string.loading))
                     binding.btnGetOtp.isEnabled = false
                 }
                 is ViewState.Success -> {
-                    binding.phoneVerificationProgress.visibility = View.GONE
+                    loadingDialog.dismiss()
                     binding.btnGetOtp.isEnabled = true
-                    isNavigated = true
-                    if (!isNavigated) {
-                        navController.navigate(R.id.action_phoneVerificationFragment_to_codeVerificationFragment)
-                    }
+                    authViewModel.resetOtpLiveData()
+                    navController.navigate(PhoneVerificationFragmentDirections.
+                    actionPhoneVerificationFragmentToCodeVerificationFragment(number.orEmpty()))
                 }
                 is ViewState.Error -> {
-                    binding.phoneVerificationProgress.visibility = View.GONE
+                    loadingDialog.dismiss()
                     binding.btnGetOtp.isEnabled = true
                     showShortToast(R.string.invalid_phone_number)
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        authViewModel.resetPhoneRegistration()
     }
 }

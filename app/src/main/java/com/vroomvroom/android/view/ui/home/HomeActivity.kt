@@ -2,7 +2,7 @@ package com.vroomvroom.android.view.ui.home
 
 import android.content.IntentFilter
 import android.os.Bundle
-import android.view.MenuItem
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -10,10 +10,11 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.gms.auth.api.phone.SmsRetriever
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.messaging.FirebaseMessaging
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.ActivityHomeBinding
 import com.vroomvroom.android.view.ui.auth.viewmodel.AuthViewModel
@@ -44,6 +45,19 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FirebaseMessaging.getInstance().subscribeToTopic("TopicName")
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w("HomeActivity", "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+
+            // Get new FCM registration token
+            val token = task.result
+
+            // Log and toast
+            Log.d("HomeActivity", token)
+        })
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
         bottomNavigationView = binding.bottomNavigationView
