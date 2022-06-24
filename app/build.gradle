@@ -62,7 +62,7 @@ dependencies {
 
     implementation 'com.google.android.gms:play-services-auth:20.2.0'
     implementation 'com.google.android.gms:play-services-auth-api-phone:18.0.1'
-    implementation 'com.google.android.gms:play-services-location:19.0.1'
+    implementation 'com.google.android.gms:play-services-location:20.0.0'
     implementation 'com.google.android.gms:play-services-maps:18.0.2'
     implementation 'com.google.firebase:firebase-messaging:23.0.5'
 
@@ -74,9 +74,9 @@ dependencies {
     kapt 'com.google.dagger:hilt-compiler:2.42'
     annotationProcessor 'com.google.dagger:hilt-compiler:2.42'
 
-    implementation "androidx.navigation:navigation-fragment-ktx:2.5.0-rc01"
-    implementation "androidx.navigation:navigation-ui-ktx:2.5.0-rc01"
-    implementation "androidx.navigation:navigation-runtime-ktx:2.5.0-rc01"
+    implementation "androidx.navigation:navigation-fragment-ktx:2.5.0-rc02"
+    implementation "androidx.navigation:navigation-ui-ktx:2.5.0-rc02"
+    implementation "androidx.navigation:navigation-runtime-ktx:2.5.0-rc02"
 
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.1"
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
