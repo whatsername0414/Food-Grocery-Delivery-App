@@ -10,7 +10,7 @@ import com.vroomvroom.android.data.model.cart.CartItemWithOptions
 import com.vroomvroom.android.utils.ClickType
 import com.vroomvroom.android.utils.Utils.safeNavigate
 import com.vroomvroom.android.utils.Utils.timeFormatter
-import com.vroomvroom.android.view.state.ViewState
+import com.vroomvroom.android.view.resource.Resource
 import com.vroomvroom.android.view.ui.base.BaseBottomSheetFragment
 import com.vroomvroom.android.view.ui.home.adapter.CartAdapter
 import com.vroomvroom.android.view.ui.common.CommonAlertDialog
@@ -62,11 +62,11 @@ class CartBottomSheetFragment : BaseBottomSheetFragment<FragmentCartBottomSheetB
     private fun observeMerchant() {
         homeViewModel.merchant.observe(viewLifecycleOwner) { response ->
             when (response) {
-                is ViewState.Loading -> {
+                is Resource.Loading -> {
                     binding.cartProgress.visibility = View.VISIBLE
                     binding.btnCheckOut.isEnabled = false
                 }
-                is ViewState.Success -> {
+                is Resource.Success -> {
                     binding.cartProgress.visibility = View.GONE
                     binding.btnCheckOut.isEnabled = true
                     val merchant = response.data
@@ -89,7 +89,7 @@ class CartBottomSheetFragment : BaseBottomSheetFragment<FragmentCartBottomSheetB
                         }
                     }
                 }
-                is ViewState.Error -> {
+                is Resource.Error -> {
                     binding.cartProgress.visibility = View.GONE
                     binding.btnCheckOut.isEnabled = true
                     dialog.show(
@@ -115,16 +115,13 @@ class CartBottomSheetFragment : BaseBottomSheetFragment<FragmentCartBottomSheetB
     @SuppressLint("SetTextI18n")
     private fun observeRoomCartItem() {
         homeViewModel.cartItem.observe(viewLifecycleOwner) { items ->
-            var subTotal = 0.0
             if (items.isEmpty()) {
                 cartAdapter.submitList(emptyList())
                 binding.cartLayout.visibility = View.GONE
                 binding.emptyCartLayout.visibility = View.VISIBLE
             } else {
                 cartAdapter.submitList(items)
-                items.forEach { item ->
-                    subTotal += item.cartItem.price
-                }
+                val subTotal = items.sumOf { it.cartItem.price }
                 homeViewModel.currentMerchantId = items.first().cartItem.cartMerchant.merchantId
                 binding.merchantName.text = items.first().cartItem.cartMerchant.merchantName
                 binding.subtotalTv.text = "₱${"%.2f".format(subTotal)}"

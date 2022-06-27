@@ -81,7 +81,7 @@ object RepoModule {
     @Singleton
     fun getRetrofitInstance(httpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("http://192.168.1.7:5000/api/v1/")
+            .baseUrl("http://192.168.1.8:5000/api/v1/")
             .client(httpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()

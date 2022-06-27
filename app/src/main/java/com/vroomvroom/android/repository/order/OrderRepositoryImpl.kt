@@ -7,14 +7,14 @@ import com.vroomvroom.android.data.model.order.*
 import com.vroomvroom.android.data.model.order.OrderMapper.mapToOrder
 import com.vroomvroom.android.data.model.user.LocationEntity
 import com.vroomvroom.android.repository.BaseRepository
-import com.vroomvroom.android.view.state.ViewState
+import com.vroomvroom.android.view.resource.Resource
 import javax.inject.Inject
 
 class OrderRepositoryImpl @Inject constructor(
     private val service: OrderService
 ) : OrderRepository, BaseRepository() {
-    override suspend fun getOrders(status: String?): ViewState<List<OrderDto>>? {
-        var data: ViewState<List<OrderDto>>? = null
+    override suspend fun getOrders(status: String?): Resource<List<OrderDto>>? {
+        var data: Resource<List<OrderDto>>? = null
         try {
             val result = service.getOrders(status)
             result.body()?.let {
@@ -27,8 +27,8 @@ class OrderRepositoryImpl @Inject constructor(
         return data
     }
 
-    override suspend fun getOrder(id: String): ViewState<OrderDto>? {
-        var data: ViewState<OrderDto>? = null
+    override suspend fun getOrder(id: String): Resource<OrderDto>? {
+        var data: Resource<OrderDto>? = null
         try {
             val result = service.getOrder(id)
             result.body()?.let {
@@ -48,8 +48,8 @@ class OrderRepositoryImpl @Inject constructor(
         totalPrice: Double,
         locationEntity: LocationEntity,
         cartItems: List<CartItemWithOptions>
-    ): ViewState<String>? {
-        var data: ViewState<String>? = null
+    ): Resource<String>? {
+        var data: Resource<String>? = null
         try {
             val result = service.createOrder(
                 mapToOrder(merchantId, payment, deliveryFee, totalPrice, locationEntity, cartItems))
@@ -65,8 +65,8 @@ class OrderRepositoryImpl @Inject constructor(
         return data
     }
 
-    override suspend fun cancelOrder(id: String, reason: String): ViewState<Boolean>? {
-        var data: ViewState<Boolean>? = null
+    override suspend fun cancelOrder(id: String, reason: String): Resource<Boolean>? {
+        var data: Resource<Boolean>? = null
         try {
             val body = mapOf("reason" to reason)
             val result = service.cancelOrder(id, body)
@@ -83,8 +83,8 @@ class OrderRepositoryImpl @Inject constructor(
     override suspend fun updateOrderAddress(
         id: String,
         location: LocationEntity
-    ): ViewState<Boolean>? {
-        var data: ViewState<Boolean>? = null
+    ): Resource<Boolean>? {
+        var data: Resource<Boolean>? = null
         try {
             val deliveryAddress = DeliveryAddress(location.address, location.city,
                 location.addInfo, listOf(location.latitude, location.longitude))
@@ -104,8 +104,8 @@ class OrderRepositoryImpl @Inject constructor(
         merchantId: String,
         rate: Int,
         comment: String
-    ): ViewState<Boolean>? {
-        var data: ViewState<Boolean>? = null
+    ): Resource<Boolean>? {
+        var data: Resource<Boolean>? = null
         try {
             val body = mapOf(
                 "merchantId" to merchantId,

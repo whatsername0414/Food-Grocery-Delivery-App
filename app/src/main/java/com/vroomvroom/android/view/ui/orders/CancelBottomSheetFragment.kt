@@ -10,7 +10,7 @@ import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentCancelBottomSheetBinding
 import com.vroomvroom.android.utils.ClickType
 import com.vroomvroom.android.utils.Constants.SUCCESS
-import com.vroomvroom.android.view.state.ViewState
+import com.vroomvroom.android.view.resource.Resource
 import com.vroomvroom.android.view.ui.base.BaseBottomSheetFragment
 import com.vroomvroom.android.view.ui.common.CommonAlertDialog
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,14 +42,14 @@ class CancelBottomSheetFragment : BaseBottomSheetFragment<FragmentCancelBottomSh
     private fun observeCancelled() {
         ordersViewModel.isCancelled.observe(viewLifecycleOwner) { response ->
             when (response) {
-                is ViewState.Loading -> {
+                is Resource.Loading -> {
                     binding.btnConfirm.isEnabled = false
                     binding.progressIndicator.visibility = View.VISIBLE
                 }
-                is ViewState.Success -> {
+                is Resource.Success -> {
                     handleSuccess()
                 }
-                is ViewState.Error -> {
+                is Resource.Error -> {
                     isCancelable = true
                     binding.btnConfirm.isEnabled = true
                     binding.progressIndicator.visibility = View.GONE

@@ -37,6 +37,7 @@ object Constants {
 
     //Date Format
     const val FORMAT_DD_MMM_YYYY_HH_MM_SS: String = "dd MMM yyyy HH:mm:ss"
+    const val DEFAULT_SERVER_TIME_FORMAT: String = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
 
     //Saved State
     const val SUCCESS: String = "SUCCESS"

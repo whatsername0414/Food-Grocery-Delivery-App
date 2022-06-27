@@ -1,7 +1,6 @@
 package com.vroomvroom.android.view.ui.orders
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.navigation.fragment.findNavController
@@ -13,7 +12,7 @@ import com.vroomvroom.android.utils.Constants.SUCCESS
 import com.vroomvroom.android.utils.Constants.FORMAT_DD_MMM_YYYY_HH_MM_SS
 import com.vroomvroom.android.utils.Utils.formatStringToDate
 import com.vroomvroom.android.utils.Utils.safeNavigate
-import com.vroomvroom.android.view.state.ViewState
+import com.vroomvroom.android.view.resource.Resource
 import com.vroomvroom.android.view.ui.base.BaseFragment
 import com.vroomvroom.android.view.ui.orders.adapter.OrderProductAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -61,12 +60,12 @@ class OrderDetailFragment : BaseFragment<FragmentOrderDetailBinding>(
     private fun observeOrder() {
         ordersViewModel.order.observe(viewLifecycleOwner) { response ->
             when (response) {
-                is ViewState.Loading -> {
+                is Resource.Loading -> {
                     binding.orderDetailLayout.visibility = View.GONE
                     binding.shimmerLayout.visibility = View.VISIBLE
                     binding.shimmerLayout.startShimmer()
                 }
-                is ViewState.Success -> {
+                is Resource.Success -> {
                     binding.commonNoticeLayout.hideNotice()
                     binding.orderDetailLayout.visibility = View.VISIBLE
                     val order = response.data
@@ -81,7 +80,7 @@ class OrderDetailFragment : BaseFragment<FragmentOrderDetailBinding>(
                         )
                     }
                 }
-                is ViewState.Error -> {
+                is Resource.Error -> {
                     binding.orderDetailLayout.visibility = View.GONE
                     binding.shimmerLayout.visibility = View.GONE
                     binding.shimmerLayout.stopShimmer()

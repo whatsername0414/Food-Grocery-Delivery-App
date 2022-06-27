@@ -6,7 +6,7 @@ import androidx.navigation.fragment.findNavController
 import com.vroomvroom.android.databinding.FragmentOrderBinding
 import com.vroomvroom.android.utils.Constants.PENDING
 import com.vroomvroom.android.utils.Utils.safeNavigate
-import com.vroomvroom.android.view.state.ViewState
+import com.vroomvroom.android.view.resource.Resource
 import com.vroomvroom.android.view.ui.base.BaseFragment
 import com.vroomvroom.android.view.ui.orders.adapter.OrderAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -50,13 +50,13 @@ class OrderFragment : BaseFragment<FragmentOrderBinding>(
     private fun observeOrdersByStatusLiveData() {
         ordersViewModel.orders.observe(viewLifecycleOwner) { response ->
             when (response) {
-                is ViewState.Loading -> {
+                is Resource.Loading -> {
                     binding.ordersRv.visibility = View.GONE
                     binding.commonNoticeLayout.hideNotice()
                     binding.shimmerLayout.startShimmer()
                     binding.shimmerLayout.visibility = View.VISIBLE
                 }
-                is ViewState.Success -> {
+                is Resource.Success -> {
                     val orders = response.data
                     if (orders.isEmpty()) {
                         orderAdapter.submitList(emptyList())
@@ -70,7 +70,7 @@ class OrderFragment : BaseFragment<FragmentOrderBinding>(
                     binding.shimmerLayout.visibility = View.GONE
                     binding.swipeRefreshLayout.isRefreshing = false
                 }
-                is ViewState.Error -> {
+                is Resource.Error -> {
                     binding.shimmerLayout.stopShimmer()
                     binding.shimmerLayout.visibility = View.GONE
                     binding.ordersRv.visibility = View.GONE

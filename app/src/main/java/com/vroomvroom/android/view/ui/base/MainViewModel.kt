@@ -8,10 +8,9 @@ import com.vroomvroom.android.data.model.merchant.Category
 import com.vroomvroom.android.data.model.merchant.Merchant
 import com.vroomvroom.android.repository.merchant.MerchantRepository
 import com.vroomvroom.android.utils.Constants.CASH_ON_DELIVERY
-import com.vroomvroom.android.view.state.ViewState
+import com.vroomvroom.android.view.resource.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,16 +19,16 @@ class MainViewModel @Inject constructor(
     private val merchantRepository: MerchantRepository,
 ): ViewModel() {
 
-    private val _categories by lazy { MutableLiveData<ViewState<List<Category>>>() }
-    val categories: LiveData<ViewState<List<Category>>>
+    private val _categories by lazy { MutableLiveData<Resource<List<Category>>>() }
+    val categories: LiveData<Resource<List<Category>>>
         get() = _categories
 
-    private val _merchants by lazy { MutableLiveData<ViewState<List<Merchant>>>() }
-    val merchants: LiveData<ViewState<List<Merchant>>>
+    private val _merchants by lazy { MutableLiveData<Resource<List<Merchant>>>() }
+    val merchants: LiveData<Resource<List<Merchant>>>
         get() = _merchants
 
-    private val _favorites by lazy { MutableLiveData<ViewState<List<Merchant>>>() }
-    val favorites: LiveData<ViewState<List<Merchant>>>
+    private val _favorites by lazy { MutableLiveData<Resource<List<Merchant>>>() }
+    val favorites: LiveData<Resource<List<Merchant>>>
         get() = _favorites
 
     lateinit var merchant: Merchant
@@ -39,19 +38,19 @@ class MainViewModel @Inject constructor(
     val isRefreshed by lazy { MutableLiveData(false) }
     val reviewed by lazy { MutableLiveData(false) }
     var shouldFetchMerchants = false
-    var isBottomBarVisible = false
+    var isBottomNavViewVisible = false
     var prevDestination: Int? = null
 
     fun getCategories(type: String) {
-        _categories.postValue(ViewState.Loading)
+        _categories.postValue(Resource.Loading)
         viewModelScope.launch(Dispatchers.IO) {
             val response = merchantRepository.getCategories(type)
             response?.let { data ->
                 when (data) {
-                    is ViewState.Success -> {
+                    is Resource.Success -> {
                         _categories.postValue(data)
                     }
-                    is ViewState.Error -> {
+                    is Resource.Error -> {
                         _categories.postValue(data)
                     }
                     else -> {
@@ -63,15 +62,15 @@ class MainViewModel @Inject constructor(
     }
 
     fun getMerchants(category: String? = null, searchTerm: String? = null) {
-        _merchants.postValue(ViewState.Loading)
+        _merchants.postValue(Resource.Loading)
         viewModelScope.launch(Dispatchers.IO) {
             val response = merchantRepository.getMerchants(category, searchTerm)
             response?.let { data ->
                 when (data) {
-                    is ViewState.Success -> {
+                    is Resource.Success -> {
                         _merchants.postValue(data)
                     }
-                    is ViewState.Error -> {
+                    is Resource.Error -> {
                         _merchants.postValue(data)
                     }
                     else -> {
@@ -83,15 +82,15 @@ class MainViewModel @Inject constructor(
     }
 
     fun getFavorites() {
-        _favorites.postValue(ViewState.Loading)
+        _favorites.postValue(Resource.Loading)
         viewModelScope.launch(Dispatchers.IO) {
             val response = merchantRepository.getFavorites()
             response?.let { data ->
                 when (data) {
-                    is ViewState.Success -> {
+                    is Resource.Success -> {
                         _favorites.postValue(data)
                     }
-                    is ViewState.Error -> {
+                    is Resource.Error -> {
                         _favorites.postValue(data)
                     }
                     else -> {

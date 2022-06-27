@@ -4,7 +4,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.vroomvroom.android.data.model.BaseResponse
 import com.vroomvroom.android.data.model.ErrorResponse
-import com.vroomvroom.android.view.state.ViewState
+import com.vroomvroom.android.view.resource.Resource
 import okhttp3.ResponseBody
 
 abstract class BaseRepository {
@@ -18,33 +18,33 @@ abstract class BaseRepository {
         private const val NOT_FOUND = "Not found"
         private const val SOMETHING_WRONG = "Something went wrong"
 
-        fun <T : Any> handleSuccess(data: T): ViewState<T> {
-            return ViewState.Success(data)
+        fun <T : Any> handleSuccess(data: T): Resource<T> {
+            return Resource.Success(data)
         }
 
         fun <T : Any> handleException(
             code: Int
-        ): ViewState<T> {
-            return ViewState.Error(Exception(getErrorMessage(code)))
+        ): Resource<T> {
+            return Resource.Error(Exception(getErrorMessage(code)))
         }
 
         fun <T : Any> handleException(
             code: Int,
             res: ResponseBody? = null
-        ): ViewState<T> {
+        ): Resource<T> {
             val gson = Gson()
             val type = object : TypeToken<BaseResponse<ErrorResponse>>() {}.type
             val errorResponse: BaseResponse<ErrorResponse>? = gson.fromJson(res?.charStream(), type)
             val exception = errorResponse?.data?.message ?: getErrorMessage(code)
-            return ViewState.Error(Exception(exception))
+            return Resource.Error(Exception(exception))
         }
 
         fun <T : Any> handleException(
             code: Int,
             message: String? = null
-        ): ViewState<T> {
+        ): Resource<T> {
             val exception = message ?: getErrorMessage(code)
-            return ViewState.Error(Exception(exception))
+            return Resource.Error(Exception(exception))
         }
 
         private fun getErrorMessage(httpCode: Int): String {

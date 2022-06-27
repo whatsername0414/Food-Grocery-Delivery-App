@@ -1,7 +1,7 @@
 package com.vroomvroom.android.data.model.merchant
 
 import com.vroomvroom.android.data.DomainMapper
-import com.vroomvroom.android.utils.Utils.DEFAULT_SERVER_TIME_FORMAT
+import com.vroomvroom.android.utils.Constants.DEFAULT_SERVER_TIME_FORMAT
 import com.vroomvroom.android.utils.Utils.isOpen
 import com.vroomvroom.android.utils.Utils.parseStringToTime
 
@@ -75,7 +75,7 @@ class MerchantMapper : DomainMapper<MerchantDto, Merchant> {
                 userId = it.user_id.orEmpty(),
                 rate = it.rate,
                 comment = it.comment,
-                createdAt = parseStringToTime(it.created_at.orEmpty(), DEFAULT_SERVER_TIME_FORMAT)
+                createdAt = parseStringToTime(it.created_at, DEFAULT_SERVER_TIME_FORMAT)
             )
         }
     }

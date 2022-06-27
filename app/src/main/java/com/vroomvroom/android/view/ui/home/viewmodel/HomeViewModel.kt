@@ -9,7 +9,7 @@ import com.vroomvroom.android.data.model.merchant.Merchant
 import com.vroomvroom.android.data.model.merchant.Option
 import com.vroomvroom.android.repository.cart.CartRepository
 import com.vroomvroom.android.repository.merchant.MerchantRepository
-import com.vroomvroom.android.view.state.ViewState
+import com.vroomvroom.android.view.resource.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,12 +22,12 @@ class HomeViewModel @Inject constructor(
     private val cartRepository: CartRepository,
 ): ViewModel() {
 
-    private val _merchant by lazy { MutableLiveData<ViewState<Merchant>>() }
-    val merchant: LiveData<ViewState<Merchant>>
+    private val _merchant by lazy { MutableLiveData<Resource<Merchant>>() }
+    val merchant: LiveData<Resource<Merchant>>
         get() = _merchant
 
-    private val _isPutFavoriteSuccessful by lazy { MutableLiveData<ViewState<Boolean>>() }
-    val isPutFavoriteSuccessful: LiveData<ViewState<Boolean>>
+    private val _isPutFavoriteSuccessful by lazy { MutableLiveData<Resource<Boolean>>() }
+    val isPutFavoriteSuccessful: LiveData<Resource<Boolean>>
         get() = _isPutFavoriteSuccessful
 
     val cartItem = cartRepository.getAllCartItem()
@@ -36,16 +36,16 @@ class HomeViewModel @Inject constructor(
     val isCartCardViewVisible by lazy { MutableLiveData(false) }
 
     fun getMerchant(merchantId: String){
-        _merchant.postValue(ViewState.Loading)
+        _merchant.postValue(Resource.Loading)
         viewModelScope.launch(Dispatchers.IO) {
             val response = merchantRepository.getMerchant(merchantId)
             response?.let { data ->
                 withContext(Dispatchers.Main) {
                     when (data) {
-                        is ViewState.Success -> {
+                        is Resource.Success -> {
                             _merchant.postValue(data)
                         }
-                        is ViewState.Error -> {
+                        is Resource.Error -> {
                             _merchant.postValue(data)
                         }
                         else -> {
@@ -62,10 +62,10 @@ class HomeViewModel @Inject constructor(
             val response = merchantRepository.updateFavorite(id)
             response.let { data ->
                 when (data) {
-                    is ViewState.Success -> {
+                    is Resource.Success -> {
                         _isPutFavoriteSuccessful.postValue(data)
                     }
-                    is ViewState.Error -> {
+                    is Resource.Error -> {
                         _isPutFavoriteSuccessful.postValue(data)
                     }
                     else -> {

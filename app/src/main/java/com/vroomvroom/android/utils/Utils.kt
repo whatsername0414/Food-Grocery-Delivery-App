@@ -34,6 +34,7 @@ import com.google.maps.android.SphericalUtil
 import com.vmadalin.easypermissions.EasyPermissions
 import com.vroomvroom.android.R
 import com.vroomvroom.android.data.model.user.LocationEntity
+import com.vroomvroom.android.utils.Constants.DEFAULT_SERVER_TIME_FORMAT
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -310,7 +311,4 @@ object Utils {
             .color(ContextCompat.getColor(context, R.color.red_a30))
             .geodesic(false))
     }
-
-    const val FORMAT_DD_MMM_YYYY_HH_MM_SS: String = "dd MMM yyyy HH:mm:ss"
-    const val DEFAULT_SERVER_TIME_FORMAT: String = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
 }

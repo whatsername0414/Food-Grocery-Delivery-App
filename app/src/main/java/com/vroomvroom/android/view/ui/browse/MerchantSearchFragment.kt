@@ -10,7 +10,7 @@ import com.vroomvroom.android.databinding.FragmentMerchantSearchBinding
 import com.vroomvroom.android.data.model.search.SearchEntity
 import com.vroomvroom.android.utils.ClickType
 import com.vroomvroom.android.utils.Utils.showSoftKeyboard
-import com.vroomvroom.android.view.state.ViewState
+import com.vroomvroom.android.view.resource.Resource
 import com.vroomvroom.android.view.ui.base.BaseFragment
 import com.vroomvroom.android.view.ui.browse.adapter.SearchAdapter
 import com.vroomvroom.android.view.ui.home.FavoriteFragmentDirections
@@ -157,7 +157,7 @@ class MerchantSearchFragment : BaseFragment<FragmentMerchantSearchBinding>(
     private fun observeMerchantsLiveData() {
         mainViewModel.merchants.observe(viewLifecycleOwner) { response ->
             when (response) {
-                is ViewState.Loading -> {
+                is Resource.Loading -> {
                     isSearchRvVisible = false
                     binding.searchRv.visibility = View.GONE
                     binding.merchantRv.visibility = View.GONE
@@ -165,7 +165,7 @@ class MerchantSearchFragment : BaseFragment<FragmentMerchantSearchBinding>(
                     binding.merchantsShimmerLayout.visibility = View.VISIBLE
                     binding.merchantsShimmerLayout.startShimmer()
                 }
-                is ViewState.Success -> {
+                is Resource.Success -> {
                     val merchants = response.data
                     if (merchants.isEmpty()) {
                         binding.commonNoticeLayout.showNotice(
@@ -190,7 +190,7 @@ class MerchantSearchFragment : BaseFragment<FragmentMerchantSearchBinding>(
                     binding.merchantsShimmerLayout.visibility = View.GONE
                     binding.merchantsShimmerLayout.stopShimmer()
                 }
-                is ViewState.Error -> {
+                is Resource.Error -> {
                     binding.merchantRv.visibility = View.GONE
                     binding.merchantsShimmerLayout.visibility = View.GONE
                     binding.merchantsShimmerLayout.stopShimmer()

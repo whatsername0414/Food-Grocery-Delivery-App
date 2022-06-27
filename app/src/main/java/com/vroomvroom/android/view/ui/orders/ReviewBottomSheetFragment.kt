@@ -6,7 +6,7 @@ import androidx.navigation.fragment.navArgs
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentReviewBottomSheetBinding
 import com.vroomvroom.android.utils.ClickType
-import com.vroomvroom.android.view.state.ViewState
+import com.vroomvroom.android.view.resource.Resource
 import com.vroomvroom.android.view.ui.base.BaseBottomSheetFragment
 import com.vroomvroom.android.view.ui.common.CommonAlertDialog
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,16 +35,16 @@ class ReviewBottomSheetFragment : BaseBottomSheetFragment<FragmentReviewBottomSh
     private fun observeReviewLiveData() {
         ordersViewModel.isReviewCreated.observe(viewLifecycleOwner) { response ->
             when (response) {
-                is ViewState.Loading -> {
+                is Resource.Loading -> {
                     isCancelable = false
                     binding.progressIndicator.visibility = View.VISIBLE
                     binding.btnSubmit.isEnabled = false
                 }
-                is ViewState.Success -> {
+                is Resource.Success -> {
                     mainActivityViewModel.reviewed.postValue(true)
                     dismiss()
                 }
-                is ViewState.Error -> {
+                is Resource.Error -> {
                     binding.progressIndicator.visibility = View.GONE
                     binding.btnSubmit.isEnabled = true
                     isCancelable = true

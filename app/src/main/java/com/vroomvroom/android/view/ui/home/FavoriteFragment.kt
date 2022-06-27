@@ -6,7 +6,7 @@ import android.view.animation.Animation
 import androidx.navigation.fragment.findNavController
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentFavoriteBinding
-import com.vroomvroom.android.view.state.ViewState
+import com.vroomvroom.android.view.resource.Resource
 import com.vroomvroom.android.view.ui.base.BaseFragment
 import com.vroomvroom.android.view.ui.home.adapter.MerchantAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -50,13 +50,13 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(
     private fun observeFavoriteMerchant() {
         mainViewModel.favorites.observe(viewLifecycleOwner) { response ->
             when (response) {
-                is ViewState.Loading -> {
+                is Resource.Loading -> {
                     binding.favoriteRv.visibility = View.GONE
                     binding.commonNoticeLayout.hideNotice()
                     binding.favoriteShimmerLayout.visibility = View.VISIBLE
                     binding.favoriteShimmerLayout.startShimmer()
                 }
-                is ViewState.Success -> {
+                is Resource.Success -> {
                     val merchants = response.data
                     if (merchants.isEmpty()) {
                         binding.commonNoticeLayout.showNotice(
@@ -75,7 +75,7 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(
                     binding.favoriteShimmerLayout.visibility = View.GONE
                     binding.favoriteShimmerLayout.stopShimmer()
                 }
-                is ViewState.Error -> {
+                is Resource.Error -> {
                     binding.favoriteShimmerLayout.visibility = View.GONE
                     binding.favoriteShimmerLayout.stopShimmer()
                     binding.favoriteRv.visibility = View.GONE

@@ -7,7 +7,7 @@ import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentPhoneVerificationBinding
 import com.vroomvroom.android.utils.Constants
 import com.vroomvroom.android.utils.Utils.hideSoftKeyboard
-import com.vroomvroom.android.view.state.ViewState
+import com.vroomvroom.android.view.resource.Resource
 import com.vroomvroom.android.view.ui.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -53,18 +53,18 @@ class PhoneVerificationFragment : BaseFragment<FragmentPhoneVerificationBinding>
     private fun observeOtpGenerateConfirmation() {
         authViewModel.isOtpSent.observe(viewLifecycleOwner) { response ->
             when (response) {
-                is ViewState.Loading -> {
+                is Resource.Loading -> {
                     loadingDialog.show(getString(R.string.loading))
                     binding.btnGetOtp.isEnabled = false
                 }
-                is ViewState.Success -> {
+                is Resource.Success -> {
                     loadingDialog.dismiss()
                     binding.btnGetOtp.isEnabled = true
                     authViewModel.resetOtpLiveData()
                     navController.navigate(PhoneVerificationFragmentDirections.
                     actionPhoneVerificationFragmentToCodeVerificationFragment(number.orEmpty()))
                 }
-                is ViewState.Error -> {
+                is Resource.Error -> {
                     loadingDialog.dismiss()
                     binding.btnGetOtp.isEnabled = true
                     showShortToast(R.string.invalid_phone_number)

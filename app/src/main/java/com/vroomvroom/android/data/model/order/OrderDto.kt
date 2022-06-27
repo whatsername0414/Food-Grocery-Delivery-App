@@ -28,7 +28,7 @@ data class OrderProductDto (
     val price : Double,
     val quantity : Int,
     val instructions : String? = null,
-    val option : List<OrderProductOptionDto>?
+    val options : List<OrderProductOptionDto>?
 )
 
 data class Customer(

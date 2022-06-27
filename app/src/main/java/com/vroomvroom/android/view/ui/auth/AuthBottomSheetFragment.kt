@@ -14,7 +14,7 @@ import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentAuthBottomSheetBinding
 import com.vroomvroom.android.data.model.user.LocationEntity
 import com.vroomvroom.android.utils.ClickType
-import com.vroomvroom.android.view.state.ViewState
+import com.vroomvroom.android.view.resource.Resource
 import com.vroomvroom.android.view.ui.base.BaseBottomSheetFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -85,12 +85,12 @@ class AuthBottomSheetFragment : BaseBottomSheetFragment<FragmentAuthBottomSheetB
     private fun observeRegisterUser() {
         authViewModel.isRegistered.observe(viewLifecycleOwner) { response ->
             when (response) {
-                is ViewState.Loading -> Unit
-                is ViewState.Success -> {
+                is Resource.Loading -> Unit
+                is Resource.Success -> {
                     loadingDialog.dismiss()
                     findNavController().popBackStack()
                 }
-                is ViewState.Error -> {
+                is Resource.Error -> {
                     loadingDialog.dismiss()
                     dialog.show(
                         getString(R.string.network_error),
@@ -117,13 +117,13 @@ class AuthBottomSheetFragment : BaseBottomSheetFragment<FragmentAuthBottomSheetB
     private fun observeNewLoggedInUser() {
         authViewModel.newLoggedInUser.observe(viewLifecycleOwner) { result ->
             when (result) {
-                is ViewState.Loading -> {
+                is Resource.Loading -> {
                     loadingDialog.show(getString(R.string.loading))
                 }
-                is ViewState.Success -> {
+                is Resource.Success -> {
                     authViewModel.saveIdToken()
                 }
-                is ViewState.Error -> {
+                is Resource.Error -> {
                     dialog.show(
                         getString(R.string.auth_failed),
                         getString(R.string.network_error_message),

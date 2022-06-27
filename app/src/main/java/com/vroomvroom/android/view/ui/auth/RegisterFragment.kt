@@ -11,7 +11,7 @@ import com.vroomvroom.android.utils.ClickType
 import com.vroomvroom.android.utils.Utils.hideSoftKeyboard
 import com.vroomvroom.android.utils.Utils.isEmailValid
 import com.vroomvroom.android.utils.Utils.safeNavigate
-import com.vroomvroom.android.view.state.ViewState
+import com.vroomvroom.android.view.resource.Resource
 import com.vroomvroom.android.view.ui.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -78,8 +78,8 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(
     private fun observeRegisterUser() {
         authViewModel.isRegistered.observe(viewLifecycleOwner) { response ->
             when (response) {
-                is ViewState.Loading -> Unit
-                is ViewState.Success -> {
+                is Resource.Loading -> Unit
+                is Resource.Success -> {
                     loadingDialog.dismiss()
                     if (prevDestinationId == R.id.checkoutFragment) {
                         navController.safeNavigate(R.id.action_registerFragment_to_checkoutFragment)
@@ -87,7 +87,7 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(
                         navController.safeNavigate(R.id.action_registerFragment_to_homeFragment)
                     }
                 }
-                is ViewState.Error -> {
+                is Resource.Error -> {
                     loadingDialog.dismiss()
                     dialog.show(
                         getString(R.string.network_error),
@@ -114,12 +114,12 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(
     private fun observeNewLogInUser() {
         authViewModel.newLoggedInUser.observe(viewLifecycleOwner) { result ->
             when (result) {
-                is ViewState.Success -> {
+                is Resource.Success -> {
                     authViewModel.saveIdToken()
                     binding.errorTv.visibility = View.GONE
                     requireActivity().hideSoftKeyboard()
                 }
-                is ViewState.Error -> {
+                is Resource.Error -> {
                     loadingDialog.dismiss()
                     binding.errorTv.visibility = View.VISIBLE
                     binding.errorTv.text = result.exception.message

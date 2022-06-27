@@ -8,7 +8,7 @@ import com.vroomvroom.android.databinding.FragmentLoginBinding
 import com.vroomvroom.android.utils.ClickType
 import com.vroomvroom.android.utils.Utils.hideSoftKeyboard
 import com.vroomvroom.android.utils.Utils.isEmailValid
-import com.vroomvroom.android.view.state.ViewState
+import com.vroomvroom.android.view.resource.Resource
 import com.vroomvroom.android.view.ui.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -51,12 +51,12 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
     private fun observeGetUser() {
         accountViewModel.isGetUserSuccessful.observe(viewLifecycleOwner) { result ->
             when (result) {
-                is ViewState.Loading -> Unit
-                is ViewState.Success -> {
+                is Resource.Loading -> Unit
+                is Resource.Success -> {
                     loadingDialog.dismiss()
                     navController.popBackStack()
                 }
-                is ViewState.Error -> {
+                is Resource.Error -> {
                     accountViewModel.getUser()
                     loadingDialog.dismiss()
                     dialog.show(
@@ -91,13 +91,13 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
     private fun observeNewLoggedInUser() {
         authViewModel.newLoggedInUser.observe(viewLifecycleOwner) { result ->
             when (result) {
-                is ViewState.Loading -> {
+                is Resource.Loading -> {
                     loadingDialog.show(getString(R.string.loading))
                 }
-                is ViewState.Success -> {
+                is Resource.Success -> {
                     authViewModel.saveIdToken()
                 }
-                is ViewState.Error -> {
+                is Resource.Error -> {
                     loadingDialog.dismiss()
                     dialog.show(
                         getString(R.string.login_failed),

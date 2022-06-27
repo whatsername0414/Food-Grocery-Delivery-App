@@ -2,12 +2,12 @@ package com.vroomvroom.android.repository.user
 
 import androidx.lifecycle.LiveData
 import com.vroomvroom.android.data.model.user.UserEntity
-import com.vroomvroom.android.view.state.ViewState
+import com.vroomvroom.android.view.resource.Resource
 
 interface UserRepository {
 
-    suspend fun getUser(): ViewState<Boolean>?
-    suspend fun updateName(name: String): ViewState<Boolean>?
+    suspend fun getUser(): Resource<Boolean>?
+    suspend fun updateName(name: String): Resource<Boolean>?
 
     //Room
     suspend fun updateUserLocale(userEntity: UserEntity)

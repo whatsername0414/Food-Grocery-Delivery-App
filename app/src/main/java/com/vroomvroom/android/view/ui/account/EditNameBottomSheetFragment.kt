@@ -6,7 +6,7 @@ import androidx.navigation.fragment.findNavController
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentEditNameBottomSheetBinding
 import com.vroomvroom.android.utils.ClickType
-import com.vroomvroom.android.view.state.ViewState
+import com.vroomvroom.android.view.resource.Resource
 import com.vroomvroom.android.view.ui.base.BaseBottomSheetFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -35,15 +35,15 @@ class EditNameBottomSheetFragment : BaseBottomSheetFragment<FragmentEditNameBott
     private fun observeUpdateName() {
         accountViewModel.isNameUpdated.observe(viewLifecycleOwner) { response ->
             when (response) {
-                is ViewState.Loading -> {
+                is Resource.Loading -> {
                     binding.btnSave.isEnabled = false
                     binding.btnCancel.isEnabled = false
                     binding.progressIndicator.visibility = View.VISIBLE
                 }
-                is ViewState.Success -> {
+                is Resource.Success -> {
                     findNavController().popBackStack()
                 }
-                is ViewState.Error -> {
+                is Resource.Error -> {
                     binding.btnSave.isEnabled = true
                     binding.btnCancel.isEnabled = true
                     binding.progressIndicator.visibility = View.GONE

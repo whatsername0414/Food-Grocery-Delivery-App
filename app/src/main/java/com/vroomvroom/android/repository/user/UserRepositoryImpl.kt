@@ -7,7 +7,7 @@ import com.vroomvroom.android.data.db.dao.UserDao
 import com.vroomvroom.android.data.model.user.UserEntity
 import com.vroomvroom.android.data.model.user.UserMapper
 import com.vroomvroom.android.repository.BaseRepository
-import com.vroomvroom.android.view.state.ViewState
+import com.vroomvroom.android.view.resource.Resource
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
@@ -15,8 +15,8 @@ class UserRepositoryImpl @Inject constructor(
     private val userDao: UserDao,
     private val userMapper: UserMapper
 ) : UserRepository, BaseRepository() {
-    override suspend fun getUser(): ViewState<Boolean>? {
-        var data: ViewState<Boolean>? = null
+    override suspend fun getUser(): Resource<Boolean>? {
+        var data: Resource<Boolean>? = null
         try {
             val result = service.getUser()
             if (result.isSuccessful && result.code() == 200) {
@@ -33,8 +33,8 @@ class UserRepositoryImpl @Inject constructor(
         return data
     }
 
-    override suspend fun updateName(name: String): ViewState<Boolean>? {
-        var data: ViewState<Boolean>? = null
+    override suspend fun updateName(name: String): Resource<Boolean>? {
+        var data: Resource<Boolean>? = null
         try {
             val body = mapOf("name" to name)
             val result = service.updateName(body)

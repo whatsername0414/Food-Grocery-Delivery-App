@@ -7,10 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.vroomvroom.android.data.model.order.OrderDto
 import com.vroomvroom.android.data.model.user.LocationEntity
 import com.vroomvroom.android.repository.order.OrderRepository
-import com.vroomvroom.android.view.state.ViewState
+import com.vroomvroom.android.view.resource.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,24 +18,24 @@ class OrdersViewModel @Inject constructor(
     private val orderRepository: OrderRepository,
 ) : ViewModel() {
 
-    private val _isCancelled by lazy { MutableLiveData<ViewState<Boolean>>() }
-    val isCancelled: LiveData<ViewState<Boolean>>
+    private val _isCancelled by lazy { MutableLiveData<Resource<Boolean>>() }
+    val isCancelled: LiveData<Resource<Boolean>>
         get() = _isCancelled
 
-    private val _isAddressUpdated by lazy { MutableLiveData<ViewState<Boolean>>() }
-    val isAddressUpdated: LiveData<ViewState<Boolean>>
+    private val _isAddressUpdated by lazy { MutableLiveData<Resource<Boolean>>() }
+    val isAddressUpdated: LiveData<Resource<Boolean>>
         get() = _isAddressUpdated
 
-    private val _isReviewCreated by lazy { MutableLiveData<ViewState<Boolean>>() }
-    val isReviewCreated: LiveData<ViewState<Boolean>>
+    private val _isReviewCreated by lazy { MutableLiveData<Resource<Boolean>>() }
+    val isReviewCreated: LiveData<Resource<Boolean>>
         get() = _isReviewCreated
 
-    private val _orders by lazy { MutableLiveData<ViewState<List<OrderDto?>>>() }
-    val orders: LiveData<ViewState<List<OrderDto?>>>
+    private val _orders by lazy { MutableLiveData<Resource<List<OrderDto?>>>() }
+    val orders: LiveData<Resource<List<OrderDto?>>>
         get() = _orders
 
-    private val _order by lazy { MutableLiveData<ViewState<OrderDto>>() }
-    val order: LiveData<ViewState<OrderDto>>
+    private val _order by lazy { MutableLiveData<Resource<OrderDto>>() }
+    val order: LiveData<Resource<OrderDto>>
         get() = _order
 
     lateinit var merchantId: String
@@ -63,15 +62,15 @@ class OrdersViewModel @Inject constructor(
 //    }
 
     fun getOrdersByStatus(status: String) {
-        _orders.postValue(ViewState.Loading)
+        _orders.postValue(Resource.Loading)
         viewModelScope.launch(Dispatchers.IO) {
             val response = orderRepository.getOrders(status)
             response?.let { data ->
                 when (data) {
-                    is ViewState.Success -> {
+                    is Resource.Success -> {
                         _orders.postValue(data)
                     }
-                    is ViewState.Error -> {
+                    is Resource.Error -> {
                         _orders.postValue(data)
                     }
                     else -> {
@@ -83,15 +82,15 @@ class OrdersViewModel @Inject constructor(
     }
 
     fun getOrder(id: String) {
-        _order.postValue(ViewState.Loading)
+        _order.postValue(Resource.Loading)
         viewModelScope.launch(Dispatchers.IO) {
             val response = orderRepository.getOrder(id)
             response?.let { data ->
                 when (data) {
-                    is ViewState.Success -> {
+                    is Resource.Success -> {
                         _order.postValue(data)
                     }
-                    is ViewState.Error -> {
+                    is Resource.Error -> {
                         _order.postValue(data)
                     }
                     else -> {
@@ -106,7 +105,7 @@ class OrdersViewModel @Inject constructor(
         orderId: String,
         location: LocationEntity
     ) {
-        _isAddressUpdated.postValue(ViewState.Loading)
+        _isAddressUpdated.postValue(Resource.Loading)
         viewModelScope.launch(Dispatchers.IO) {
             val response = orderRepository.updateOrderAddress(
                 orderId,
@@ -114,10 +113,10 @@ class OrdersViewModel @Inject constructor(
             )
             response?.let { data ->
                 when (data) {
-                    is ViewState.Success -> {
+                    is Resource.Success -> {
                         _isAddressUpdated.postValue(data)
                     }
-                    is ViewState.Error -> {
+                    is Resource.Error -> {
                         _isAddressUpdated.postValue(data)
                     }
                     else -> {
@@ -133,10 +132,10 @@ class OrdersViewModel @Inject constructor(
             val response = orderRepository.cancelOrder(orderId, reason)
             response?.let { data ->
                 when (data) {
-                    is ViewState.Success -> {
+                    is Resource.Success -> {
                         _isCancelled.postValue(data)
                     }
-                    is ViewState.Error -> {
+                    is Resource.Error -> {
                         _isCancelled.postValue(data)
                     }
                     else -> {
@@ -148,14 +147,14 @@ class OrdersViewModel @Inject constructor(
     }
     fun createReview(orderId: String, merchantId: String, rate: Int, comment: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            _isReviewCreated.postValue(ViewState.Loading)
+            _isReviewCreated.postValue(Resource.Loading)
             val response = orderRepository.createReview(orderId, merchantId, rate, comment)
             response?.let { data ->
                 when(data) {
-                    is ViewState.Success -> {
+                    is Resource.Success -> {
                         _isReviewCreated.postValue(data)
                     }
-                    is ViewState.Error -> {
+                    is Resource.Error -> {
                         _isReviewCreated.postValue(data)
                     }
                     else -> {

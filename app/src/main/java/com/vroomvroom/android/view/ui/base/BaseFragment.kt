@@ -6,10 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.Toolbar
 import androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -22,8 +20,10 @@ import com.google.android.material.snackbar.Snackbar
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.CommonNoticeLayoutBinding
 import com.vroomvroom.android.data.model.merchant.Merchant
+import com.vroomvroom.android.utils.ClickType
 import com.vroomvroom.android.utils.Constants
-import com.vroomvroom.android.view.state.ViewState
+import com.vroomvroom.android.utils.Utils.safeNavigate
+import com.vroomvroom.android.view.resource.Resource
 import com.vroomvroom.android.view.ui.account.viewmodel.AccountViewModel
 import com.vroomvroom.android.view.ui.auth.viewmodel.AuthViewModel
 import com.vroomvroom.android.view.ui.browse.viewmodel.BrowseViewModel
@@ -84,8 +84,8 @@ abstract class BaseFragment<VB: ViewBinding> (
     ) {
         homeViewModel.isPutFavoriteSuccessful.observe(viewLifecycleOwner) { response ->
             when (response) {
-                is ViewState.Loading -> Unit
-                is ViewState.Success -> {
+                is Resource.Loading -> Unit
+                is Resource.Success -> {
                     if (response.data) {
                         if (direction == Constants.ADD_TO_FAVORITES) {
                             showShortSnackBar("Added to favorites")
@@ -102,10 +102,37 @@ abstract class BaseFragment<VB: ViewBinding> (
                     }
                     homeViewModel.isPutFavoriteSuccessful.removeObservers(viewLifecycleOwner)
                 }
-                is ViewState.Error -> {
+                is Resource.Error -> {
                     showShortToast(R.string.general_error_message)
                     merchantAdapter.notifyItemChanged(position)
                     homeViewModel.isPutFavoriteSuccessful.removeObservers(viewLifecycleOwner)
+                }
+            }
+        }
+    }
+
+    fun performLogout() {
+        authViewModel.logoutUser { successful ->
+            if (successful) {
+                authViewModel.deleteUserRecord()
+                authViewModel.clearDataStore()
+                locationViewModel.deleteAllAddress()
+                findNavController().safeNavigate(R.id.action_accountFragment_to_locationFragment)
+
+            } else {
+                dialog.show(
+                    getString(R.string.network_error),
+                    getString(R.string.network_error_message),
+                    getString(R.string.cancel),
+                    getString(R.string.retry)
+                ) { type ->
+                    when (type) {
+                        ClickType.POSITIVE -> {
+                            performLogout()
+                            dialog.dismiss()
+                        }
+                        ClickType.NEGATIVE -> dialog.dismiss()
+                    }
                 }
             }
         }
@@ -187,7 +214,7 @@ abstract class BaseFragment<VB: ViewBinding> (
             message,
             Snackbar.LENGTH_LONG
         )
-        if (mainActivityViewModel.isBottomBarVisible) {
+        if (mainActivityViewModel.isBottomNavViewVisible) {
             val snackBarView = snackBar.view
             snackBarView.translationY = - (400 / requireContext().resources.displayMetrics.density)
         }

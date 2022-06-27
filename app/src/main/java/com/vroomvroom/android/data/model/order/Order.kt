@@ -25,7 +25,7 @@ data class DeliveryAddress (
 data class OrderDetail (
 	@SerializedName("delivery_fee") val deliveryFee : Double,
 	@SerializedName("total_price") val totalPrice : Double,
-	val product : List<OrderProduct>,
+	val products : List<OrderProduct>,
 )
 
 data class OrderProduct (
@@ -36,7 +36,7 @@ data class OrderProduct (
 	val price : Double,
 	val quantity : Int,
 	val instructions : String? = null,
-	val option : List<OrderProductOption>?
+	val options : List<OrderProductOption>?
 )
 
 data class OrderProductOption (

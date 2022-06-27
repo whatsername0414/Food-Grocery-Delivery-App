@@ -38,13 +38,13 @@ class OrderProductAdapter(
             .into(holder.binding.orderProductImage)
 
         val optionList = StringBuilder()
-        orderProduct.option?.forEach { option ->
+        orderProduct.options?.forEach { option ->
             val type = option.optionType
             val name = option.name
             optionList.append("$type: $name •\n")
         }
 
-        if (!orderProduct.option.isNullOrEmpty()) {
+        if (!orderProduct.options.isNullOrEmpty()) {
             holder.binding.orderProductOption.text = optionList
         } else holder.binding.orderProductOption.visibility = View.GONE
     }

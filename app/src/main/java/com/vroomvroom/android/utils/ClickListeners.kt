@@ -3,7 +3,7 @@ package com.vroomvroom.android.utils
 import android.content.Intent
 import com.vroomvroom.android.data.model.merchant.Option
 import com.vroomvroom.android.data.model.merchant.Product
-import com.vroomvroom.android.view.state.ViewState
+import com.vroomvroom.android.view.resource.Resource
 
 
 interface OnProductClickListener {
@@ -15,5 +15,5 @@ interface OnOptionClickListener {
 }
 
 interface SmsBroadcastReceiverListener {
-    fun onIntent(intent: ViewState<Intent>)
+    fun onIntent(intent: Resource<Intent>)
 }

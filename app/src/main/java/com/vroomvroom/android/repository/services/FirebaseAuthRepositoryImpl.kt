@@ -19,7 +19,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.vroomvroom.android.repository.BaseRepository
-import com.vroomvroom.android.view.state.ViewState
+import com.vroomvroom.android.view.resource.Resource
 import javax.inject.Inject
 
 class FirebaseAuthRepositoryImpl @Inject constructor(
@@ -29,6 +29,7 @@ class FirebaseAuthRepositoryImpl @Inject constructor(
     private val googleSignInClient: GoogleSignInClient,
     private val client: SmsRetrieverClient
 ) : BaseRepository(), FirebaseAuthRepository {
+
     override fun getCurrentUser(): FirebaseUser? {
         return auth.currentUser
     }
@@ -58,7 +59,7 @@ class FirebaseAuthRepositoryImpl @Inject constructor(
 
     override fun signInIntent()  = googleSignInClient.signInIntent
 
-    override fun googleSignIn(data: Intent?, onResult: (ViewState<FirebaseUser>) -> Unit) {
+    override fun googleSignIn(data: Intent?, onResult: (Resource<FirebaseUser>) -> Unit) {
         val task = GoogleSignIn.getSignedInAccountFromIntent(data)
         val exception = task.exception
         if (task.isSuccessful) {
@@ -78,7 +79,7 @@ class FirebaseAuthRepositoryImpl @Inject constructor(
 
     override fun firebaseAuthWithGoogle(
         idToken: String,
-        onResult: (ViewState<FirebaseUser>) -> Unit
+        onResult: (Resource<FirebaseUser>) -> Unit
     ) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         auth.signInWithCredential(credential)
@@ -97,7 +98,7 @@ class FirebaseAuthRepositoryImpl @Inject constructor(
 
     override fun facebookLogin(
         fragment: BottomSheetDialogFragment,
-        onResult: (ViewState<FirebaseUser>) -> Unit
+        onResult: (Resource<FirebaseUser>) -> Unit
     ) {
         loginManager.logIn(fragment, listOf("email", "public_profile"))
         loginManager.registerCallback(callbackManager, object :
@@ -121,7 +122,7 @@ class FirebaseAuthRepositoryImpl @Inject constructor(
 
     override fun handleFacebookAccessToken(
         token: AccessToken,
-        onResult: (ViewState<FirebaseUser>) -> Unit
+        onResult: (Resource<FirebaseUser>) -> Unit
     ) {
         val credential = FacebookAuthProvider.getCredential(token.token)
         auth.signInWithCredential(credential)
@@ -140,7 +141,7 @@ class FirebaseAuthRepositoryImpl @Inject constructor(
     override fun logInWithEmailAndPassword(
         emailAddress: String,
         password: String,
-        onResult: (ViewState<FirebaseUser>) -> Unit
+        onResult: (Resource<FirebaseUser>) -> Unit
     ) {
         auth.signInWithEmailAndPassword(emailAddress, password)
             .addOnCompleteListener { task ->
@@ -159,7 +160,7 @@ class FirebaseAuthRepositoryImpl @Inject constructor(
     override fun registerWithEmailAndPassword(
         emailAddress: String,
         password: String,
-        onResult: (ViewState<FirebaseUser>) -> Unit
+        onResult: (Resource<FirebaseUser>) -> Unit
     ) {
         auth.createUserWithEmailAndPassword(emailAddress, password)
             .addOnCompleteListener { task ->
@@ -178,7 +179,7 @@ class FirebaseAuthRepositoryImpl @Inject constructor(
 
     override fun resetPasswordWithEmail(
         emailAddress: String,
-        onSent: (ViewState<String>) -> Unit
+        onSent: (Resource<String>) -> Unit
     ) {
         auth.sendPasswordResetEmail(emailAddress)
             .addOnCompleteListener { task ->

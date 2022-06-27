@@ -1,7 +1,6 @@
 package com.vroomvroom.android.view.ui.home
 
 import android.animation.ObjectAnimator
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -13,7 +12,7 @@ import com.vroomvroom.android.databinding.FragmentHomeBinding
 import com.vroomvroom.android.data.model.user.LocationEntity
 import com.vroomvroom.android.utils.Constants.SCROLL_THRESHOLD
 import com.vroomvroom.android.utils.Utils.safeNavigate
-import com.vroomvroom.android.view.state.ViewState
+import com.vroomvroom.android.view.resource.Resource
 import com.vroomvroom.android.view.ui.home.adapter.CategoryAdapter
 import com.vroomvroom.android.view.ui.home.adapter.MerchantAdapter
 import com.vroomvroom.android.view.ui.base.BaseFragment
@@ -24,7 +23,6 @@ import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-@SuppressLint("NotifyDataSetChanged")
 class HomeFragment: BaseFragment<FragmentHomeBinding>(
     FragmentHomeBinding::inflate
 ) {
@@ -44,7 +42,6 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(
         observeMerchants()
         observeUserLocation()
         observeRoomCartItem()
-        viewTreeObserver()
         shouldBackToTopObserver()
         setupAnimationListener()
 
@@ -67,6 +64,10 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(
             findNavController().safeNavigate(
                 HomeFragmentDirections.actionHomeFragmentToCartBottomSheetFragment()
             )
+        }
+
+        binding.homeNestedScrollView.setOnScrollChangeListener { _, _, scrollY, _, _ ->
+            mainActivityViewModel.isHomeScrolled.postValue(scrollY > SCROLL_THRESHOLD)
         }
 
         categoryAdapter.onCategoryClicked = { category ->
@@ -105,6 +106,9 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(
                 merchantAdapter.setUser(user)
                 merchantAdapter.notifyDataSetChanged()
             } else {
+                if (authViewModel.signedInUser != null) {
+                    performLogout()
+                }
                 binding.favorite.visibility = View.GONE
                 merchantAdapter.setUser(null)
                 merchantAdapter.notifyDataSetChanged()
@@ -132,7 +136,7 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(
     private fun observeCategories() {
         mainViewModel.categories.observe(viewLifecycleOwner) { response ->
             when(response) {
-                is ViewState.Loading -> {
+                is Resource.Loading -> {
                     binding.apply {
                         commonNoticeLayout.hideNotice()
                         homeRvLinearLayout.visibility = View.GONE
@@ -141,7 +145,7 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(
 
                     }
                 }
-                is ViewState.Success -> {
+                is Resource.Success -> {
                     categoriesLoaded = true
                     val category = response.data
                     categoryAdapter.submitList(category)
@@ -155,7 +159,7 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(
                         }
                     }
                 }
-                is ViewState.Error -> {
+                is Resource.Error -> {
                     categoriesLoaded = false
                     binding.apply {
                         categoryShimmerLayout.stopShimmer()
@@ -177,7 +181,7 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(
         mainViewModel.merchants.observe(viewLifecycleOwner) { response ->
             lifecycleScope.launch(Dispatchers.Main) {
                 when (response) {
-                    is ViewState.Loading -> {
+                    is Resource.Loading -> {
                         binding.apply {
                             commonNoticeLayout.hideNotice()
                             if (categoryClicked) {
@@ -189,7 +193,7 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(
                             }
                         }
                     }
-                    is ViewState.Success -> {
+                    is Resource.Success -> {
                         merchantsLoaded = true
                         val merchants = response.data
                         merchantAdapter.submitList(merchants)
@@ -207,7 +211,7 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(
                             }
                         }
                     }
-                    is ViewState.Error -> {
+                    is Resource.Error -> {
                         merchantsLoaded = false
                         binding.apply {
                             merchantsShimmerLayout.apply {
@@ -224,14 +228,6 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(
                     }
                 }
             }
-        }
-    }
-
-    private fun viewTreeObserver() {
-        binding.homeNestedScrollView.setOnScrollChangeListener { _, _, scrollY, _, _ ->
-            mainActivityViewModel.isHomeScrolled.postValue(
-                scrollY > SCROLL_THRESHOLD
-            )
         }
     }
 

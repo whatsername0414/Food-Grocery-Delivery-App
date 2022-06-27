@@ -15,7 +15,7 @@ import com.vroomvroom.android.utils.ClickType
 import com.vroomvroom.android.utils.Constants
 import com.vroomvroom.android.utils.Utils.hideSoftKeyboard
 import com.vroomvroom.android.utils.Utils.safeNavigate
-import com.vroomvroom.android.view.state.ViewState
+import com.vroomvroom.android.view.resource.Resource
 import com.vroomvroom.android.view.ui.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -79,8 +79,8 @@ class CodeVerificationFragment : BaseFragment<FragmentCodeVerificationBinding>(
         }
         authViewModel.messageIntent.observe(viewLifecycleOwner) { intent ->
             when (intent) {
-                is ViewState.Success -> getResult.launch(intent.data)
-                is ViewState.Error -> {
+                is Resource.Success -> getResult.launch(intent.data)
+                is Resource.Error -> {
                     Toast.makeText(
                         requireContext(), intent.exception.message, Toast.LENGTH_SHORT
                     ).show()
@@ -93,11 +93,11 @@ class CodeVerificationFragment : BaseFragment<FragmentCodeVerificationBinding>(
     private fun observeOtpVerificationResult() {
         authViewModel.isPhoneNumberVerified.observe(viewLifecycleOwner) { response ->
             when (response) {
-                is ViewState.Loading -> {
+                is Resource.Loading -> {
                     loadingDialog.show(getString(R.string.loading))
                     binding.btnVerifyOtp.isEnabled = false
                 }
-                is ViewState.Success -> {
+                is Resource.Success -> {
                     loadingDialog.dismiss()
                     initDialog(
                         getString(R.string.congratulations),
@@ -112,7 +112,7 @@ class CodeVerificationFragment : BaseFragment<FragmentCodeVerificationBinding>(
                         navController.popBackStack()
                     }
                 }
-                is ViewState.Error -> {
+                is Resource.Error -> {
                     loadingDialog.dismiss()
                     binding.btnVerifyOtp.isEnabled = true
                     initDialog(

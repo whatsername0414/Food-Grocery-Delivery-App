@@ -46,32 +46,12 @@ class AccountFragment : BaseFragment<FragmentAccountBinding>(
         }
     }
 
-    private fun performLogout() {
-        authViewModel.logoutUser { successful ->
-            if (successful) {
-                authViewModel.deleteUserRecord()
-                authViewModel.clearDataStore()
-                locationViewModel.deleteAllAddress()
-                findNavController().safeNavigate(R.id.action_accountFragment_to_locationFragment)
-
-            } else {
-                initAlertDialog(
-                    getString(R.string.network_error),
-                    getString(R.string.network_error_message),
-                    getString(R.string.cancel),
-                    getString(R.string.retry)
-                )
-            }
-        }
-    }
-
     private fun initAlertDialog(
         title: String,
         message: String,
         leftButtonTitle: String,
         rightButtonTitle: String
     ) {
-        val dialog = CommonAlertDialog(requireActivity())
         dialog.show(
             title,
             message,

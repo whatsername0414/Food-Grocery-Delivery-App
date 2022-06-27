@@ -6,7 +6,7 @@ import android.content.Intent
 import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.Status
-import com.vroomvroom.android.view.state.ViewState
+import com.vroomvroom.android.view.resource.Resource
 import javax.inject.Inject
 
 class SmsBroadcastReceiver @Inject constructor(): BroadcastReceiver() {
@@ -22,11 +22,11 @@ class SmsBroadcastReceiver @Inject constructor(): BroadcastReceiver() {
                 CommonStatusCodes.SUCCESS -> {
                     val messageIntent = extras.getParcelable<Intent>(SmsRetriever.EXTRA_CONSENT_INTENT)
                     messageIntent?.let {
-                        smsBroadcastReceiverListener?.onIntent(ViewState.Success(it))
+                        smsBroadcastReceiverListener?.onIntent(Resource.Success(it))
                     }
                 }
                 CommonStatusCodes.TIMEOUT -> {
-                    smsBroadcastReceiverListener?.onIntent(ViewState.Error(Exception("Something went wrong")))
+                    smsBroadcastReceiverListener?.onIntent(Resource.Error(Exception("Something went wrong")))
                 }
             }
         }

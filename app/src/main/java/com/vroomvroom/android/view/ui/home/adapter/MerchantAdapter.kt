@@ -54,7 +54,7 @@ class MerchantAdapter: ListAdapter<Merchant, MerchantViewHolder>(MerchantDiffUti
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: MerchantViewHolder, position: Int) {
         val merchant = getItem(position)
-        holder.binding.tvOpening.text = timeFormatter(merchant.opening)
+        holder.binding.openingTv.text = timeFormatter(merchant.opening)
         holder.binding.merchant = merchant
         Glide
             .with(holder.itemView.context)
@@ -75,17 +75,12 @@ class MerchantAdapter: ListAdapter<Merchant, MerchantViewHolder>(MerchantDiffUti
 
         holder.binding.restaurantCategories.text = merchant.categories.stringBuilder()
         if (merchant.isOpen) {
-            holder.binding.closedBg.visibility = View.GONE
-            holder.binding.tvOpening.visibility = View.GONE
-            holder.binding.preorderBtn.visibility = View.GONE
             holder.binding.cardView.isClickable = true
             holder.binding.cardView.setOnClickListener {
                 onMerchantClicked?.invoke(merchant)
             }
         } else {
-            holder.binding.closedBg.visibility = View.VISIBLE
-            holder.binding.tvOpening.visibility = View.VISIBLE
-            holder.binding.preorderBtn.visibility = View.VISIBLE
+            holder.binding.closedGroup.visibility = View.VISIBLE
             holder.binding.cardView.isClickable = false
             holder.binding.preorderBtn.setOnClickListener {
                 onMerchantClicked?.invoke(merchant)

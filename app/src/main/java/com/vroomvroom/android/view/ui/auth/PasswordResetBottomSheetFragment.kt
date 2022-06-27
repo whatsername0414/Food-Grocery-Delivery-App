@@ -8,7 +8,7 @@ import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentPasswordResetBottomSheetBinding
 import com.vroomvroom.android.utils.ClickType
 import com.vroomvroom.android.utils.Utils.isEmailValid
-import com.vroomvroom.android.view.state.ViewState
+import com.vroomvroom.android.view.resource.Resource
 import com.vroomvroom.android.view.ui.base.BaseBottomSheetFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -35,14 +35,14 @@ class PasswordResetBottomSheetFragment : BaseBottomSheetFragment<FragmentPasswor
     private fun observeIsResetPasswordEmailSent() {
         authViewModel.isPasswordResetEmailSent.observe(viewLifecycleOwner) { result ->
             when (result) {
-                is ViewState.Success -> {
+                is Resource.Success -> {
                     Toast.makeText(
                         requireContext(), "Email sent",
                         Toast.LENGTH_SHORT
                     ).show()
                     findNavController().popBackStack()
                 }
-                is ViewState.Error -> {
+                is Resource.Error -> {
                     dialog.show(
                         getString(R.string.network_error),
                         getString(R.string.network_error_message),

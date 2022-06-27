@@ -4,7 +4,7 @@ import android.util.Log
 import com.vroomvroom.android.data.api.MerchantService
 import com.vroomvroom.android.data.model.merchant.*
 import com.vroomvroom.android.repository.BaseRepository
-import com.vroomvroom.android.view.state.ViewState
+import com.vroomvroom.android.view.resource.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -15,8 +15,8 @@ class MerchantRepositoryImpl @Inject constructor(
 ) : MerchantRepository, BaseRepository()  {
     //TODO handle error body response
 
-    override suspend fun getCategories(type: String): ViewState<List<Category>>? {
-        var data: ViewState<List<Category>>? = null
+    override suspend fun getCategories(type: String): Resource<List<Category>>? {
+        var data: Resource<List<Category>>? = null
         try {
             val result = service.getCategories(type)
             if (result.isSuccessful) {
@@ -31,8 +31,8 @@ class MerchantRepositoryImpl @Inject constructor(
         return data
     }
 
-    override suspend fun getMerchants(category: String?, searchTerm: String?): ViewState<List<Merchant>>? {
-        var data: ViewState<List<Merchant>>? = null
+    override suspend fun getMerchants(category: String?, searchTerm: String?): Resource<List<Merchant>>? {
+        var data: Resource<List<Merchant>>? = null
         try {
             val result = service.getMerchants(category, searchTerm)
             if (result.isSuccessful) {
@@ -49,8 +49,8 @@ class MerchantRepositoryImpl @Inject constructor(
         return data
     }
 
-    override suspend fun getMerchant(id: String): ViewState<Merchant>? {
-        var data: ViewState<Merchant>? = null
+    override suspend fun getMerchant(id: String): Resource<Merchant>? {
+        var data: Resource<Merchant>? = null
         try {
             val result = service.getMerchant(id)
             if (result.isSuccessful) {
@@ -67,8 +67,8 @@ class MerchantRepositoryImpl @Inject constructor(
         return data
     }
 
-    override suspend fun getFavorites(): ViewState<List<Merchant>>? {
-        var data: ViewState<List<Merchant>>? = null
+    override suspend fun getFavorites(): Resource<List<Merchant>>? {
+        var data: Resource<List<Merchant>>? = null
         try {
             val result = service.getFavorites()
             if (result.isSuccessful) {
@@ -85,8 +85,8 @@ class MerchantRepositoryImpl @Inject constructor(
         return data
     }
 
-    override suspend fun updateFavorite(id: String): ViewState<Boolean> {
-        val data: ViewState<Boolean>
+    override suspend fun updateFavorite(id: String): Resource<Boolean> {
+        val data: Resource<Boolean>
         try {
             val result = service.updateFavorite(id)
             data = if (result.isSuccessful && result.code() == 201) {

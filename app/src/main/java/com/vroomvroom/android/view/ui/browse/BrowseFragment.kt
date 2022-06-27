@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import com.vroomvroom.android.databinding.FragmentBrowseBinding
-import com.vroomvroom.android.view.state.ViewState
+import com.vroomvroom.android.view.resource.Resource
 import com.vroomvroom.android.view.ui.base.BaseFragment
 import com.vroomvroom.android.view.ui.home.adapter.CategoryAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -44,7 +44,7 @@ class BrowseFragment : BaseFragment<FragmentBrowseBinding>(
     private fun observeBrowseCategory() {
         mainViewModel.categories.observe(viewLifecycleOwner) { response ->
             when(response) {
-                is ViewState.Loading -> {
+                is Resource.Loading -> {
                     binding.apply {
                         binding.commonNoticeLayout.hideNotice()
                         title.visibility = View.GONE
@@ -55,7 +55,7 @@ class BrowseFragment : BaseFragment<FragmentBrowseBinding>(
                         }
                     }
                 }
-                is ViewState.Success -> {
+                is Resource.Success -> {
                     val category = response.data
                     categoryAdapter.submitList(category)
                     binding.apply {
@@ -67,7 +67,7 @@ class BrowseFragment : BaseFragment<FragmentBrowseBinding>(
                         }
                     }
                 }
-                is ViewState.Error -> {
+                is Resource.Error -> {
                     binding.apply {
                         categoryRv.visibility = View.GONE
                         title.visibility = View.GONE

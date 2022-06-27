@@ -23,7 +23,7 @@ import com.vroomvroom.android.utils.OnProductClickListener
 import com.vroomvroom.android.utils.Utils.onReady
 import com.vroomvroom.android.utils.Utils.stringBuilder
 import com.vroomvroom.android.utils.Utils.timeFormatter
-import com.vroomvroom.android.view.state.ViewState
+import com.vroomvroom.android.view.resource.Resource
 import com.vroomvroom.android.view.ui.base.BaseFragment
 import com.vroomvroom.android.view.ui.home.adapter.CartAdapter
 import com.vroomvroom.android.view.ui.home.adapter.ProductSectionAdapter
@@ -86,14 +86,14 @@ class MerchantFragment : BaseFragment<FragmentMerchantBinding>(
     private fun observeMerchantLiveData() {
         homeViewModel.merchant.observe(viewLifecycleOwner) { response ->
             when(response) {
-                is ViewState.Loading -> {
+                is Resource.Loading -> {
                     binding.commonNoticeLayout.hideNotice()
                     binding.merchantAppBar.visibility = View.GONE
                     binding.productSectionRv.visibility = View.GONE
                     binding.merchantShimmerLayout.visibility = View.VISIBLE
                     binding.merchantShimmerLayout.startShimmer()
                 }
-                is ViewState.Success -> {
+                is Resource.Success -> {
                     val merchant = response.data
                     mainActivityViewModel.merchant = merchant
                     productSectionAdapter.submitList(merchant.productSections)
@@ -111,7 +111,7 @@ class MerchantFragment : BaseFragment<FragmentMerchantBinding>(
                         }
                     }
                 }
-                is ViewState.Error -> {
+                is Resource.Error -> {
                     binding.merchantShimmerLayout.visibility = View.GONE
                     binding.merchantShimmerLayout.stopShimmer()
                     binding.merchantAppBar.visibility = View.GONE

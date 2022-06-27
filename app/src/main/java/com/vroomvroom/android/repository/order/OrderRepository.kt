@@ -1,16 +1,15 @@
 package com.vroomvroom.android.repository.order
 
 import com.vroomvroom.android.data.model.cart.CartItemWithOptions
-import com.vroomvroom.android.data.model.order.Order
 import com.vroomvroom.android.data.model.order.OrderDto
 import com.vroomvroom.android.data.model.order.Payment
 import com.vroomvroom.android.data.model.user.LocationEntity
-import com.vroomvroom.android.view.state.ViewState
+import com.vroomvroom.android.view.resource.Resource
 
 interface OrderRepository {
 
-    suspend fun getOrders(status: String?): ViewState<List<OrderDto>>?
-    suspend fun getOrder(id: String): ViewState<OrderDto>?
+    suspend fun getOrders(status: String?): Resource<List<OrderDto>>?
+    suspend fun getOrder(id: String): Resource<OrderDto>?
     suspend fun createOrders(
         merchantId: String,
         payment: Payment,
@@ -18,16 +17,16 @@ interface OrderRepository {
         totalPrice: Double,
         locationEntity: LocationEntity,
         cartItems: List<CartItemWithOptions>
-    ): ViewState<String>?
-    suspend fun cancelOrder(id: String, reason: String): ViewState<Boolean>?
+    ): Resource<String>?
+    suspend fun cancelOrder(id: String, reason: String): Resource<Boolean>?
     suspend fun updateOrderAddress(
         id: String,
         location: LocationEntity
-    ): ViewState<Boolean>?
+    ): Resource<Boolean>?
     suspend fun createReview(
         id: String,
         merchantId: String,
         rate: Int,
         comment: String
-    ): ViewState<Boolean>?
+    ): Resource<Boolean>?
 }

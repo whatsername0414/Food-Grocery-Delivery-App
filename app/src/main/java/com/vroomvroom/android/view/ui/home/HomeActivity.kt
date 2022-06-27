@@ -22,7 +22,7 @@ import com.vroomvroom.android.view.ui.base.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@AndroidEntryPoint
+    @AndroidEntryPoint
 @ExperimentalCoroutinesApi
 class HomeActivity : AppCompatActivity() {
 
@@ -85,12 +85,12 @@ class HomeActivity : AppCompatActivity() {
             }
             when (destination.id) {
                 R.id.homeFragment, R.id.browseFragment, R.id.ordersFragment, R.id.accountFragment -> {
-                    mainActivityViewModel.isBottomBarVisible = true
+                    mainActivityViewModel.isBottomNavViewVisible = true
                     bottomNavigationView.visibility = View.VISIBLE
                 }
                 else -> {
                     isHomeSelected = false
-                    mainActivityViewModel.isBottomBarVisible = false
+                    mainActivityViewModel.isBottomNavViewVisible = false
                     bottomNavigationView.visibility = View.GONE
                 }
             }

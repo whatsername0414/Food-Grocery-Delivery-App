@@ -3,12 +3,32 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/drawable/account_selector.xml" value="0.161" />
         <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/drawable/bg_gray_3d3_rounded_16dp_stroke_filled.xml" value="0.1425" />
         <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/drawable/bg_gray_3d3_rounded_16dp_stroke_outlined.xml" value="0.1425" />
+        <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/drawable/bg_red_a30_rounded_16dp.xml" value="0.161" />
+        <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/drawable/bg_white_fff_rounded_10dp_bottom.xml" value="0.161" />
         <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/drawable/bg_white_fff_rounded_16dp_stroke_filled.xml" value="0.1425" />
+        <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/drawable/browser_selector.xml" value="0.161" />
+        <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/drawable/home_scrolled_selector.xml" value="0.161" />
+        <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/drawable/home_selector.xml" value="0.15" />
+        <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/drawable/ic_account.xml" value="0.161" />
+        <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/drawable/ic_account_gray_7f7.xml" value="0.161" />
+        <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/drawable/ic_arrow_left.xml" value="0.161" />
+        <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/drawable/ic_browse.xml" value="0.161" />
+        <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/drawable/ic_browse_gray_7f7.xml" value="0.161" />
+        <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/drawable/ic_home.xml" value="0.15" />
+        <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/drawable/ic_home_gray_7f7.xml" value="0.161" />
+        <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/drawable/ic_invoice.xml" value="0.161" />
+        <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/drawable/ic_pinned_user.xml" value="0.161" />
+        <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/drawable/ic_receipt_gray_7f7.xml" value="0.161" />
+        <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/drawable/ic_store.xml" value="0.161" />
+        <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/drawable/receipt_selector.xml" value="0.161" />
         <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/layout/activity_home.xml" value="0.27447916666666666" />
         <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/layout/common_alert_dialog_layout.xml" value="0.27447916666666666" />
+        <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/layout/common_notice_layout.xml" value="0.29322916666666665" />
         <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/layout/fragment_auth_bottom_sheet.xml" value="0.27447916666666666" />
+        <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/layout/fragment_browse.xml" value="0.29322916666666665" />
         <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/layout/fragment_cart_bottom_sheet.xml" value="0.27447916666666666" />
         <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/layout/fragment_checkout.xml" value="0.27447916666666666" />
         <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/layout/fragment_code_verification.xml" value="0.264" />
@@ -21,7 +41,8 @@
         <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/layout/fragment_merchant_search.xml" value="0.27447916666666666" />
         <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/layout/fragment_merchant_shimmer.xml" value="0.27447916666666666" />
         <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/layout/fragment_order.xml" value="0.27447916666666666" />
-        <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/layout/fragment_order_detail.xml" value="0.4" />
+        <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/layout/fragment_order_detail.xml" value="0.264" />
+        <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/layout/fragment_orders.xml" value="0.27447916666666666" />
         <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/layout/fragment_pending.xml" value="0.27447916666666666" />
         <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/layout/fragment_phone_verification.xml" value="0.264" />
         <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/layout/fragment_product_bottom_sheet.xml" value="0.264" />
@@ -49,7 +70,9 @@
         <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/layout/item_product_shimmer.xml" value="0.27447916666666666" />
         <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/layout/item_review.xml" value="0.27447916666666666" />
         <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/layout/item_search.xml" value="0.1265625" />
+        <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/layout/placed_order_dialog_layout.xml" value="0.29322916666666665" />
         <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/layout/receipt_dialog_layout.xml" value="0.27447916666666666" />
+        <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/menu/bottom_menu.xml" value="0.29322916666666665" />
         <entry key="..\:/Users/macel/.gradle/caches/transforms-3/de21b4908582fa1cae50247fb23c313e/transformed/appcompat-1.4.1/res/layout/support_simple_spinner_dropdown_item.xml" value="0.22447916666666667" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable-night/splash_image.xml" value="0.126" />
         <entry key="..\:/Users/macel/AndroidStudioProjects/Android-Project/app/src/main/res/drawable-v24/ic_close_maroon.xml" value="0.21388888888888888" />

@@ -13,7 +13,7 @@ import com.vroomvroom.android.repository.services.FirebaseAuthRepository
 import com.vroomvroom.android.repository.user.UserRepository
 import com.vroomvroom.android.utils.SmsBroadcastReceiver
 import com.vroomvroom.android.utils.SmsBroadcastReceiverListener
-import com.vroomvroom.android.view.state.ViewState
+import com.vroomvroom.android.view.resource.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -29,40 +29,41 @@ class AuthViewModel @Inject constructor(
     private val preferences: UserPreferences
 ) : ViewModel() {
 
-    private val _isOtpSent by lazy { MutableLiveData<ViewState<Boolean>>() }
-    val isOtpSent: LiveData<ViewState<Boolean>>
+    private val _isOtpSent by lazy { MutableLiveData<Resource<Boolean>>() }
+    val isOtpSent: LiveData<Resource<Boolean>>
         get() = _isOtpSent
 
-    private val _isPhoneNumberVerified by lazy { MutableLiveData<ViewState<Boolean>>() }
-    val isPhoneNumberVerified: LiveData<ViewState<Boolean>>
+    private val _isPhoneNumberVerified by lazy { MutableLiveData<Resource<Boolean>>() }
+    val isPhoneNumberVerified: LiveData<Resource<Boolean>>
         get() = _isPhoneNumberVerified
 
-    private val _isRegistered by lazy { MutableLiveData<ViewState<Boolean>>() }
-    val isRegistered: LiveData<ViewState<Boolean>>
+    private val _isRegistered by lazy { MutableLiveData<Resource<Boolean>>() }
+    val isRegistered: LiveData<Resource<Boolean>>
         get() = _isRegistered
 
     val token = preferences.token.asLiveData()
 
     val user = userRepository.getUserLocale()
-    private val _newLoggedInUser by lazy { MutableLiveData<ViewState<FirebaseUser>>() }
-    val newLoggedInUser: LiveData<ViewState<FirebaseUser>>
+    val signedInUser = firebaseAuthRepository.getCurrentUser()
+    private val _newLoggedInUser by lazy { MutableLiveData<Resource<FirebaseUser>>() }
+    val newLoggedInUser: LiveData<Resource<FirebaseUser>>
         get() = _newLoggedInUser
-    val isPasswordResetEmailSent by lazy { MutableLiveData<ViewState<String>>() }
-    val messageIntent by lazy { MutableLiveData<ViewState<Intent>>() }
+    val isPasswordResetEmailSent by lazy { MutableLiveData<Resource<String>>() }
+    val messageIntent by lazy { MutableLiveData<Resource<Intent>>() }
 
     val signInIntent = firebaseAuthRepository.signInIntent()
     val broadcastReceiver = smsBroadcastReceiver
 
     fun registerPhoneNumber(number: String) {
-        _isOtpSent.postValue(ViewState.Loading)
+        _isOtpSent.postValue(Resource.Loading)
         viewModelScope.launch(Dispatchers.IO) {
             val response = authRepository.registerPhoneNumber(number)
             response?.let { data ->
                 when (data) {
-                    is ViewState.Success -> {
+                    is Resource.Success -> {
                         _isOtpSent.postValue(data)
                     }
-                    is ViewState.Error -> {
+                    is Resource.Error -> {
                         _isOtpSent.postValue(data)
                     }
                     else -> {
@@ -82,15 +83,15 @@ class AuthViewModel @Inject constructor(
     }
 
     fun verifyOtp(otp: String) {
-        _isPhoneNumberVerified.postValue(ViewState.Loading)
+        _isPhoneNumberVerified.postValue(Resource.Loading)
         viewModelScope.launch(Dispatchers.IO) {
             val response = authRepository.verifyOtp(otp)
             response?.let { data ->
                 when (data) {
-                    is ViewState.Success -> {
+                    is Resource.Success -> {
                         _isPhoneNumberVerified.postValue(data)
                     }
-                    is ViewState.Error -> {
+                    is Resource.Error -> {
                         _isPhoneNumberVerified.postValue(data)
                     }
                     else -> {
@@ -104,7 +105,6 @@ class AuthViewModel @Inject constructor(
     fun saveIdToken() {
         firebaseAuthRepository.getIdToken { result ->
             result?.let { token ->
-                Log.d("AuthViewModel", token)
                 viewModelScope.launch(Dispatchers.IO) {
                     preferences.saveToken(token)
                 }
@@ -125,15 +125,15 @@ class AuthViewModel @Inject constructor(
     }
 
     fun register(locationEntity: LocationEntity) {
-        _isRegistered.postValue(ViewState.Loading)
+        _isRegistered.postValue(Resource.Loading)
         viewModelScope.launch(Dispatchers.IO) {
             val response = authRepository.register(locationEntity)
             response.let { data ->
                 when (data) {
-                    is ViewState.Success -> {
+                    is Resource.Success -> {
                         _isRegistered.postValue(data)
                     }
-                    is ViewState.Error -> {
+                    is Resource.Error -> {
                         _isRegistered.postValue(data)
                     }
                     else -> {
@@ -164,13 +164,13 @@ class AuthViewModel @Inject constructor(
     }
 
     fun googleSignIn(data: Intent?) {
-        _newLoggedInUser.postValue(ViewState.Loading)
+        _newLoggedInUser.postValue(Resource.Loading)
         firebaseAuthRepository.googleSignIn(data) { result ->
             when (result) {
-                is ViewState.Success -> {
+                is Resource.Success -> {
                     _newLoggedInUser.postValue(result)
                 }
-                is ViewState.Error -> {
+                is Resource.Error -> {
                     _newLoggedInUser.postValue(result)
                 }
                 else -> {
@@ -180,13 +180,13 @@ class AuthViewModel @Inject constructor(
         }
     }
     fun facebookLogIn(fragment: BottomSheetDialogFragment) {
-        _newLoggedInUser.postValue(ViewState.Loading)
+        _newLoggedInUser.postValue(Resource.Loading)
         firebaseAuthRepository.facebookLogin(fragment) { result ->
             when (result) {
-                is ViewState.Success -> {
+                is Resource.Success -> {
                     _newLoggedInUser.postValue(result)
                 }
-                is ViewState.Error -> {
+                is Resource.Error -> {
                     _newLoggedInUser.postValue(result)
                 }
                 else -> {
@@ -197,13 +197,13 @@ class AuthViewModel @Inject constructor(
     }
 
     fun registerWithEmailAndPassword(emailAddress: String, password: String) {
-        _newLoggedInUser.postValue(ViewState.Loading)
+        _newLoggedInUser.postValue(Resource.Loading)
         firebaseAuthRepository.registerWithEmailAndPassword(emailAddress, password) { result ->
             when (result) {
-                is ViewState.Success -> {
+                is Resource.Success -> {
                     _newLoggedInUser.postValue(result)
                 }
-                is ViewState.Error -> {
+                is Resource.Error -> {
                     _newLoggedInUser.postValue(result)
                 }
                 else -> {
@@ -214,13 +214,13 @@ class AuthViewModel @Inject constructor(
     }
 
     fun logInWithEmailAndPassword(emailAddress: String, password: String) {
-        _newLoggedInUser.postValue(ViewState.Loading)
+        _newLoggedInUser.postValue(Resource.Loading)
         firebaseAuthRepository.logInWithEmailAndPassword(emailAddress, password) { result ->
             when (result) {
-                is ViewState.Success -> {
+                is Resource.Success -> {
                     _newLoggedInUser.postValue(result)
                 }
-                is ViewState.Error -> {
+                is Resource.Error -> {
                     _newLoggedInUser.postValue(result)
                 }
                 else -> {
@@ -233,10 +233,10 @@ class AuthViewModel @Inject constructor(
     fun resetPasswordWithEmail(emailAddress: String) {
         firebaseAuthRepository.resetPasswordWithEmail(emailAddress) { result ->
             when (result) {
-                is ViewState.Success -> {
+                is Resource.Success -> {
                     isPasswordResetEmailSent.postValue(result)
                 }
-                is ViewState.Error -> {
+                is Resource.Error -> {
                     isPasswordResetEmailSent.postValue(result)
                 }
                 else -> {
@@ -253,12 +253,12 @@ class AuthViewModel @Inject constructor(
     fun registerBroadcastReceiver() {
         firebaseAuthRepository.smsRetrieverClient()
         smsBroadcastReceiver.smsBroadcastReceiverListener = object : SmsBroadcastReceiverListener {
-            override fun onIntent(intent: ViewState<Intent>) {
+            override fun onIntent(intent: Resource<Intent>) {
                 when (intent) {
-                    is ViewState.Success -> {
+                    is Resource.Success -> {
                         messageIntent.postValue(intent)
                     }
-                    is ViewState.Error -> {
+                    is Resource.Error -> {
                         messageIntent.postValue(intent)
                     }
                     else -> {

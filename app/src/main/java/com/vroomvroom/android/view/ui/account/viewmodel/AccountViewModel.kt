@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vroomvroom.android.repository.user.UserRepository
-import com.vroomvroom.android.view.state.ViewState
+import com.vroomvroom.android.view.resource.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,11 +16,11 @@ class AccountViewModel @Inject constructor(
     private val userRepository: UserRepository,
 ) : ViewModel() {
 
-    private val _isGetUserSuccessful by lazy { MutableLiveData<ViewState<Boolean>>() }
-    val isGetUserSuccessful: LiveData<ViewState<Boolean>>
+    private val _isGetUserSuccessful by lazy { MutableLiveData<Resource<Boolean>>() }
+    val isGetUserSuccessful: LiveData<Resource<Boolean>>
         get() = _isGetUserSuccessful
-    private val _isNameUpdated by lazy { MutableLiveData<ViewState<Boolean>>() }
-    val isNameUpdated: LiveData<ViewState<Boolean>>
+    private val _isNameUpdated by lazy { MutableLiveData<Resource<Boolean>>() }
+    val isNameUpdated: LiveData<Resource<Boolean>>
         get() = _isNameUpdated
 
     fun getUser() {
@@ -28,10 +28,10 @@ class AccountViewModel @Inject constructor(
             val response = userRepository.getUser()
             response?.let { data ->
                 when (data) {
-                    is ViewState.Success -> {
+                    is Resource.Success -> {
                         _isGetUserSuccessful.postValue(data)
                     }
-                    is ViewState.Error -> {
+                    is Resource.Error -> {
                         _isGetUserSuccessful.postValue(data)
                     }
                     else -> {
@@ -43,15 +43,15 @@ class AccountViewModel @Inject constructor(
     }
 
     fun updateName(name: String) {
-        _isNameUpdated.postValue(ViewState.Loading)
+        _isNameUpdated.postValue(Resource.Loading)
         viewModelScope.launch(Dispatchers.IO) {
             val response = userRepository.updateName(name)
             response?.let { data ->
                 when (data) {
-                    is ViewState.Success -> {
+                    is Resource.Success -> {
                         _isNameUpdated.postValue(data)
                     }
-                    is ViewState.Error -> {
+                    is Resource.Error -> {
                         _isNameUpdated.postValue(data)
                     }
                     else -> {

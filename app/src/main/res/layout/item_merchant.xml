@@ -57,8 +57,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/dark_background"
-                        tools:visibility="invisible"/>
+                        app:srcCompat="@drawable/dark_background"/>
 
                     <LinearLayout
                         android:id="@+id/favoriteLayout"
@@ -81,7 +80,7 @@
                     </LinearLayout>
 
                     <TextView
-                        android:id="@+id/tv_opening"
+                        android:id="@+id/opening_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -107,6 +106,13 @@
                         android:drawableEnd="@drawable/ic_arrow_right"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent" />
+
+                    <androidx.constraintlayout.widget.Group
+                        android:id="@+id/closed_group"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        app:constraint_referenced_ids="closed_bg, opening_tv, preorder_btn"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

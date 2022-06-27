@@ -8,7 +8,7 @@ import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentAddressesBinding
 import com.vroomvroom.android.data.model.user.LocationEntity
 import com.vroomvroom.android.utils.ClickType
-import com.vroomvroom.android.view.state.ViewState
+import com.vroomvroom.android.view.resource.Resource
 import com.vroomvroom.android.view.ui.base.BaseFragment
 import com.vroomvroom.android.view.ui.location.adapter.AddressAdapter
 import com.vroomvroom.android.view.ui.common.CommonAlertDialog
@@ -73,14 +73,14 @@ class AddressesFragment : BaseFragment<FragmentAddressesBinding>(
     private fun observeChangeAddress() {
         ordersViewModel.isAddressUpdated.observe(viewLifecycleOwner) { response ->
             when (response) {
-                is ViewState.Loading -> {
+                is Resource.Loading -> {
                     binding.progressIndicator.visibility = View.VISIBLE
                 }
-                is ViewState.Success -> {
+                is Resource.Success -> {
                     binding.progressIndicator.visibility = View.GONE
                     handleSuccess()
                 }
-                is ViewState.Error -> {
+                is Resource.Error -> {
                     binding.progressIndicator.visibility = View.GONE
                     handleFailed()
                 }

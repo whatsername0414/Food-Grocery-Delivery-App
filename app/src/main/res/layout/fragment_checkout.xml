@@ -259,11 +259,11 @@
         android:layout_marginHorizontal="@dimen/dp_32"
         android:layout_marginBottom="@dimen/dp_16"
         android:background="@drawable/bg_red_a30_rounded_16dp"
-        tools:text="Place Order • ₱145"
         android:textAllCaps="false"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="Place Order • ₱145" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

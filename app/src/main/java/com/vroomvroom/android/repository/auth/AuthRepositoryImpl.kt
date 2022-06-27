@@ -8,7 +8,7 @@ import com.vroomvroom.android.data.model.user.UserMapper
 import com.vroomvroom.android.repository.BaseRepository
 import com.vroomvroom.android.repository.merchant.MerchantRepositoryImpl
 import com.vroomvroom.android.repository.user.UserRepositoryImpl
-import com.vroomvroom.android.view.state.ViewState
+import com.vroomvroom.android.view.resource.Resource
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
@@ -16,8 +16,8 @@ class AuthRepositoryImpl @Inject constructor(
     private val userDao: UserDao,
     private val userMapper: UserMapper
 ) : AuthRepository, BaseRepository() {
-    override suspend fun register(locationEntity: LocationEntity): ViewState<Boolean>? {
-        var data: ViewState<Boolean>? = null
+    override suspend fun register(locationEntity: LocationEntity): Resource<Boolean>? {
+        var data: Resource<Boolean>? = null
         try {
             val result = service.register(locationEntity)
             if (result.isSuccessful && result.code() == 200) {
@@ -36,8 +36,8 @@ class AuthRepositoryImpl @Inject constructor(
         return data
     }
 
-    override suspend fun registerPhoneNumber(number: String): ViewState<Boolean>? {
-        var data: ViewState<Boolean>? = null
+    override suspend fun registerPhoneNumber(number: String): Resource<Boolean>? {
+        var data: Resource<Boolean>? = null
         try {
             val body = mapOf("number" to number)
             val result = service.registerPhoneNumber(body)
@@ -51,8 +51,8 @@ class AuthRepositoryImpl @Inject constructor(
         return data
     }
 
-    override suspend fun verifyOtp(otp: String): ViewState<Boolean>? {
-        var data: ViewState<Boolean>? = null
+    override suspend fun verifyOtp(otp: String): Resource<Boolean>? {
+        var data: Resource<Boolean>? = null
         try {
             val body = mapOf("otp" to otp)
             val result = service.verifyOtp(body)

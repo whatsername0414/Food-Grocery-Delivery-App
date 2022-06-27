@@ -21,7 +21,7 @@ import com.vroomvroom.android.utils.Constants.GCASH
 import com.vroomvroom.android.utils.Utils.setMap
 import com.vroomvroom.android.utils.Utils.setMapWithTwoPoint
 import com.vroomvroom.android.utils.Utils.showCurvedPolyline
-import com.vroomvroom.android.view.state.ViewState
+import com.vroomvroom.android.view.resource.Resource
 import com.vroomvroom.android.view.ui.base.BaseFragment
 import com.vroomvroom.android.view.ui.common.CommonAlertDialog
 import com.vroomvroom.android.view.ui.common.CompleteType
@@ -47,6 +47,7 @@ class CheckoutFragment : BaseFragment<FragmentCheckoutBinding> (
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        checkoutViewModel.subtotal = 0.0
         mapView = binding.userLocationMapView
         initGoogleMap(savedInstanceState)
         navController = findNavController()
@@ -96,11 +97,7 @@ class CheckoutFragment : BaseFragment<FragmentCheckoutBinding> (
     private fun observeRoomCartItemLiveData() {
         homeViewModel.cartItem.observe(viewLifecycleOwner) { items ->
             checkoutAdapter.submitList(items)
-            if (!checkoutViewModel.isComputed) {
-                items.forEach { item ->
-                    checkoutViewModel.subtotal += item.cartItem.price
-                }.also { checkoutViewModel.isComputed = true }
-            }
+            checkoutViewModel.subtotal = items.sumOf { it.cartItem.price }
             binding.checkoutMerchant.text = items.first().cartItem.cartMerchant.merchantName
             binding.checkoutSubTotalTv.text =
                 getString(R.string.peso, "%.2f".format(checkoutViewModel.subtotal))
@@ -165,10 +162,10 @@ class CheckoutFragment : BaseFragment<FragmentCheckoutBinding> (
     private fun observeOrderLiveData() {
         checkoutViewModel.order.observe(viewLifecycleOwner) { response ->
             when (response) {
-                is ViewState.Loading -> {
+                is Resource.Loading -> {
                     loadingDialog.show(getString(R.string.creating_order))
                 }
-                is ViewState.Success -> {
+                is Resource.Success -> {
                     homeViewModel.cartItem.removeObservers(viewLifecycleOwner)
                     homeViewModel.deleteAllCartItem()
                     loadingDialog.dismiss()
@@ -181,7 +178,7 @@ class CheckoutFragment : BaseFragment<FragmentCheckoutBinding> (
                             CompleteType.CHECKOUT,
                             response.data))
                 }
-                is ViewState.Error -> {
+                is Resource.Error -> {
                     loadingDialog.dismiss()
                     handleError()
                     binding.btnPlaceOrder.text =
