@@ -100,7 +100,7 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(
     }
 
     private fun observeUser() {
-        authViewModel.user.observe(viewLifecycleOwner) { user ->
+        mainActivityViewModel.user.observe(viewLifecycleOwner) { user ->
             if (user != null) {
                 binding.favorite.visibility = View.VISIBLE
                 merchantAdapter.setUser(user)

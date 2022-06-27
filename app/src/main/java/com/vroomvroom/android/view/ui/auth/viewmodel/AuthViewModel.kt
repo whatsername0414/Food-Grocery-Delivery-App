@@ -1,7 +1,6 @@
 package com.vroomvroom.android.view.ui.auth.viewmodel
 
 import android.content.Intent
-import android.util.Log
 import androidx.lifecycle.*
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -43,7 +42,6 @@ class AuthViewModel @Inject constructor(
 
     val token = preferences.token.asLiveData()
 
-    val user = userRepository.getUserLocale()
     val signedInUser = firebaseAuthRepository.getCurrentUser()
     private val _newLoggedInUser by lazy { MutableLiveData<Resource<FirebaseUser>>() }
     val newLoggedInUser: LiveData<Resource<FirebaseUser>>

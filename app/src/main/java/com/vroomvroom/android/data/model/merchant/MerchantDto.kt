@@ -12,6 +12,7 @@ data class MerchantDto(
     val location: List<String>?,
     val opening: Int,
     val closing: Int,
+    val isOpen: Boolean,
     val reviews: List<ReviewDto>?
 )
 

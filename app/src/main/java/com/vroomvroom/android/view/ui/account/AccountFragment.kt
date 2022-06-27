@@ -28,7 +28,7 @@ class AccountFragment : BaseFragment<FragmentAccountBinding>(
     }
 
     private fun observeUser() {
-        authViewModel.user.observe(viewLifecycleOwner) { user ->
+        mainActivityViewModel.user.observe(viewLifecycleOwner) { user ->
             if (user != null) {
                 initOptionAdapter(true)
                 binding.accountIcon.visibility = View.GONE

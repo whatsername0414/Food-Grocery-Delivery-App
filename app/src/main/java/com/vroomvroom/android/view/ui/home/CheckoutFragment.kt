@@ -73,7 +73,7 @@ class CheckoutFragment : BaseFragment<FragmentCheckoutBinding> (
     }
 
     private fun observeUser() {
-        authViewModel.user.observe(viewLifecycleOwner) { user ->
+        mainViewModel.user.observe(viewLifecycleOwner) { user ->
             when {
                 user == null -> {
                     binding.btnPlaceOrder.text = getString(R.string.login_or_sign_up)

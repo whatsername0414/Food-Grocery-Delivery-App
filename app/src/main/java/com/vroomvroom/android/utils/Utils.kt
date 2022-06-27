@@ -269,15 +269,6 @@ object Utils {
 
     }
 
-    fun isOpen(opening: Int, closing: Int): Boolean {
-        val cal = Calendar.getInstance()
-        val now = cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE)
-        if (now in (opening / 60)..(closing / 60)) {
-            return true
-        }
-        return true
-    }
-
     fun GoogleMap?.showCurvedPolyline(p1: LatLng, p2: LatLng, k: Double = 0.5, context: Context) {
         //Calculate distance and heading between two points
         val d = SphericalUtil.computeDistanceBetween(p1, p2)

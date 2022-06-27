@@ -28,7 +28,7 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(
         binding.appBarLayout.toolbar.setupToolbar()
 
         merchantAdapter.apply {
-            setUser(authViewModel.user.value)
+            setUser(mainActivityViewModel.user.value)
             binding.favoriteRv.adapter = this
         }
 

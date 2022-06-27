@@ -36,7 +36,7 @@ class MerchantSearchFragment : BaseFragment<FragmentMerchantSearchBinding>(
         initSearchView()
         observeMerchantsLiveData()
 
-        binding.merchantRv.adapter = merchantAdapter.apply {setUser(authViewModel.user.value)}
+        binding.merchantRv.adapter = merchantAdapter.apply {setUser(user)}
         binding.searchRv.adapter = searchAdapter
 
         val args = args.searchTerm

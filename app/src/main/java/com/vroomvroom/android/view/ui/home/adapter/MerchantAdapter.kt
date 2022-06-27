@@ -1,6 +1,5 @@
 package com.vroomvroom.android.view.ui.home.adapter
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,7 +50,6 @@ class MerchantAdapter: ListAdapter<Merchant, MerchantViewHolder>(MerchantDiffUti
         return MerchantViewHolder(binding)
     }
 
-    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: MerchantViewHolder, position: Int) {
         val merchant = getItem(position)
         holder.binding.openingTv.text = timeFormatter(merchant.opening)

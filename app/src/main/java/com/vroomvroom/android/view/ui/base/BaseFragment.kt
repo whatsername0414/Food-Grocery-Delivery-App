@@ -20,6 +20,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.CommonNoticeLayoutBinding
 import com.vroomvroom.android.data.model.merchant.Merchant
+import com.vroomvroom.android.data.model.user.UserEntity
 import com.vroomvroom.android.utils.ClickType
 import com.vroomvroom.android.utils.Constants
 import com.vroomvroom.android.utils.Utils.safeNavigate
@@ -60,6 +61,7 @@ abstract class BaseFragment<VB: ViewBinding> (
     val binding: VB
         get() = _binding as VB
 
+    var user: UserEntity? = null
     lateinit var navController: NavController
     var prevDestinationId: Int = -1
     private lateinit var snackBar: Snackbar
@@ -73,6 +75,7 @@ abstract class BaseFragment<VB: ViewBinding> (
         _binding = bindingInflater.invoke(inflater)
         if (_binding == null)
             throw IllegalArgumentException("Binding cannot be null")
+        user = mainActivityViewModel.user.value
         return binding.root
     }
 

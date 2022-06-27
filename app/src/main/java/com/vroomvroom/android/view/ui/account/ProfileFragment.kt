@@ -34,7 +34,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(
     }
 
     private fun observeUser() {
-        authViewModel.user.observe(viewLifecycleOwner) { user ->
+        mainViewModel.user.observe(viewLifecycleOwner) { user ->
             if (user != null) {
                 binding.user = user
             }

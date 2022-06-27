@@ -37,7 +37,16 @@ class OrdersFragment : BaseFragment<FragmentOrdersBinding>(
         val fragmentManager = requireActivity().supportFragmentManager
         fragmentAdapter = FragmentAdapter(fragmentManager, lifecycle)
 
-        observeUser()
+        if (user != null) {
+            binding.tabLayout.visibility = View.VISIBLE
+            binding.viewPager.visibility = View.VISIBLE
+            setupViewPager()
+            setupTabLayout()
+        } else {
+            binding.tabLayout.visibility = View.GONE
+            binding.viewPager.visibility = View.GONE
+            findNavController().navigate(R.id.action_ordersFragment_to_authBottomSheetFragment)
+        }
 
         binding.cart.setOnClickListener {
             findNavController().safeNavigate(
@@ -83,21 +92,6 @@ class OrdersFragment : BaseFragment<FragmentOrdersBinding>(
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
-    }
-
-    private fun observeUser() {
-        authViewModel.user.observe(viewLifecycleOwner) { user ->
-            if (user != null) {
-                binding.tabLayout.visibility = View.VISIBLE
-                binding.viewPager.visibility = View.VISIBLE
-                setupViewPager()
-                setupTabLayout()
-            } else {
-                binding.tabLayout.visibility = View.GONE
-                binding.viewPager.visibility = View.GONE
-                findNavController().navigate(R.id.action_ordersFragment_to_authBottomSheetFragment)
-            }
-        }
     }
 
     private fun setupTabBadge(number: Int, position: Int) {

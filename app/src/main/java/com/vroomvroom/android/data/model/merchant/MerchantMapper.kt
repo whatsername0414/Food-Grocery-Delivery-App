@@ -2,7 +2,6 @@ package com.vroomvroom.android.data.model.merchant
 
 import com.vroomvroom.android.data.DomainMapper
 import com.vroomvroom.android.utils.Constants.DEFAULT_SERVER_TIME_FORMAT
-import com.vroomvroom.android.utils.Utils.isOpen
 import com.vroomvroom.android.utils.Utils.parseStringToTime
 
 class MerchantMapper : DomainMapper<MerchantDto, Merchant> {
@@ -18,7 +17,7 @@ class MerchantMapper : DomainMapper<MerchantDto, Merchant> {
             favorite = model.favorite,
             opening = model.opening,
             closing = model.closing,
-            isOpen = isOpen(model.opening, model.closing),
+            isOpen = model.isOpen,
             location = model.location,
             reviews = mapToReview(model.reviews)
         )
@@ -71,8 +70,8 @@ class MerchantMapper : DomainMapper<MerchantDto, Merchant> {
     private fun mapToReview(reviews: List<ReviewDto>?): List<Review>? {
         return reviews?.map {
             Review(
-                id = it._id.orEmpty(),
-                userId = it.user_id.orEmpty(),
+                id = it._id,
+                userId = it.user_id,
                 rate = it.rate,
                 comment = it.comment,
                 createdAt = parseStringToTime(it.created_at, DEFAULT_SERVER_TIME_FORMAT)
@@ -96,7 +95,7 @@ class MerchantMapper : DomainMapper<MerchantDto, Merchant> {
             favorite = merchant.favorite,
             opening = merchant.opening,
             closing = merchant.closing,
-            isOpen = isOpen(merchant.opening, merchant.closing),
+            isOpen = merchant.isOpen,
             location = null,
             reviews = null
         )

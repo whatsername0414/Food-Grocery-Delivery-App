@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.vroomvroom.android.data.model.merchant.Category
 import com.vroomvroom.android.data.model.merchant.Merchant
 import com.vroomvroom.android.repository.merchant.MerchantRepository
+import com.vroomvroom.android.repository.user.UserRepository
 import com.vroomvroom.android.utils.Constants.CASH_ON_DELIVERY
 import com.vroomvroom.android.view.resource.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,6 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val merchantRepository: MerchantRepository,
+    userRepository: UserRepository
 ): ViewModel() {
 
     private val _categories by lazy { MutableLiveData<Resource<List<Category>>>() }
@@ -37,6 +39,7 @@ class MainViewModel @Inject constructor(
     val shouldBackToTop by lazy { MutableLiveData(false) }
     val isRefreshed by lazy { MutableLiveData(false) }
     val reviewed by lazy { MutableLiveData(false) }
+    val user = userRepository.getUserLocale()
     var shouldFetchMerchants = false
     var isBottomNavViewVisible = false
     var prevDestination: Int? = null
