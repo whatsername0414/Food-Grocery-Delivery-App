@@ -1,5 +1,6 @@
 package com.vroomvroom.android.repository
 
+import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.vroomvroom.android.data.model.BaseResponse

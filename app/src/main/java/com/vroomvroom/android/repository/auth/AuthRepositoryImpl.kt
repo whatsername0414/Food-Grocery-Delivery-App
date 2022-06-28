@@ -7,7 +7,6 @@ import com.vroomvroom.android.data.model.user.LocationEntity
 import com.vroomvroom.android.data.model.user.UserMapper
 import com.vroomvroom.android.repository.BaseRepository
 import com.vroomvroom.android.repository.merchant.MerchantRepositoryImpl
-import com.vroomvroom.android.repository.user.UserRepositoryImpl
 import com.vroomvroom.android.view.resource.Resource
 import javax.inject.Inject
 
@@ -36,32 +35,13 @@ class AuthRepositoryImpl @Inject constructor(
         return data
     }
 
-    override suspend fun registerPhoneNumber(number: String): Resource<Boolean>? {
-        var data: Resource<Boolean>? = null
+    override suspend fun generateEmailOtp(emailAddress: String): Resource<Boolean> {
+        val data: Resource<Boolean>
         try {
-            val body = mapOf("number" to number)
-            val result = service.registerPhoneNumber(body)
-            if (result.isSuccessful && result.code() == 201) {
+            val body = mapOf("emailAddress" to emailAddress)
+            val result = service.generateEmailOtp(body)
+            if (result.isSuccessful && result.code() == 200) {
                 data = handleSuccess(true)
-            }
-        } catch (e: Exception) {
-            Log.e(UserRepositoryImpl.TAG, "Error: ${e.message}")
-            return handleException(GENERAL_ERROR_CODE)
-        }
-        return data
-    }
-
-    override suspend fun verifyOtp(otp: String): Resource<Boolean>? {
-        var data: Resource<Boolean>? = null
-        try {
-            val body = mapOf("otp" to otp)
-            val result = service.verifyOtp(body)
-            if (result.isSuccessful && result.code() == 201) {
-                result.body()?.data?.let {
-                    val user = userMapper.mapToDomainModel(it)
-                    userDao.updateUser(user)
-                    data = handleSuccess(true)
-                }
             } else {
                 return handleException(result.code(), result.errorBody())
             }
@@ -72,5 +52,23 @@ class AuthRepositoryImpl @Inject constructor(
         return data
     }
 
-
+    override suspend fun verifyEmailOtp(emailAddress: String, otp: String): Resource<Boolean> {
+        val data: Resource<Boolean>
+        try {
+            val body = mapOf(
+                "emailAddress" to emailAddress,
+                "otp" to otp
+            )
+            val result = service.verifyEmailOtp(body)
+            if (result.isSuccessful && result.code() == 200) {
+                data = handleSuccess(true)
+            } else {
+                return handleException(result.code(), result.errorBody())
+            }
+        } catch (e: Exception) {
+            Log.d(MerchantRepositoryImpl.TAG, "Error: ${e.message}")
+            return handleException(GENERAL_ERROR_CODE)
+        }
+        return data
+    }
 }

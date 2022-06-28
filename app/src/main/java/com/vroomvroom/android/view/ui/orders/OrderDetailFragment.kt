@@ -8,10 +8,12 @@ import androidx.navigation.fragment.navArgs
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentOrderDetailBinding
 import com.vroomvroom.android.data.model.order.OrderDto
+import com.vroomvroom.android.data.model.order.Status
 import com.vroomvroom.android.utils.Constants.SUCCESS
 import com.vroomvroom.android.utils.Constants.FORMAT_DD_MMM_YYYY_HH_MM_SS
 import com.vroomvroom.android.utils.Utils.formatStringToDate
 import com.vroomvroom.android.utils.Utils.safeNavigate
+import com.vroomvroom.android.utils.Utils.toUppercase
 import com.vroomvroom.android.view.resource.Resource
 import com.vroomvroom.android.view.ui.base.BaseFragment
 import com.vroomvroom.android.view.ui.orders.adapter.OrderProductAdapter
@@ -70,6 +72,9 @@ class OrderDetailFragment : BaseFragment<FragmentOrderDetailBinding>(
                     binding.orderDetailLayout.visibility = View.VISIBLE
                     val order = response.data
                     ordersViewModel.merchantId = order.merchant.id
+                    binding.statusTv.text = Status.values()[order.status].name
+                        .toUppercase()
+                        .replace(",", " ")
                     updateButtonModify(order)
                     updateViewsOnDataReady(order)
                     binding.orderMerchantLayout.setOnClickListener {
@@ -94,7 +99,7 @@ class OrderDetailFragment : BaseFragment<FragmentOrderDetailBinding>(
 
     private fun updateButtonModify(order: OrderDto) {
         when (order.status) {
-            "Pending" -> {
+            Status.PENDING.ordinal -> {
                 binding.btnModifyOrder.text = getString(R.string.cancel)
                 binding.btnModifyOrder.setOnClickListener {
                     navController.navigate(
@@ -102,7 +107,7 @@ class OrderDetailFragment : BaseFragment<FragmentOrderDetailBinding>(
                     )
                 }
             }
-            "Confirmed" -> {
+            Status.CONFIRMED.ordinal -> {
                 binding.btnModifyOrder.text = getString(R.string.change_address)
                 binding.btnModifyOrder.setOnClickListener {
                     navController.navigate(
@@ -110,7 +115,7 @@ class OrderDetailFragment : BaseFragment<FragmentOrderDetailBinding>(
                     )
                 }
             }
-            "Delivered" -> {
+            Status.DELIVERED.ordinal -> {
                 if (order.reviewed) {
                     binding.btnModifyOrder.visibility = View.GONE
                 } else {
@@ -150,7 +155,7 @@ class OrderDetailFragment : BaseFragment<FragmentOrderDetailBinding>(
             getString(R.string.peso, "%.2f".format(order.orderDetail.deliveryFee))
         val total = order.orderDetail.totalPrice + order.orderDetail.deliveryFee
         binding.totalTv.text = getString(R.string.peso, "%.2f".format(total))
-        binding.orderProductRv.adapter = OrderProductAdapter(order.orderDetail.product)
+        binding.orderProductRv.adapter = OrderProductAdapter(order.orderDetail.products)
         binding.placedDate.text =
             getString(R.string.placed_on,
                 formatStringToDate(order.createdAt, FORMAT_DD_MMM_YYYY_HH_MM_SS))

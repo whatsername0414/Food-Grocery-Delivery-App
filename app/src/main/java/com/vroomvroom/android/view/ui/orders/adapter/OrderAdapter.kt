@@ -10,8 +10,11 @@ import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.ItemOrderBinding
 import com.vroomvroom.android.data.model.order.Merchant
 import com.vroomvroom.android.data.model.order.OrderDto
+import com.vroomvroom.android.data.model.order.Status
+import com.vroomvroom.android.utils.Utils.toUppercase
+import java.util.*
 
-class OrdersDiffUtil: DiffUtil.ItemCallback<OrderDto?>() {
+class OrdersDiffUtil: DiffUtil.ItemCallback<OrderDto>() {
     override fun areItemsTheSame(
         oldItem: OrderDto,
         newItem: OrderDto
@@ -28,7 +31,7 @@ class OrdersDiffUtil: DiffUtil.ItemCallback<OrderDto?>() {
 
 }
 
-class OrderAdapter: ListAdapter<OrderDto?, OrderViewHolder>(OrdersDiffUtil()) {
+class OrderAdapter: ListAdapter<OrderDto, OrderViewHolder>(OrdersDiffUtil()) {
 
     var onMerchantClicked: ((Merchant) -> Unit)? = null
     var onOrderClicked: ((String) -> Unit)? = null
@@ -45,24 +48,27 @@ class OrderAdapter: ListAdapter<OrderDto?, OrderViewHolder>(OrdersDiffUtil()) {
 
     override fun onBindViewHolder(holder: OrderViewHolder, position: Int) {
         val order = getItem(position)
-        order?.let { data ->
-            holder.binding.order = data
-            val subTotal = data.orderDetail.totalPrice + order.orderDetail.deliveryFee
-            holder.binding.subtotal.text = holder.itemView.context.getString(
+        holder.binding.order = order
+        val subTotal = order.orderDetail.totalPrice + order.orderDetail.deliveryFee
+        holder.binding.apply {
+            statusTv.text = Status.values()[order.status].name
+                .toUppercase()
+                .replace(",", " ")
+            subtotal.text = holder.itemView.context.getString(
                 R.string.peso, "%.2f".format(subTotal))
-            val orderProductAdapter = OrderProductAdapter(data.orderDetail.product)
-            holder.binding.orderProductRv.adapter = orderProductAdapter
+            val orderProductAdapter = OrderProductAdapter(order.orderDetail.products)
+            orderProductRv.adapter = orderProductAdapter
 
-            holder.binding.orderMerchantLayout.setOnClickListener {
-                onMerchantClicked?.invoke(data.merchant)
+            orderMerchantLayout.setOnClickListener {
+                onMerchantClicked?.invoke(order.merchant)
             }
 
-            holder.binding.root.setOnClickListener {
-                onOrderClicked?.invoke(data.id)
+            root.setOnClickListener {
+                onOrderClicked?.invoke(order.id)
             }
 
-            holder.binding.coverView.setOnClickListener {
-                onOrderClicked?.invoke(data.id)
+            coverView.setOnClickListener {
+                onOrderClicked?.invoke(order.id)
             }
         }
     }

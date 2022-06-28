@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vroomvroom.android.data.model.order.OrderDto
+import com.vroomvroom.android.data.model.order.Status
 import com.vroomvroom.android.data.model.user.LocationEntity
 import com.vroomvroom.android.repository.order.OrderRepository
 import com.vroomvroom.android.view.resource.Resource
@@ -30,8 +31,8 @@ class OrdersViewModel @Inject constructor(
     val isReviewCreated: LiveData<Resource<Boolean>>
         get() = _isReviewCreated
 
-    private val _orders by lazy { MutableLiveData<Resource<List<OrderDto?>>>() }
-    val orders: LiveData<Resource<List<OrderDto?>>>
+    private val _orders by lazy { MutableLiveData<Resource<List<OrderDto>>>() }
+    val orders: LiveData<Resource<List<OrderDto>>>
         get() = _orders
 
     private val _order by lazy { MutableLiveData<Resource<OrderDto>>() }
@@ -61,7 +62,7 @@ class OrdersViewModel @Inject constructor(
 //        }
 //    }
 
-    fun getOrdersByStatus(status: String) {
+    fun getOrdersByStatus(status: Status) {
         _orders.postValue(Resource.Loading)
         viewModelScope.launch(Dispatchers.IO) {
             val response = orderRepository.getOrders(status)

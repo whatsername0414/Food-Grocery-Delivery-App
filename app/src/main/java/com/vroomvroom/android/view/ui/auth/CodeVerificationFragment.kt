@@ -91,7 +91,7 @@ class CodeVerificationFragment : BaseFragment<FragmentCodeVerificationBinding>(
     }
 
     private fun observeOtpVerificationResult() {
-        authViewModel.isPhoneNumberVerified.observe(viewLifecycleOwner) { response ->
+        authViewModel.isVerified.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Resource.Loading -> {
                     loadingDialog.show(getString(R.string.loading))
@@ -139,7 +139,7 @@ class CodeVerificationFragment : BaseFragment<FragmentCodeVerificationBinding>(
         requireActivity().hideSoftKeyboard()
         val otp = binding.otpEditTxt.text.toString()
         if (otp.isNotBlank()) {
-            authViewModel.verifyOtp(otp)
+            authViewModel.verifyPhoneOtp(otp)
         }
     }
 

@@ -13,10 +13,10 @@ import javax.inject.Inject
 class OrderRepositoryImpl @Inject constructor(
     private val service: OrderService
 ) : OrderRepository, BaseRepository() {
-    override suspend fun getOrders(status: String?): Resource<List<OrderDto>>? {
+    override suspend fun getOrders(status: Status): Resource<List<OrderDto>>? {
         var data: Resource<List<OrderDto>>? = null
         try {
-            val result = service.getOrders(status)
+            val result = service.getOrders(status.ordinal)
             result.body()?.let {
                 data = handleSuccess(it.data)
             }
@@ -51,8 +51,8 @@ class OrderRepositoryImpl @Inject constructor(
     ): Resource<String>? {
         var data: Resource<String>? = null
         try {
-            val result = service.createOrder(
-                mapToOrder(merchantId, payment, deliveryFee, totalPrice, locationEntity, cartItems))
+            val result = service.createOrder(mapToOrder(merchantId, payment, deliveryFee,
+                totalPrice, locationEntity, cartItems))
             if (result.isSuccessful) {
                 result.body()?.data?.let {
                     data = handleSuccess(it["orderId"].orEmpty())

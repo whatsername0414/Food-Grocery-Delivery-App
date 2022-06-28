@@ -9,19 +9,18 @@ import retrofit2.http.POST
 
 interface AuthService {
 
-    @POST("users")
+    @POST("auth")
     suspend fun register(
         @Body body: LocationEntity
     ): Response<BaseResponse<UserDto>>
 
-    @POST("users/me/register-phone-number")
-    suspend fun registerPhoneNumber(
+    @POST("auth/email-otp")
+    suspend fun generateEmailOtp(
         @Body body: Map<String, String>
-    ): Response<BaseResponse<Map<String, String>>>
+    ): Response<BaseResponse<Map<String, Any>>>
 
-    @POST("users/me/verify-otp")
-    suspend fun verifyOtp(
+    @POST("auth/verify-email-otp")
+    suspend fun verifyEmailOtp(
         @Body body: Map<String, String>
-    ): Response<BaseResponse<UserDto>>
-
+    ): Response<BaseResponse<Map<String, Any>>>
 }

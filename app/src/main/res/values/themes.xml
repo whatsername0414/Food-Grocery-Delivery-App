@@ -10,10 +10,11 @@
         <item name="colorSecondaryVariant">@color/gray_a5a</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor" >?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
         <item name="android:windowAnimationStyle">@null</item>
         <item name="autoCompleteTextViewStyle">@style/SearchAutoCompleteTextView</item>
+        <item name="android:autofilledHighlight" tools:targetApi="o">@android:color/transparent</item>
     </style>
     <style name="SplashScreenTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="android:windowAnimationStyle">@null</item>

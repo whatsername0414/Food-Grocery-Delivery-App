@@ -3,8 +3,8 @@ package com.vroomvroom.android.view.ui.orders
 import android.os.Bundle
 import android.view.View
 import androidx.navigation.fragment.findNavController
+import com.vroomvroom.android.data.model.order.Status
 import com.vroomvroom.android.databinding.FragmentOrderBinding
-import com.vroomvroom.android.utils.Constants.PENDING
 import com.vroomvroom.android.utils.Utils.safeNavigate
 import com.vroomvroom.android.view.resource.Resource
 import com.vroomvroom.android.view.ui.base.BaseFragment
@@ -19,11 +19,11 @@ class OrderFragment : BaseFragment<FragmentOrderBinding>(
 ) {
 
     private val orderAdapter by lazy { OrderAdapter() }
-    private lateinit var status: String
+    private lateinit var status: Status
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        status = arguments?.getString(STATUS) ?: PENDING
+        status = arguments?.getParcelable(STATUS) ?: Status.PENDING
         binding.ordersRv.adapter = orderAdapter
         observeOrdersByStatusLiveData()
         observeIsRefreshed()
@@ -97,11 +97,11 @@ class OrderFragment : BaseFragment<FragmentOrderBinding>(
          * current won't use anymore
          */
         fun newInstance(
-            status: String
+            status: Status
         ): OrderFragment {
             val fragment = OrderFragment()
             val bundle = Bundle()
-            bundle.putString(STATUS, status)
+            bundle.putParcelable(STATUS, status)
             fragment.arguments = bundle
             return fragment
         }

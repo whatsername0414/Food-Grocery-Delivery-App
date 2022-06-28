@@ -3,6 +3,8 @@ package com.vroomvroom.android.view.ui.auth
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
 import androidx.navigation.fragment.findNavController
 import com.vroomvroom.android.R
 import com.vroomvroom.android.data.model.user.LocationEntity
@@ -11,6 +13,7 @@ import com.vroomvroom.android.utils.ClickType
 import com.vroomvroom.android.utils.Utils.hideSoftKeyboard
 import com.vroomvroom.android.utils.Utils.isEmailValid
 import com.vroomvroom.android.utils.Utils.safeNavigate
+import com.vroomvroom.android.utils.Utils.setSafeOnClickListener
 import com.vroomvroom.android.view.resource.Resource
 import com.vroomvroom.android.view.ui.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,6 +26,7 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(
 ) {
 
     private var currentLocation: LocationEntity? = null
+    private var emailAddress:String = ""
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -35,27 +39,98 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(
         observeToken()
         observeNewLogInUser()
         observeRegisterUser()
+        observeOtpSent()
+        observeVerified()
 
         binding.txtLogin.setOnClickListener {
             navController.popBackStack()
         }
         binding.btnRegister.setOnClickListener {
             requireActivity().hideSoftKeyboard()
-            val emailAddress = binding.registerEmailInputEditText.text.toString()
-            val password = binding.registerPasswordInputEditText.text.toString()
-            val confirmPassword = binding.registerConfirmPasswordInputEditText.text.toString()
+            val password = binding.registerPasswordInputEditText.text?.toString().orEmpty()
+            val confirmPassword = binding.registerConfirmPasswordInputEditText.text?.toString()
+            if (password == confirmPassword) {
+                loadingDialog.show(getString(R.string.loading))
+                binding.errorTv.visibility = View.GONE
+                authViewModel.registerWithEmailAndPassword(emailAddress, password)
+            } else {
+                binding.errorTv.visibility = View.VISIBLE
+                binding.errorTv.text = getString(R.string.invalid_password)
+            }
+        }
+
+        binding.btnSendOtp.setSafeOnClickListener {
+            requireActivity().hideSoftKeyboard()
+            loadingDialog.show(getString(R.string.sending))
+            emailAddress = binding.registerEmailInputEditText.text?.toString().orEmpty()
             if (emailAddress.isEmailValid()) {
-                if (password == confirmPassword) {
-                    loadingDialog.show(getString(R.string.loading))
-                    binding.errorTv.visibility = View.GONE
-                    authViewModel.registerWithEmailAndPassword(emailAddress, password)
-                } else {
-                    binding.errorTv.visibility = View.VISIBLE
-                    binding.errorTv.text = getString(R.string.invalid_password)
-                }
+                authViewModel.generateEmailOtp(emailAddress)
             } else {
                 binding.errorTv.visibility = View.VISIBLE
                 binding.errorTv.text = getString(R.string.invalid_email_address)
+            }
+        }
+
+        binding.btnVerifyOtp.setOnClickListener {
+            requireActivity().hideSoftKeyboard()
+            val otp = binding.registerOtpInputEditText.text?.toString()
+            if (otp.isNullOrBlank()) {
+                binding.errorTv.text = getString(R.string.otp_invalid)
+                return@setOnClickListener
+            }
+            authViewModel.verifyEmailOtp(emailAddress, otp)
+        }
+        binding.apply {
+            registerEmailInputEditText.doAfterTextChanged {
+                registerOtpInputLayout.visibility = View.GONE
+                resendTv.visibility = View.GONE
+                btnVerifyOtp.visibility = View.GONE
+                btnSendOtp.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    private fun observeOtpSent() {
+        authViewModel.isOtpSent.observe(viewLifecycleOwner) { response ->
+            when (response) {
+                is Resource.Loading -> binding.errorTv.visibility = View.GONE
+                is Resource.Success -> {
+                    loadingDialog.dismiss()
+                    binding.apply {
+                        registerOtpInputLayout.isVisible = response.data
+                        resendTv.isVisible = response.data
+                        btnVerifyOtp.isVisible = response.data
+                        btnSendOtp.isVisible = !response.data
+                    }
+
+                }
+                is Resource.Error -> {
+                    binding.errorTv.apply {
+                        text = response.exception.message
+                        visibility = View.VISIBLE
+                    }
+                }
+            }
+        }
+    }
+
+    private fun observeVerified() {
+        authViewModel.isVerified.observe(viewLifecycleOwner) { response ->
+            when (response) {
+                is Resource.Loading -> Unit
+                is Resource.Success -> {
+                    binding.apply {
+                        registerOtpInputLayout.isVisible = !response.data
+                        resendTv.isVisible = !response.data
+                        btnVerifyOtp.isVisible = !response.data
+                        btnSendOtp.isVisible = !response.data
+                        btnRegister.isEnabled = response.data
+                        registerEmailInputLayout.error = "Verified"
+                    }
+                }
+                is Resource.Error -> {
+                    binding.errorTv.text = response.exception.message
+                }
             }
         }
     }
@@ -69,7 +144,6 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(
     private fun observeToken() {
         authViewModel.token.observe(viewLifecycleOwner) { token ->
             if (token != null) {
-                Log.d("CurrentLocation", currentLocation.toString())
                 currentLocation?.let { authViewModel.register(it) }
             }
         }
@@ -127,5 +201,10 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(
                 else -> Unit
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        authViewModel.resetOtpLiveData()
     }
 }

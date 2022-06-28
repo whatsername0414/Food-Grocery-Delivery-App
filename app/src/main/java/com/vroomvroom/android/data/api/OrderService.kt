@@ -12,7 +12,7 @@ interface OrderService {
 
     @GET("orders")
     suspend fun getOrders(
-        @Query("status") status: String?
+        @Query("status") status: Int
     ): Response<BaseResponseList<OrderDto>>
 
     @GET("orders/{id}")

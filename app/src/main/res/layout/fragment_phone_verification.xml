@@ -91,7 +91,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_large"
             android:background="@drawable/bg_red_a30_rounded_16dp"
-            android:text="@string/generate_otp"
+            android:text="@string/send_otp"
             android:textAllCaps="false"
             android:textColor="@color/white" />
     </LinearLayout>

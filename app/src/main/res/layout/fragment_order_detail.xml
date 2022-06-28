@@ -29,12 +29,11 @@
             app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
 
             <TextView
-                android:id="@+id/textView9"
+                android:id="@+id/statusTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dp_24"
                 android:layout_marginTop="@dimen/dp_8"
-                android:text="@{order.status}"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -48,7 +47,7 @@
                 android:layout_marginStart="@dimen/dp_24"
                 android:text="@{`Paid by ` + order.payment.method}"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView9"
+                app:layout_constraintTop_toBottomOf="@+id/statusTv"
                 tools:text="Paid by Cash On Delivery" />
 
             <TextView

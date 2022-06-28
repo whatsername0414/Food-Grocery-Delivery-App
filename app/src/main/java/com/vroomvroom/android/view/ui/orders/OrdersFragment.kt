@@ -29,13 +29,15 @@ class OrdersFragment : BaseFragment<FragmentOrdersBinding>(
     private lateinit var fragmentAdapter: FragmentAdapter
     private val args by navArgs<OrdersFragmentArgs>()
 
-    private var type: String? = null
+    private var status: String? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val fragmentManager = requireActivity().supportFragmentManager
         fragmentAdapter = FragmentAdapter(fragmentManager, lifecycle)
+
+        status = args.status
 
         if (user != null) {
             binding.tabLayout.visibility = View.VISIBLE
@@ -53,7 +55,6 @@ class OrdersFragment : BaseFragment<FragmentOrdersBinding>(
                 OrderDetailFragmentDirections.actionGlobalToCartBottomSheetFragment()
             )
         }
-        type = args.status
 
     }
 
@@ -63,7 +64,7 @@ class OrdersFragment : BaseFragment<FragmentOrdersBinding>(
             registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
-                        when (type) {
+                        when (status) {
                             CONFIRMED -> {
                                 binding.tabLayout.getTabAt(CONFIRMED_TAB_POSITION)?.select()
                             }
@@ -74,8 +75,6 @@ class OrdersFragment : BaseFragment<FragmentOrdersBinding>(
                                 binding.tabLayout.getTabAt(position)?.select()
                             }
                         }
-                    type = null
-
                 }
             })
             (getChildAt(0) as? RecyclerView)?.overScrollMode = RecyclerView.OVER_SCROLL_NEVER

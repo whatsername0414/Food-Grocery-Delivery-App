@@ -109,6 +109,12 @@ object Utils {
         }
     }
 
+    fun String.toUppercase(): String {
+        return this.split("_")
+            .joinToString { status ->
+                status.lowercase().replaceFirstChar { it.uppercaseChar() } }
+    }
+
     fun hasLocationPermission(context: Context) = EasyPermissions.hasPermissions(
         context,
         Manifest.permission.ACCESS_FINE_LOCATION,
@@ -128,7 +134,7 @@ object Utils {
         val locationRequest = LocationRequest.create().apply {
             interval = 10000
             fastestInterval = 5000
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+            priority = Priority.PRIORITY_HIGH_ACCURACY
         }
         val builder = LocationSettingsRequest.Builder()
             .addLocationRequest(locationRequest)

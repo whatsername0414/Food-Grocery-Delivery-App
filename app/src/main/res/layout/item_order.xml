@@ -42,10 +42,10 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/statusTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/dp_16"
-            android:text="@{order.status}"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textColor="@color/red_a30"
             app:layout_constraintBottom_toBottomOf="@+id/orderMerchantLayout"
@@ -149,7 +149,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_16"
             android:layout_marginEnd="@dimen/dp_8"
-            android:text="@{order.orderDetail.product.size() > 1 ? `Subtotal(` + order.orderDetail.product.size() + ` Items):` : `Subtotal(` + order.orderDetail.product.size() + ` Item):`}"
+            android:text="@{order.orderDetail.products.size() > 1 ? `Subtotal(` + order.orderDetail.products.size() + ` Items):` : `Subtotal(` + order.orderDetail.products.size() + ` Item):`}"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             app:layout_constraintEnd_toStartOf="@+id/subtotal"
             app:layout_constraintTop_toBottomOf="@+id/orderProductRv"

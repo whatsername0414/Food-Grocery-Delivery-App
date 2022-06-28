@@ -33,7 +33,7 @@
                 android:id="@+id/imageView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/margin_large"
+                android:layout_marginVertical="@dimen/margin_mid"
                 app:srcCompat="@drawable/ic_logo" />
 
             <TextView
@@ -64,6 +64,9 @@
                 app:boxCornerRadiusBottomStart="@dimen/dp_15"
                 app:boxCornerRadiusTopEnd="@dimen/dp_15"
                 app:boxCornerRadiusTopStart="@dimen/dp_15"
+                app:boxStrokeErrorColor="@color/green_04E"
+                app:errorIconDrawable="@null"
+                app:errorTextColor="@color/green_04E"
                 app:hintTextColor="@color/red_a30"
                 app:startIconDrawable="@drawable/ic_profile">
 
@@ -72,6 +75,87 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textEmailAddress" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/registerOtpInputLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_large"
+                android:hint="@string/otp"
+                android:visibility="gone"
+                app:boxCornerRadiusBottomEnd="@dimen/dp_15"
+                app:boxCornerRadiusBottomStart="@dimen/dp_15"
+                app:boxCornerRadiusTopEnd="@dimen/dp_15"
+                app:boxCornerRadiusTopStart="@dimen/dp_15"
+                app:hintTextColor="@color/red_a30"
+                app:startIconDrawable="@drawable/ic_otp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/registerOtpInputEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/resendTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/margin_small"
+                android:layout_marginHorizontal="@dimen/margin_large"
+                android:text="@string/resend_email"
+                android:visibility="gone"
+                android:textAlignment="center"
+                android:textSize="16sp" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <Button
+                    android:id="@+id/btn_send_otp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_large"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:background="@drawable/bg_red_a30_rounded_16dp"
+                    android:text="@string/send_otp"
+                    android:textAllCaps="false"
+                    app:layout_constraintTop_toTopOf="parent"/>
+                <Button
+                    android:id="@+id/btn_verify_otp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_large"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:background="@drawable/bg_red_a30_rounded_16dp"
+                    android:text="@string/verify"
+                    android:textAllCaps="false"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toTopOf="parent"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/register_name_input_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_16"
+                android:layout_marginHorizontal="@dimen/margin_large"
+                android:hint="@string/name"
+                app:boxCornerRadiusBottomEnd="@dimen/dp_15"
+                app:boxCornerRadiusBottomStart="@dimen/dp_15"
+                app:boxCornerRadiusTopEnd="@dimen/dp_15"
+                app:boxCornerRadiusTopStart="@dimen/dp_15"
+                app:hintTextColor="@color/red_a30"
+                app:startIconDrawable="@drawable/ic_profile">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/register_name_input_editText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword" />
+
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -120,26 +204,27 @@
                     android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <Button
-                android:id="@+id/btn_register"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/margin_large"
-                android:layout_marginTop="@dimen/dp_16"
-                android:background="@drawable/bg_red_a30_rounded_16dp"
-                android:text="@string/register"
-                android:textAllCaps="false"
-                android:textSize="18sp" />
-
             <TextView
                 android:id="@+id/txtLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/margin_large"
-                android:layout_marginVertical="@dimen/margin_large"
+                android:layout_marginVertical="@dimen/margin_big"
                 android:text="@string/already_have_an_account_login"
                 android:textAlignment="center"
                 android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/btn_register"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_large"
+                android:layout_marginTop="@dimen/dp_8"
+                android:layout_marginBottom="@dimen/dp_24"
+                android:background="@drawable/bg_red_a30_rounded_16dp"
+                android:text="@string/register"
+                android:textAllCaps="false"
+                android:enabled="false"/>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

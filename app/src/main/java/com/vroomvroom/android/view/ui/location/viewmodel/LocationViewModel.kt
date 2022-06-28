@@ -9,10 +9,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
 import com.vroomvroom.android.data.model.user.LocationEntity
 import com.vroomvroom.android.repository.local.RoomRepository
@@ -75,7 +72,7 @@ class LocationViewModel @Inject constructor(
     @SuppressLint("MissingPermission")
     fun requestLocationUpdates() {
         val locationRequest = LocationRequest.create().apply {
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+            priority = Priority.PRIORITY_HIGH_ACCURACY
             interval = 5000
             fastestInterval = 2000
         }

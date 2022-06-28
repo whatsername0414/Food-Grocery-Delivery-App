@@ -17,6 +17,8 @@
         <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/drawable/ic_arrow_left.xml" value="0.161" />
         <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/drawable/ic_browse.xml" value="0.161" />
         <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/drawable/ic_browse_gray_7f7.xml" value="0.161" />
+        <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/drawable/ic_check.xml" value="0.137" />
+        <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/drawable/ic_check_green.xml" value="0.137" />
         <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/drawable/ic_home.xml" value="0.15" />
         <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/drawable/ic_home_gray_7f7.xml" value="0.161" />
         <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/drawable/ic_invoice.xml" value="0.161" />
@@ -47,7 +49,7 @@
         <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/layout/fragment_phone_verification.xml" value="0.264" />
         <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/layout/fragment_product_bottom_sheet.xml" value="0.264" />
         <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/layout/fragment_product_bottom_sheet_test.xml" value="0.264" />
-        <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/layout/fragment_register.xml" value="0.152" />
+        <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/layout/fragment_register.xml" value="0.264" />
         <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/layout/fragment_web_view.xml" value="0.1265625" />
         <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/layout/item_address.xml" value="0.1265625" />
         <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/layout/item_appbar_layout.xml" value="0.27447916666666666" />
@@ -61,7 +63,7 @@
         <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/layout/item_option.xml" value="0.29322916666666665" />
         <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/layout/item_option_section.xml" value="0.27447916666666666" />
         <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/layout/item_option_type.xml" value="0.264" />
-        <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/layout/item_order.xml" value="0.1265625" />
+        <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/layout/item_order.xml" value="0.264" />
         <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/layout/item_order_product.xml" value="0.1265625" />
         <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/layout/item_order_product_shimmer.xml" value="0.27447916666666666" />
         <entry key="..\:/Users/Macking/StudioProjects/VroomVroomRest/app/src/main/res/layout/item_order_shimmer.xml" value="0.27447916666666666" />

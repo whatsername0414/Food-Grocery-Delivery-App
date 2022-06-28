@@ -9,7 +9,7 @@ data class OrderDto(
     val payment: PaymentDto,
     @SerializedName("delivery_address") val deliveryAddress: DeliveryAddress,
     @SerializedName("order_detail") val orderDetail: OrderDetailDto,
-    val status: String,
+    val status: Int,
     @SerializedName("created_at") val createdAt: String,
     val reviewed: Boolean
 )
@@ -17,7 +17,7 @@ data class OrderDto(
 data class OrderDetailDto (
     @SerializedName("delivery_fee") val deliveryFee : Double,
     @SerializedName("total_price") val totalPrice : Double,
-    val product : List<OrderProductDto>,
+    val products : List<OrderProductDto>,
 )
 
 data class OrderProductDto (

@@ -32,9 +32,9 @@ class AuthViewModel @Inject constructor(
     val isOtpSent: LiveData<Resource<Boolean>>
         get() = _isOtpSent
 
-    private val _isPhoneNumberVerified by lazy { MutableLiveData<Resource<Boolean>>() }
-    val isPhoneNumberVerified: LiveData<Resource<Boolean>>
-        get() = _isPhoneNumberVerified
+    private val _isVerified by lazy { MutableLiveData<Resource<Boolean>>() }
+    val isVerified: LiveData<Resource<Boolean>>
+        get() = _isVerified
 
     private val _isRegistered by lazy { MutableLiveData<Resource<Boolean>>() }
     val isRegistered: LiveData<Resource<Boolean>>
@@ -52,10 +52,51 @@ class AuthViewModel @Inject constructor(
     val signInIntent = firebaseAuthRepository.signInIntent()
     val broadcastReceiver = smsBroadcastReceiver
 
+    fun resetOtpLiveData() {
+        _isOtpSent.postValue(null)
+    }
+
+    fun resetPhoneRegistration() {
+        _isOtpSent.postValue(null)
+    }
+
+    fun generateEmailOtp(emailAddress: String) {
+        _isOtpSent.postValue(Resource.Loading)
+        viewModelScope.launch(Dispatchers.IO) {
+            val response = authRepository.generateEmailOtp(emailAddress)
+            when (response) {
+                is Resource.Success ->
+                    _isOtpSent.postValue(response)
+                is Resource.Error -> {
+                    _isOtpSent.postValue(response)
+                }
+                else -> Unit
+            }
+        }
+    }
+
+    fun verifyEmailOtp(emailAddress: String, otp: String) {
+        _isVerified.postValue(Resource.Loading)
+        viewModelScope.launch(Dispatchers.IO) {
+            val response = authRepository.verifyEmailOtp(emailAddress, otp)
+            when (response) {
+                is Resource.Success -> {
+                    _isVerified.postValue(response)
+                }
+                is Resource.Error -> {
+                    _isVerified.postValue(response)
+                }
+                else -> {
+                    _isVerified.postValue(response)
+                }
+            }
+        }
+    }
+
     fun registerPhoneNumber(number: String) {
         _isOtpSent.postValue(Resource.Loading)
         viewModelScope.launch(Dispatchers.IO) {
-            val response = authRepository.registerPhoneNumber(number)
+            val response = userRepository.generatePhoneOtp(number)
             response?.let { data ->
                 when (data) {
                     is Resource.Success -> {
@@ -72,28 +113,20 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    fun resetOtpLiveData() {
-        _isOtpSent.postValue(null)
-    }
-
-    fun resetPhoneRegistration() {
-        _isOtpSent.postValue(null)
-    }
-
-    fun verifyOtp(otp: String) {
-        _isPhoneNumberVerified.postValue(Resource.Loading)
+    fun verifyPhoneOtp(otp: String) {
+        _isVerified.postValue(Resource.Loading)
         viewModelScope.launch(Dispatchers.IO) {
-            val response = authRepository.verifyOtp(otp)
+            val response = userRepository.verifyOtp(otp)
             response?.let { data ->
                 when (data) {
                     is Resource.Success -> {
-                        _isPhoneNumberVerified.postValue(data)
+                        _isVerified.postValue(data)
                     }
                     is Resource.Error -> {
-                        _isPhoneNumberVerified.postValue(data)
+                        _isVerified.postValue(data)
                     }
                     else -> {
-                        _isPhoneNumberVerified.postValue(data)
+                        _isVerified.postValue(data)
                     }
                 }
             }

@@ -7,6 +7,7 @@ import com.vroomvroom.android.data.db.dao.UserDao
 import com.vroomvroom.android.data.model.user.UserEntity
 import com.vroomvroom.android.data.model.user.UserMapper
 import com.vroomvroom.android.repository.BaseRepository
+import com.vroomvroom.android.repository.merchant.MerchantRepositoryImpl
 import com.vroomvroom.android.view.resource.Resource
 import javax.inject.Inject
 
@@ -45,6 +46,42 @@ class UserRepositoryImpl @Inject constructor(
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error: ${e.message}")
+            return handleException(GENERAL_ERROR_CODE)
+        }
+        return data
+    }
+
+    override suspend fun generatePhoneOtp(number: String): Resource<Boolean>? {
+        var data: Resource<Boolean>? = null
+        try {
+            val body = mapOf("number" to number)
+            val result = service.registerPhoneNumber(body)
+            if (result.isSuccessful && result.code() == 201) {
+                data = handleSuccess(true)
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error: ${e.message}")
+            return handleException(GENERAL_ERROR_CODE)
+        }
+        return data
+    }
+
+    override suspend fun verifyOtp(otp: String): Resource<Boolean>? {
+        var data: Resource<Boolean>? = null
+        try {
+            val body = mapOf("otp" to otp)
+            val result = service.verifyOtp(body)
+            if (result.isSuccessful && result.code() == 201) {
+                result.body()?.data?.let {
+                    val user = userMapper.mapToDomainModel(it)
+                    userDao.updateUser(user)
+                    data = handleSuccess(true)
+                }
+            } else {
+                return handleException(result.code(), result.errorBody())
+            }
+        } catch (e: Exception) {
+            Log.d(MerchantRepositoryImpl.TAG, "Error: ${e.message}")
             return handleException(GENERAL_ERROR_CODE)
         }
         return data
