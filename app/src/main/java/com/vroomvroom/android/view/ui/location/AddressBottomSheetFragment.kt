@@ -26,7 +26,6 @@ class AddressBottomSheetFragment : BaseBottomSheetFragment<FragmentAddressBottom
         locationViewModel.userLocation.observe(viewLifecycleOwner){}
 
         binding.localityInputEditText.setText(args.location.city)
-        val args = args
         binding.btnSave.setOnClickListener {
             val street = binding.streetInputEditText.text
             val city = binding.localityInputEditText.text

@@ -14,19 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "1062569335230-mifl9375jcsgp63nviiknuk6vrn0hd22.apps.googleusercontent.com",
+          "client_id": "1062569335230-tf4qs48l72prsblf98mn6fajfah774le.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.vroomvroom.android",
             "certificate_hash": "8f7230843043b475b39ed38f271b354facf74e32"
-          }
-        },
-        {
-          "client_id": "1062569335230-uiut8d8gf2u2jt19mdtc0oo884jvth6f.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.vroomvroom.android",
-            "certificate_hash": "b478eec6c548411789bf9cf0a26037296ff07b0d"
           }
         },
         {
@@ -37,6 +29,49 @@
       "api_key": [
         {
           "current_key": "AIzaSyDCtiSPULjYWEZ5Ly9bB1G3WRQrg6ubeDI"
+        },
+        {
+          "current_key": "AIzaSyBCTlyo1KuaqKd8c5-mhPNVbJD3nFmOnpA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1062569335230-ts2kagetg2ip9td4kinmbnvmede90tp4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1062569335230:android:9e478d5600ff5f474ac1ef",
+        "android_client_info": {
+          "package_name": "com.vroomvroomrider.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1062569335230-3hibmeka64supb86ft4a62guvhb8cp8o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vroomvroomrider.android",
+            "certificate_hash": "8f7230843043b475b39ed38f271b354facf74e32"
+          }
+        },
+        {
+          "client_id": "1062569335230-ts2kagetg2ip9td4kinmbnvmede90tp4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCtiSPULjYWEZ5Ly9bB1G3WRQrg6ubeDI"
+        },
+        {
+          "current_key": "AIzaSyBCTlyo1KuaqKd8c5-mhPNVbJD3nFmOnpA"
         }
       ],
       "services": {

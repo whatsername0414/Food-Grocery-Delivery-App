@@ -6,7 +6,6 @@ import com.vroomvroom.android.data.db.dao.UserDao
 import com.vroomvroom.android.data.model.user.LocationEntity
 import com.vroomvroom.android.data.model.user.UserMapper
 import com.vroomvroom.android.repository.BaseRepository
-import com.vroomvroom.android.repository.merchant.MerchantRepositoryImpl
 import com.vroomvroom.android.view.resource.Resource
 import javax.inject.Inject
 
@@ -29,7 +28,7 @@ class AuthRepositoryImpl @Inject constructor(
                 handleSuccess(false)
             }
         } catch (e: Exception) {
-            Log.d(MerchantRepositoryImpl.TAG, "Error: ${e.message}")
+            Log.d(TAG, "Error: ${e.message}")
             return handleException(GENERAL_ERROR_CODE)
         }
         return data
@@ -46,7 +45,7 @@ class AuthRepositoryImpl @Inject constructor(
                 return handleException(result.code(), result.errorBody())
             }
         } catch (e: Exception) {
-            Log.d(MerchantRepositoryImpl.TAG, "Error: ${e.message}")
+            Log.d(TAG, "Error: ${e.message}")
             return handleException(GENERAL_ERROR_CODE)
         }
         return data
@@ -66,9 +65,13 @@ class AuthRepositoryImpl @Inject constructor(
                 return handleException(result.code(), result.errorBody())
             }
         } catch (e: Exception) {
-            Log.d(MerchantRepositoryImpl.TAG, "Error: ${e.message}")
+            Log.d(TAG, "Error: ${e.message}")
             return handleException(GENERAL_ERROR_CODE)
         }
         return data
+    }
+
+    companion object {
+        const val TAG = "AuthRepositoryImpl"
     }
 }

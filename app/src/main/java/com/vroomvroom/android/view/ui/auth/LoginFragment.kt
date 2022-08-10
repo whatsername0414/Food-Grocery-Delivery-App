@@ -44,7 +44,10 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
             val password = binding.loginPasswordInputEditText.text.toString()
             if (emailAddress.isEmailValid()) {
                 authViewModel.logInWithEmailAndPassword(emailAddress, password)
-            } else binding.loginEmailInputLayout.helperText = "Invalid email"
+            } else {
+                binding.errorTv.visibility = View.VISIBLE
+                binding.errorTv.text = getString(R.string.invalid_email_address)
+            }
         }
     }
 

@@ -11,7 +11,6 @@
     <string name="placed_order_title">Success!</string>
     <string name="placed_order_message">You have successfully placed order!</string>
     <string name="creating_dialog_message">Creating order…</string>
-    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyDCtiSPULjYWEZ5Ly9bB1G3WRQrg6ubeDI</string>
     <string name="facebook_app_id">593283722014887</string>
     <string name="fb_login_protocol_scheme">fb593283722014887</string>
     <string name="facebook_client_token">dd589d0b733000634328ead72eeec53b</string>

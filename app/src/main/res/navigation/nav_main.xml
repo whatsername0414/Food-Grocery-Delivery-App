@@ -105,6 +105,9 @@
             app:enterAnim="@anim/from_right"
             app:exitAnim="@anim/to_left"
             app:popExitAnim="@anim/to_right"/>
+        <action
+            android:id="@+id/action_locationFragment_to_addressBottomSheetFragment"
+            app:destination="@id/addressBottomSheetFragment" />
     </fragment>
     <fragment
         android:id="@+id/mapsFragment"

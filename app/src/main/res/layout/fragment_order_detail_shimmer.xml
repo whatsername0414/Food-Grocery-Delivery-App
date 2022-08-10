@@ -42,7 +42,7 @@
         android:background="@drawable/gray"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView23"
-        android:text="@string/don_t_have_an_account_signup" />
+        android:text="@string/continue_with_email" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView6"
@@ -94,7 +94,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="4dp"
                 android:background="@drawable/gray"
-                android:text="@string/don_t_have_an_account_signup"
+                android:text="@string/continue_with_email"
                 android:textColor="@color/gray_a5a"
                 app:layout_constraintStart_toEndOf="@+id/imageView11"
                 app:layout_constraintTop_toBottomOf="@+id/textView25" />

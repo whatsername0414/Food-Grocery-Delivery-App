@@ -38,7 +38,8 @@ class MerchantRepositoryImpl @Inject constructor(
             if (result.isSuccessful) {
                 result.body()?.data?.let {
                     withContext(Dispatchers.Default) {
-                        data = handleSuccess(merchantMapper.mapToDomainModelList(it))
+                        val merchants = merchantMapper.mapToDomainModelList(it)
+                        data = handleSuccess(merchants)
                     }
                 }
             }

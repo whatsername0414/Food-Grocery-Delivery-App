@@ -181,7 +181,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(
         }
     }
 
-    private fun saveAndDismiss(prevDestination: Int?) {
+    private fun saveAddress(prevDestination: Int?) {
         newLatLng?.let { latLng ->
             locationViewModel.insertLocation(
                 userLocationBuilder(address = address, latLng = latLng)
@@ -206,7 +206,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(
                 ) { type ->
                     when (type) {
                         ClickType.POSITIVE -> {
-                            saveAndDismiss(prevDestination)
+                            saveAddress(prevDestination)
                             dialog.dismiss()
                         }
                         ClickType.NEGATIVE -> dialog.dismiss()
@@ -221,7 +221,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(
                         )
                     )
                 } else {
-                    saveAndDismiss(prevDestination)
+                    saveAddress(prevDestination)
                 }
             }
         } else {

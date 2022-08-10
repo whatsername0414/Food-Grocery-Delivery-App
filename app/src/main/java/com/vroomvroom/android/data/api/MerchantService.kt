@@ -1,7 +1,6 @@
 package com.vroomvroom.android.data.api
 
 import com.vroomvroom.android.data.model.BaseResponse
-import com.vroomvroom.android.data.model.BaseResponseList
 import com.vroomvroom.android.data.model.merchant.Category
 import com.vroomvroom.android.data.model.merchant.MerchantDto
 import retrofit2.Response
@@ -12,13 +11,13 @@ interface MerchantService {
     @GET("categories")
     suspend fun getCategories(
         @Query("type") type: String,
-    ): Response<BaseResponseList<Category>>
+    ): Response<BaseResponse<List<Category>>>
 
     @GET("merchants")
     suspend fun getMerchants(
         @Query("category") category: String?,
         @Query("searchTerm") searchTerm: String?
-    ): Response<BaseResponseList<MerchantDto>>
+    ): Response<BaseResponse<List<MerchantDto>>>
 
     @GET("merchants/{id}")
     suspend fun getMerchant(
@@ -26,7 +25,7 @@ interface MerchantService {
     ): Response<BaseResponse<MerchantDto>>
 
     @GET("merchants/favorites")
-    suspend fun getFavorites(): Response<BaseResponseList<MerchantDto>>
+    suspend fun getFavorites(): Response<BaseResponse<List<MerchantDto>>>
 
     @PUT("merchants/{id}/favorite")
     suspend fun updateFavorite(

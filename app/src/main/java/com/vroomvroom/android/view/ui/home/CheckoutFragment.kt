@@ -119,6 +119,7 @@ class CheckoutFragment : BaseFragment<FragmentCheckoutBinding> (
                     .build()
                 val cameraUpdate = CameraUpdateFactory.newLatLngBounds(boundsBuilder, 128)
                 map?.moveCamera(cameraUpdate)
+
                 map?.setMapWithTwoPoint(requireContext(), sydney1, sydney2)
                 map?.showCurvedPolyline(sydney1, sydney2, context = requireContext())
             }

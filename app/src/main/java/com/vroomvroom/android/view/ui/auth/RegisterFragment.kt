@@ -1,7 +1,6 @@
 package com.vroomvroom.android.view.ui.auth
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
@@ -61,9 +60,9 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(
 
         binding.btnSendOtp.setSafeOnClickListener {
             requireActivity().hideSoftKeyboard()
-            loadingDialog.show(getString(R.string.sending))
             emailAddress = binding.registerEmailInputEditText.text?.toString().orEmpty()
             if (emailAddress.isEmailValid()) {
+                loadingDialog.show(getString(R.string.sending))
                 authViewModel.generateEmailOtp(emailAddress)
             } else {
                 binding.errorTv.visibility = View.VISIBLE

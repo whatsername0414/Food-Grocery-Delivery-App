@@ -1,7 +1,6 @@
 package com.vroomvroom.android.data.api
 
 import com.vroomvroom.android.data.model.BaseResponse
-import com.vroomvroom.android.data.model.BaseResponseList
 import com.vroomvroom.android.data.model.order.DeliveryAddress
 import com.vroomvroom.android.data.model.order.Order
 import com.vroomvroom.android.data.model.order.OrderDto
@@ -12,8 +11,9 @@ interface OrderService {
 
     @GET("orders")
     suspend fun getOrders(
+        @Query("type") type: String = "customer",
         @Query("status") status: Int
-    ): Response<BaseResponseList<OrderDto>>
+    ): Response<BaseResponse<List<OrderDto>>>
 
     @GET("orders/{id}")
     suspend fun getOrder(

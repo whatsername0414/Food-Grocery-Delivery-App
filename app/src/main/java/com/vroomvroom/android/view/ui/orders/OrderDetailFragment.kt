@@ -72,7 +72,7 @@ class OrderDetailFragment : BaseFragment<FragmentOrderDetailBinding>(
                     binding.orderDetailLayout.visibility = View.VISIBLE
                     val order = response.data
                     ordersViewModel.merchantId = order.merchant.id
-                    binding.statusTv.text = Status.values()[order.status].name
+                    binding.statusTv.text = order.status.label
                         .toUppercase()
                         .replace(",", " ")
                     updateButtonModify(order)
@@ -98,7 +98,7 @@ class OrderDetailFragment : BaseFragment<FragmentOrderDetailBinding>(
     }
 
     private fun updateButtonModify(order: OrderDto) {
-        when (order.status) {
+        when (order.status.ordinal) {
             Status.PENDING.ordinal -> {
                 binding.btnModifyOrder.text = getString(R.string.cancel)
                 binding.btnModifyOrder.setOnClickListener {
@@ -148,19 +148,21 @@ class OrderDetailFragment : BaseFragment<FragmentOrderDetailBinding>(
     }
 
     private fun updateViewsOnDataReady(order: OrderDto) {
-        binding.order = order
-        binding.subTotalTv.text =
-            getString(R.string.peso, "%.2f".format(order.orderDetail.totalPrice))
-        binding.deliveryFee.text =
-            getString(R.string.peso, "%.2f".format(order.orderDetail.deliveryFee))
-        val total = order.orderDetail.totalPrice + order.orderDetail.deliveryFee
-        binding.totalTv.text = getString(R.string.peso, "%.2f".format(total))
-        binding.orderProductRv.adapter = OrderProductAdapter(order.orderDetail.products)
-        binding.placedDate.text =
-            getString(R.string.placed_on,
-                formatStringToDate(order.createdAt, FORMAT_DD_MMM_YYYY_HH_MM_SS))
-        binding.shimmerLayout.visibility = View.GONE
-        binding.shimmerLayout.stopShimmer()
+        binding.apply {
+            this.order = order
+            subTotalTv.text =
+                getString(R.string.peso, "%.2f".format(order.orderDetail.totalPrice))
+            deliveryFee.text =
+                getString(R.string.peso, "%.2f".format(order.orderDetail.deliveryFee))
+            val total = order.orderDetail.totalPrice + order.orderDetail.deliveryFee
+            totalTv.text = getString(R.string.peso, "%.2f".format(total))
+            orderProductRv.adapter = OrderProductAdapter(order.orderDetail.products)
+            placedDate.text =
+                getString(R.string.placed_on,
+                    formatStringToDate(order.createdAt, FORMAT_DD_MMM_YYYY_HH_MM_SS))
+            shimmerLayout.visibility = View.GONE
+            shimmerLayout.stopShimmer()
+        }
     }
 
     private fun onBackPressed() {

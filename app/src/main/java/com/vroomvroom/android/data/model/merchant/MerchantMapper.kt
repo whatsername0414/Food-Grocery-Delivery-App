@@ -80,25 +80,23 @@ class MerchantMapper : DomainMapper<MerchantDto, Merchant> {
     }
 
     override fun mapToDomainModelList(model: List<MerchantDto>): List<Merchant> {
-        return model.map { mapToMerchant(it) }
-    }
-
-    private fun mapToMerchant(merchant: MerchantDto) : Merchant {
-        return Merchant(
-            id = merchant._id,
-            name = merchant.name,
-            img_url = merchant.img_url,
-            categories = merchant.categories,
-            productSections = null,
-            rates = merchant.rates,
-            ratings = merchant.ratings,
-            favorite = merchant.favorite,
-            opening = merchant.opening,
-            closing = merchant.closing,
-            isOpen = merchant.isOpen,
-            location = null,
-            reviews = null
-        )
+        return model.map {
+            Merchant(
+                id = it._id,
+                name = it.name,
+                img_url = it.img_url,
+                categories = it.categories,
+                productSections = null,
+                rates = it.rates,
+                ratings = it.ratings,
+                favorite = it.favorite,
+                opening = it.opening,
+                closing = it.closing,
+                isOpen = it.isOpen,
+                location = null,
+                reviews = null
+            )
+        }
     }
 
     override fun mapFromDomainModel(model: Merchant): MerchantDto {

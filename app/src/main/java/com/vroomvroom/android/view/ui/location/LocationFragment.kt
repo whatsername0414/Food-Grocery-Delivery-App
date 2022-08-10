@@ -71,15 +71,28 @@ class LocationFragment : BaseFragment<FragmentLocationBinding>(
         }
         locationViewModel.currentLocation.observe(viewLifecycleOwner) { location ->
             if (location != null) {
+                locationViewModel.removeLocationUpdates()
                 val latLng = LatLng(location.latitude, location.longitude)
                 locationViewModel.getAddress(latLng)
                 locationViewModel.address.observe(viewLifecycleOwner) { res ->
-                    locationViewModel.insertLocation(
-                        userLocationBuilder(
-                            address = res,
-                            latLng = latLng
+                    if (res?.thoroughfare.isNullOrBlank()) {
+                        findNavController().safeNavigate(
+                            LocationFragmentDirections.
+                            actionLocationFragmentToAddressBottomSheetFragment(
+                                userLocationBuilder(
+                                    address = res,
+                                    latLng = latLng
+                                )
+                            )
                         )
-                    )
+                    } else {
+                        locationViewModel.insertLocation(
+                            userLocationBuilder(
+                                address = res,
+                                latLng = latLng
+                            )
+                        )
+                    }
                 }
             }
         }
@@ -116,7 +129,6 @@ class LocationFragment : BaseFragment<FragmentLocationBinding>(
     private fun observeUserLocation() {
         locationViewModel.userLocation.observe(viewLifecycleOwner) { userLocation ->
             if (!userLocation.isNullOrEmpty()) {
-                locationViewModel.removeLocationUpdates()
                 findNavController().popBackStack()
             }
         }

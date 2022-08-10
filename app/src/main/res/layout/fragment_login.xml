@@ -99,21 +99,11 @@
                     android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <Button
-                android:id="@+id/btn_login"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_16"
-                android:layout_marginHorizontal="@dimen/margin_large"
-                android:background="@drawable/bg_red_a30_rounded_16dp"
-                android:text="@string/login"
-                android:textAllCaps="false" />
-
             <TextView
                 android:id="@+id/forgot_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_32"
+                android:layout_marginTop="@dimen/dp_16"
                 android:layout_marginHorizontal="@dimen/margin_large"
                 android:text="@string/forgot_password"
                 android:textAlignment="center"
@@ -124,12 +114,21 @@
                 android:id="@+id/txtSignUp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_16"
-                android:layout_marginBottom="@dimen/dp_32"
+                android:layout_marginTop="@dimen/dp_8"
                 android:layout_marginHorizontal="@dimen/margin_large"
                 android:text="@string/don_t_have_an_account_signup"
                 android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body2"/>
+
+            <Button
+                android:id="@+id/btn_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_24"
+                android:layout_marginHorizontal="@dimen/margin_large"
+                android:background="@drawable/bg_red_a30_rounded_16dp"
+                android:text="@string/login"
+                android:textAllCaps="false" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

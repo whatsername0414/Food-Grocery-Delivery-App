@@ -4,7 +4,7 @@ data class UserDto(
     val _id: String,
     val name: String? = null,
     val email: String? = null,
-    val phone: Phone? = null
+    val phone: PhoneDto? = null
 )
 
 data class PhoneDto(

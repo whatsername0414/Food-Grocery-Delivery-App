@@ -16,7 +16,7 @@ class OrderRepositoryImpl @Inject constructor(
     override suspend fun getOrders(status: Status): Resource<List<OrderDto>>? {
         var data: Resource<List<OrderDto>>? = null
         try {
-            val result = service.getOrders(status.ordinal)
+            val result = service.getOrders(status = status.ordinal)
             result.body()?.let {
                 data = handleSuccess(it.data)
             }

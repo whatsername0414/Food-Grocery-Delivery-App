@@ -89,6 +89,7 @@ abstract class BaseFragment<VB: ViewBinding> (
             when (response) {
                 is Resource.Loading -> Unit
                 is Resource.Success -> {
+                    mainActivityViewModel.shouldFetchMerchants = true
                     if (response.data) {
                         if (direction == Constants.ADD_TO_FAVORITES) {
                             showShortSnackBar("Added to favorites")

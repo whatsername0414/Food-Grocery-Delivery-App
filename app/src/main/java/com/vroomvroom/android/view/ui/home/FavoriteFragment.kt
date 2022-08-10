@@ -42,7 +42,6 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(
             onFavoriteClicked = { merchant, position, direction ->
                 homeViewModel.updateFavorite(merchant.id)
                 observeFavorite(this, merchant, position, direction)
-                mainActivityViewModel.shouldFetchMerchants = true
             }
         }
     }

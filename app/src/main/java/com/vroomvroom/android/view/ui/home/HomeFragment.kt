@@ -106,9 +106,6 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(
                 merchantAdapter.setUser(user)
                 merchantAdapter.notifyDataSetChanged()
             } else {
-                if (authViewModel.signedInUser != null) {
-                    performLogout()
-                }
                 binding.favorite.visibility = View.GONE
                 merchantAdapter.setUser(null)
                 merchantAdapter.notifyDataSetChanged()

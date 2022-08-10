@@ -11,9 +11,9 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.vroomvroom.android.data.db.Database
 import com.vroomvroom.android.repository.local.UserPreferences
-import com.vroomvroom.android.utils.Constants.CART_ITEM_TABLE
 import com.vroomvroom.android.utils.Constants.CHANNEL_ID
 import com.vroomvroom.android.utils.Constants.PREFERENCES_STORE_NAME
+import com.vroomvroom.android.utils.Constants.VROOMVROOM_DATABASE
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -89,12 +89,12 @@ object RepoModule {
 
     @Singleton
     @Provides
-    fun provideCartItemDatabase(
+    fun provideDatabase(
         @ApplicationContext app: Context
     ) = Room.databaseBuilder(
         app,
         Database::class.java,
-        CART_ITEM_TABLE
+        VROOMVROOM_DATABASE
     ).build()
 
     @Singleton

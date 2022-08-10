@@ -7,12 +7,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.vroomvroom.android.R
-import com.vroomvroom.android.databinding.ItemOrderBinding
 import com.vroomvroom.android.data.model.order.Merchant
 import com.vroomvroom.android.data.model.order.OrderDto
-import com.vroomvroom.android.data.model.order.Status
+import com.vroomvroom.android.databinding.ItemOrderBinding
 import com.vroomvroom.android.utils.Utils.toUppercase
-import java.util.*
 
 class OrdersDiffUtil: DiffUtil.ItemCallback<OrderDto>() {
     override fun areItemsTheSame(
@@ -51,7 +49,7 @@ class OrderAdapter: ListAdapter<OrderDto, OrderViewHolder>(OrdersDiffUtil()) {
         holder.binding.order = order
         val subTotal = order.orderDetail.totalPrice + order.orderDetail.deliveryFee
         holder.binding.apply {
-            statusTv.text = Status.values()[order.status].name
+            statusTv.text = order.status.label
                 .toUppercase()
                 .replace(",", " ")
             subtotal.text = holder.itemView.context.getString(

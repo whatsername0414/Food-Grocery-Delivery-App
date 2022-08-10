@@ -29,15 +29,11 @@ class OrdersFragment : BaseFragment<FragmentOrdersBinding>(
     private lateinit var fragmentAdapter: FragmentAdapter
     private val args by navArgs<OrdersFragmentArgs>()
 
-    private var status: String? = null
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val fragmentManager = requireActivity().supportFragmentManager
         fragmentAdapter = FragmentAdapter(fragmentManager, lifecycle)
-
-        status = args.status
 
         if (user != null) {
             binding.tabLayout.visibility = View.VISIBLE
@@ -64,7 +60,7 @@ class OrdersFragment : BaseFragment<FragmentOrdersBinding>(
             registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
-                        when (status) {
+                        when (args.status) {
                             CONFIRMED -> {
                                 binding.tabLayout.getTabAt(CONFIRMED_TAB_POSITION)?.select()
                             }

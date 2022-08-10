@@ -69,6 +69,14 @@ object Utils {
         }
     }
 
+    fun NavController.safeNavigate(directions: NavDirections) {
+        try {
+            navigate(directions)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
     fun String.isEmailValid(): Boolean {
         return !TextUtils.isEmpty(this) && Patterns.EMAIL_ADDRESS.matcher(this).matches()
     }

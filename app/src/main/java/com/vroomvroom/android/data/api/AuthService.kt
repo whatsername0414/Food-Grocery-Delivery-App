@@ -9,7 +9,7 @@ import retrofit2.http.POST
 
 interface AuthService {
 
-    @POST("auth")
+    @POST("auth/register")
     suspend fun register(
         @Body body: LocationEntity
     ): Response<BaseResponse<UserDto>>

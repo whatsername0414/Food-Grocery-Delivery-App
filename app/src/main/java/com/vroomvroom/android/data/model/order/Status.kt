@@ -7,8 +7,6 @@ import kotlinx.parcelize.Parcelize
 enum class Status : Parcelable {
     PENDING,
     CONFIRMED,
-    ACCEPTED,
-    PURCHASED,
     TO_RECEIVE,
     DELIVERED,
     CANCELLED
