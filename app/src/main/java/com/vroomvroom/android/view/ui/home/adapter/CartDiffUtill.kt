@@ -8,7 +8,7 @@ class CartDiffUtil: DiffUtil.ItemCallback<CartItemWithOptions>() {
         oldItem: CartItemWithOptions,
         newItem: CartItemWithOptions
     ): Boolean {
-        return oldItem.cartItem.productId == newItem.cartItem.productId
+        return oldItem.cartItem.id == newItem.cartItem.id
     }
 
     override fun areContentsTheSame(

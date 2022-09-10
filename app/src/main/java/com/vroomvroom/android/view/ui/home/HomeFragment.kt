@@ -274,7 +274,6 @@ class HomeFragment: BaseFragment<FragmentHomeBinding>(
                     }
                 }
                 override fun onAnimationRepeat(animation: Animation?) {
-                    Log.d("HomeFragment", "Animation Repeat")
                 }
             })
         } else {

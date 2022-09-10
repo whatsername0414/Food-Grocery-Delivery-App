@@ -4,7 +4,6 @@ import android.content.Context
 import android.location.Geocoder
 import androidx.core.app.NotificationCompat
 import com.vroomvroom.android.PushNotificationService
-import com.vroomvroom.android.utils.NotificationManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,16 +16,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 @ExperimentalCoroutinesApi
 object UtilModule {
-
-
-    @Singleton
-    @Provides
-    fun provideNotificationBuilder(
-        @ApplicationContext app: Context,
-        builder: NotificationCompat.Builder
-    ): NotificationManager {
-        return NotificationManager(app, builder)
-    }
 
     @Singleton
     @Provides

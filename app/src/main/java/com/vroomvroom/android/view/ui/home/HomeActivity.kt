@@ -45,18 +45,14 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        FirebaseMessaging.getInstance().subscribeToTopic("TopicName")
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
                 Log.w("HomeActivity", "Fetching FCM registration token failed", task.exception)
                 return@OnCompleteListener
             }
-
             // Get new FCM registration token
             val token = task.result
-
-            // Log and toast
-            Log.d("HomeActivity", token)
+            mainActivityViewModel.fcmToken = token
         })
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)

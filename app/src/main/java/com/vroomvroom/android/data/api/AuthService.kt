@@ -11,7 +11,7 @@ interface AuthService {
 
     @POST("auth/register")
     suspend fun register(
-        @Body body: LocationEntity
+        @Body body: HashMap<String, Any>
     ): Response<BaseResponse<UserDto>>
 
     @POST("auth/email-otp")

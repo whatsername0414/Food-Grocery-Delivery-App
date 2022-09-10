@@ -43,6 +43,7 @@ class MainViewModel @Inject constructor(
     var shouldFetchMerchants = false
     var isBottomNavViewVisible = false
     var prevDestination: Int? = null
+    var fcmToken: String? = null
 
     fun getCategories(type: String) {
         _categories.postValue(Resource.Loading)

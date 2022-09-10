@@ -9,11 +9,11 @@ import javax.inject.Inject
 class CartRepositoryImpl @Inject constructor (
     private val cartItemDAO: CartItemDAO
 ) : CartRepository {
-    override suspend fun insertCartItem(cartItemEntity: CartItemEntity) {
-        cartItemDAO.insertCartItem(cartItemEntity)
+    override suspend fun insertCartItem(cartItemEntity: CartItemEntity): Long {
+        return cartItemDAO.insertCartItem(cartItemEntity)
     }
-    override suspend fun insertCartItemOptions(options: Map<String, Option>) {
-        val cartItemOptions = mapFromDomainModelList(options)
+    override suspend fun insertCartItemOptions(options: Map<String, Option>, productId: Int) {
+        val cartItemOptions = mapFromDomainModelList(options, productId)
             cartItemDAO.insertCartItemOptions(cartItemOptions)
     }
     override suspend fun updateCartItem(cartItemEntity: CartItemEntity) =

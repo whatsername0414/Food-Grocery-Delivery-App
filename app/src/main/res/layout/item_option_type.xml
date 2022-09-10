@@ -5,8 +5,8 @@
 
     <data>
         <variable
-            name="optionType"
-            type="com.vroomvroom.android.data.model.merchant.OptionType" />
+            name="sections"
+            type="com.vroomvroom.android.data.model.merchant.OptionSections" />
         <import type="android.view.View"/>
     </data>
 
@@ -20,6 +20,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textSize="14sp"
+            android:text="@{sections.name}"
             tools:text="Drinks"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -31,7 +32,7 @@
             android:layout_marginStart="@dimen/dp_8"
             android:textSize="11sp"
             android:text="@string/required"
-            android:visibility="@{optionType.required ? View.VISIBLE : View.GONE}"
+            android:visibility="@{sections.required ? View.VISIBLE : View.GONE}"
             app:layout_constraintTop_toTopOf="@+id/sectionTitle"
             app:layout_constraintStart_toEndOf="@+id/sectionTitle"
             app:layout_constraintBottom_toBottomOf="@+id/sectionTitle"/>

@@ -78,9 +78,9 @@ class HomeViewModel @Inject constructor(
 
     fun insertCartItem(cartItemEntity: CartItemEntity) {
         viewModelScope.launch(Dispatchers.IO) {
-            cartRepository.insertCartItem(cartItemEntity)
+            val id = cartRepository.insertCartItem(cartItemEntity)
             if (choseOptions.isNotEmpty()) {
-                cartRepository.insertCartItemOptions(choseOptions)
+                cartRepository.insertCartItemOptions(choseOptions, id.toInt())
             }
         }
     }

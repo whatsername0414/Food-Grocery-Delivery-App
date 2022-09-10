@@ -7,7 +7,8 @@ import com.vroomvroom.android.utils.Constants.CART_ITEM_TABLE
 
 @Entity(tableName = CART_ITEM_TABLE)
 data class CartItemEntity(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    val id: Int? = null,
     val productId: String,
     @Embedded
     val cartMerchant: CartMerchantEntity,

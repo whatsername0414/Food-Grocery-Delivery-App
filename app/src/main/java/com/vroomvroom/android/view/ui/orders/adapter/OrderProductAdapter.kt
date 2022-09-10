@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.ItemOrderProductBinding
 import com.vroomvroom.android.data.model.order.OrderProductDto
+import com.vroomvroom.android.utils.Utils.getImageUrl
 
 class OrderProductAdapter(
     private val orderProduct: List<OrderProductDto>
@@ -33,19 +34,14 @@ class OrderProductAdapter(
             R.string.peso, "%.2f".format(orderProduct.price))
         Glide
             .with(holder.itemView.context)
-            .load(orderProduct.productImgUrl)
+            .load(getImageUrl(orderProduct.productImgUrl.orEmpty()))
             .placeholder(R.drawable.ic_placeholder)
             .into(holder.binding.orderProductImage)
 
-        val optionList = StringBuilder()
-        orderProduct.options?.forEach { option ->
-            val type = option.optionType
-            val name = option.name
-            optionList.append("$type: $name •\n")
-        }
+        val optionList = orderProduct.options?.map { "${it.optionType}: ${it.name}" }
 
-        if (!orderProduct.options.isNullOrEmpty()) {
-            holder.binding.orderProductOption.text = optionList
+        if (!optionList.isNullOrEmpty()) {
+            holder.binding.orderProductOption.text = optionList.joinToString(", ")
         } else holder.binding.orderProductOption.visibility = View.GONE
     }
 

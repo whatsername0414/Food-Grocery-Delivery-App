@@ -12,7 +12,7 @@ object Constants {
 
     //Identifiers
     const val PERMISSION_LOCATION_REQUEST_CODE = 1
-    const val CHANNEL_ID = "VroomVroomID"
+    const val CHANNEL_ID = "VroomVroom"
     const val CHANNEL_NAME = "Vroom Vroom"
     const val REQUEST_CHECK_SETTINGS = 0x1
     const val MAPVIEW_BUNDLE_KEY = "MapViewBundleKey"

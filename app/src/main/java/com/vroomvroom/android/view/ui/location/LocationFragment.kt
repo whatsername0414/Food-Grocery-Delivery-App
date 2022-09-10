@@ -56,7 +56,11 @@ class LocationFragment : BaseFragment<FragmentLocationBinding>(
                     locationViewModel.requestLocationUpdates()
                 } else {
                     binding.linearProgress.visibility = View.GONE
-                    createLocationRequest(requireActivity(), this )
+                    createLocationRequest(requireActivity()) { usable ->
+                        if (usable) {
+                            locationViewModel.requestLocationUpdates()
+                        }
+                    }
                 }
             } else {
                 Snackbar.make(

@@ -163,6 +163,7 @@
     <string name="logout_failed">Logout Failed</string>
     <string name="auth_failed">Authentication Failed</string>
     <string name="general_error_message">Something went wrong</string>
+    <string name="failed">Failed</string>
     <string name="network_error">Network Error</string>
     <string name="unable_to_load_data">Unable to load data</string>
     <string name="verification_failed">Verification Failed</string>

@@ -15,13 +15,13 @@ object CartItemMapper {
         merchantName: String
     ): CartItemEntity {
         return CartItemEntity(
-            productId,
-            mapToMerchantEntity(merchantId, merchantName),
-            name,
-            productImgUrl,
-            price,
-            quantity,
-            specialInstructions
+            productId = productId,
+            cartMerchant = mapToMerchantEntity(merchantId, merchantName),
+            name = name,
+            productImgUrl = productImgUrl,
+            price = price,
+            quantity = quantity,
+            specialInstructions = specialInstructions
         )
     }
 
@@ -29,9 +29,9 @@ object CartItemMapper {
         return CartMerchantEntity(id, name)
     }
 
-    fun mapFromDomainModelList(model: Map<String, Option>): List<CartItemOptionEntity> {
+    fun mapFromDomainModelList(model: Map<String, Option>, productId: Int?): List<CartItemOptionEntity> {
         return model.map { (key, value) ->
-            CartItemOptionEntity(null, value.name, value.additionalPrice, key)
+            CartItemOptionEntity(null, value.name, value.additionalPrice, key, productId)
         }
     }
 }

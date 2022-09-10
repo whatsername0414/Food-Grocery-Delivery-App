@@ -14,10 +14,14 @@ class AuthRepositoryImpl @Inject constructor(
     private val userDao: UserDao,
     private val userMapper: UserMapper
 ) : AuthRepository, BaseRepository() {
-    override suspend fun register(locationEntity: LocationEntity): Resource<Boolean>? {
+    override suspend fun register(locationEntity: LocationEntity, fcmToken: String): Resource<Boolean>? {
         var data: Resource<Boolean>? = null
         try {
-            val result = service.register(locationEntity)
+            val body = HashMap<String, Any>()
+            body["location"] = locationEntity
+            body["fcmToken"] = fcmToken
+            body["type"] = "user"
+            val result = service.register(body)
             if (result.isSuccessful && result.code() == 200) {
                 result.body()?.data?.let {
                     val user = userMapper.mapToDomainModel(it)

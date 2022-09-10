@@ -138,7 +138,7 @@ object Utils {
         )
     }
 
-    fun createLocationRequest(activity: Activity, hostFragment: Fragment) {
+    fun createLocationRequest(activity: Activity, onLocationUsable: (Boolean) -> Unit) {
         val locationRequest = LocationRequest.create().apply {
             interval = 10000
             fastestInterval = 5000
@@ -151,7 +151,7 @@ object Utils {
 
         taskVerifyLocationSetting.addOnSuccessListener { locationSettingsResponse ->
             if (locationSettingsResponse.locationSettingsStates?.isLocationUsable == true) {
-                requestLocationPermission(hostFragment)
+                onLocationUsable(true)
             }
         }
 
@@ -315,5 +315,9 @@ object Utils {
         this?.addPolyline(options.width(10f)
             .color(ContextCompat.getColor(context, R.color.red_a30))
             .geodesic(false))
+    }
+
+    fun getImageUrl(imageName: String): String {
+        return "http://192.168.1.10:5000/public/images/${imageName}"
     }
 }

@@ -2,6 +2,7 @@ package com.vroomvroom.android.view.ui.home
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
@@ -45,14 +46,14 @@ class MerchantInfoFragment : BaseFragment<FragmentMerchantInfoBinding>(
         val merchant = mainActivityViewModel.merchant
         binding.merchant = merchant
         adapter.submitList(merchant.reviews)
+        Log.d("MerchantInfoFragment", merchant.location.toString())
         merchant.location?.let { location ->
             merchantLocation = LatLng(
-                location[0].toDouble(),
-                location[1].toDouble()
+                location[0],
+                location[1]
             )
+            locationViewModel.getAddress(merchantLocation)
         }
-
-        locationViewModel.getAddress(merchantLocation)
     }
 
     @SuppressLint("SetTextI18n")

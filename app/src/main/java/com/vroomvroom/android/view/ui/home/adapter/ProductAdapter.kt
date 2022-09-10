@@ -9,6 +9,7 @@ import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.ItemProductBinding
 import com.vroomvroom.android.data.model.merchant.Product
 import com.vroomvroom.android.utils.OnProductClickListener
+import com.vroomvroom.android.utils.Utils.getImageUrl
 
 class ProductAdapter(
     private val product: List<Product?>,
@@ -33,8 +34,7 @@ class ProductAdapter(
 
         Glide
             .with(holder.itemView.context)
-            .load(product?.productImgUrl)
-            .placeholder(R.drawable.ic_placeholder)
+            .load(getImageUrl(product?.productImgUrl.orEmpty()))
             .into(holder.binding.orderProductImage)
 
         holder.binding.productPrice.text = holder.itemView.context.getString(

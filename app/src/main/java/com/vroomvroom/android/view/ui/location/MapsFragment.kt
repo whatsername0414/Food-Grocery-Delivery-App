@@ -141,7 +141,11 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(
                 if (hasLocationPermission(requireContext())) {
                     locationViewModel.requestLocationUpdates()
                 } else {
-                    createLocationRequest(requireActivity(), this )
+                    createLocationRequest(requireActivity()) { usable ->
+                        if (usable) {
+                            locationViewModel.requestLocationUpdates()
+                        }
+                    }
                 }
             } else {
                 Snackbar.make(binding.root.rootView, R.string.snackbar_no_connection, Snackbar.LENGTH_SHORT)

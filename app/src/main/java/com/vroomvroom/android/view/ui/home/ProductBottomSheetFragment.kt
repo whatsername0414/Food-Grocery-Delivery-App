@@ -1,6 +1,7 @@
 package com.vroomvroom.android.view.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -16,6 +17,7 @@ import com.vroomvroom.android.databinding.FragmentProductBottomSheetBinding
 import com.vroomvroom.android.utils.ClickType
 import com.vroomvroom.android.utils.OnOptionClickListener
 import com.vroomvroom.android.utils.Utils.clearFocus
+import com.vroomvroom.android.utils.Utils.getImageUrl
 import com.vroomvroom.android.view.ui.base.BaseBottomSheetFragment
 import com.vroomvroom.android.view.ui.home.adapter.OptionSectionAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -44,7 +46,7 @@ class ProductBottomSheetFragment : BaseBottomSheetFragment<FragmentProductBottom
         val product = navArgs.product
         Glide
             .with(this)
-            .load(product.productImgUrl)
+            .load(getImageUrl(product.productImgUrl.orEmpty()))
             .placeholder(R.drawable.ic_placeholder)
             .into(binding.bottomSheetProductImg)
 
@@ -52,8 +54,8 @@ class ProductBottomSheetFragment : BaseBottomSheetFragment<FragmentProductBottom
         binding.optionTypeRv.adapter = optionSectionAdapter
         binding.productPrice.text = getString(R.string.peso, "%.2f".format(product.price))
         binding.product = product
-        optionSectionAdapter.submitList(product.optionTypes)
-        required = product.optionTypes?.filter { it.required }?.size
+        optionSectionAdapter.submitList(product.optionSections)
+        required = product.optionSections?.filter { it.required }?.size
         checkRequired()
         binding.bottomSheetTextDescription.isVisible = !product.description.isNullOrBlank()
 

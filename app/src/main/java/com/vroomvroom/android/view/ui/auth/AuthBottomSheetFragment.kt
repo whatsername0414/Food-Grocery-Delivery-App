@@ -77,7 +77,9 @@ class AuthBottomSheetFragment : BaseBottomSheetFragment<FragmentAuthBottomSheetB
     private fun observeToken() {
         authViewModel.token.observe(viewLifecycleOwner) { token ->
             if (token != null) {
-                currentLocation?.let { authViewModel.register(it) }
+                currentLocation?.let {
+                    authViewModel.register(it, mainActivityViewModel.fcmToken.orEmpty())
+                }
             }
         }
     }
@@ -103,7 +105,8 @@ class AuthBottomSheetFragment : BaseBottomSheetFragment<FragmentAuthBottomSheetB
                         when (type) {
                             ClickType.POSITIVE -> {
                                 loadingDialog.show(getString(R.string.loading))
-                                currentLocation?.let { authViewModel.register(it) }
+                                currentLocation?.let { authViewModel.register(it,
+                                        mainActivityViewModel.fcmToken.orEmpty()) }
                                 dialog.dismiss()
                             }
                             ClickType.NEGATIVE -> Unit

@@ -43,22 +43,22 @@ class MerchantMapper : DomainMapper<MerchantDto, Merchant> {
                 productImgUrl = it.product_img_url,
                 price = it.price,
                 description = it.description,
-                optionTypes = mapToOptions(it.option)
+                optionSections = mapToOptionSection(it.option_sections)
             )
         }
     }
 
-    private fun mapToOptions(options: List<OptionDto>?): List<OptionType>? {
+    private fun mapToOptionSection(options: List<OptionSectionDto>?): List<OptionSections>? {
         return options?.map {
-            OptionType(
+            OptionSections(
                 name = it.name,
                 required = it.required,
-                options = mapToChoices(it.choice)
+                options = mapToChoices(it.options)
             )
         }
     }
 
-    private fun mapToChoices(choices: List<ChoiceDto>): List<Option> {
+    private fun mapToChoices(choices: List<OptionDto>): List<Option> {
         return choices.map {
             Option(
                 name = it.name,

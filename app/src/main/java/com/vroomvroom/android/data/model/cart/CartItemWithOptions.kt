@@ -6,6 +6,6 @@ import androidx.room.Relation
 class CartItemWithOptions(
     @Embedded
     val cartItem: CartItemEntity,
-    @Relation(parentColumn = "productId", entityColumn = "productId")
+    @Relation(parentColumn = "id", entityColumn = "productId")
     val cartItemOptions: List<CartItemOptionEntity>?
 )

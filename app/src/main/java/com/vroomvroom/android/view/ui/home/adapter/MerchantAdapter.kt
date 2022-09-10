@@ -14,6 +14,7 @@ import com.vroomvroom.android.data.model.user.UserEntity
 import com.vroomvroom.android.data.model.merchant.Merchant
 import com.vroomvroom.android.utils.Constants.ADD_TO_FAVORITES
 import com.vroomvroom.android.utils.Constants.REMOVE_FROM_FAVORITES
+import com.vroomvroom.android.utils.Utils.getImageUrl
 import com.vroomvroom.android.utils.Utils.setSafeOnClickListener
 import com.vroomvroom.android.utils.Utils.stringBuilder
 import com.vroomvroom.android.utils.Utils.timeFormatter
@@ -56,7 +57,7 @@ class MerchantAdapter: ListAdapter<Merchant, MerchantViewHolder>(MerchantDiffUti
         holder.binding.merchant = merchant
         Glide
             .with(holder.itemView.context)
-            .load(merchant.img_url)
+            .load(getImageUrl(merchant.img_url))
             .placeholder(R.drawable.ic_placeholder)
             .into(holder.binding.merchantImg)
 

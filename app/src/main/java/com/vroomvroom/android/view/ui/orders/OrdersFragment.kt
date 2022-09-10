@@ -25,7 +25,6 @@ class OrdersFragment : BaseFragment<FragmentOrdersBinding>(
     FragmentOrdersBinding::inflate
 ) {
 
-
     private lateinit var fragmentAdapter: FragmentAdapter
     private val args by navArgs<OrdersFragmentArgs>()
 
@@ -35,21 +34,23 @@ class OrdersFragment : BaseFragment<FragmentOrdersBinding>(
         val fragmentManager = requireActivity().supportFragmentManager
         fragmentAdapter = FragmentAdapter(fragmentManager, lifecycle)
 
-        if (user != null) {
-            binding.tabLayout.visibility = View.VISIBLE
-            binding.viewPager.visibility = View.VISIBLE
-            setupViewPager()
-            setupTabLayout()
-        } else {
-            binding.tabLayout.visibility = View.GONE
-            binding.viewPager.visibility = View.GONE
-            findNavController().navigate(R.id.action_ordersFragment_to_authBottomSheetFragment)
-        }
+        mainViewModel.user.observe(viewLifecycleOwner) { user ->
+            if (user != null) {
+                binding.tabLayout.visibility = View.VISIBLE
+                binding.viewPager.visibility = View.VISIBLE
+                setupViewPager()
+                setupTabLayout()
+            } else {
+                binding.tabLayout.visibility = View.GONE
+                binding.viewPager.visibility = View.GONE
+                findNavController().navigate(R.id.action_ordersFragment_to_authBottomSheetFragment)
+            }
 
-        binding.cart.setOnClickListener {
-            findNavController().safeNavigate(
-                OrderDetailFragmentDirections.actionGlobalToCartBottomSheetFragment()
-            )
+            binding.cart.setOnClickListener {
+                findNavController().safeNavigate(
+                    OrderDetailFragmentDirections.actionGlobalToCartBottomSheetFragment()
+                )
+            }
         }
 
     }

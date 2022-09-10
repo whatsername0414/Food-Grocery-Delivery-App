@@ -20,6 +20,7 @@ import com.vroomvroom.android.data.model.merchant.Merchant
 import com.vroomvroom.android.data.model.merchant.Product
 import com.vroomvroom.android.data.model.merchant.ProductSections
 import com.vroomvroom.android.utils.OnProductClickListener
+import com.vroomvroom.android.utils.Utils.getImageUrl
 import com.vroomvroom.android.utils.Utils.onReady
 import com.vroomvroom.android.utils.Utils.stringBuilder
 import com.vroomvroom.android.utils.Utils.timeFormatter
@@ -152,11 +153,11 @@ class MerchantFragment : BaseFragment<FragmentMerchantBinding>(
             R.string.time, timeFormatter(merchant.opening), timeFormatter(merchant.closing))
         binding.merchantRating.text =
             if (merchant.rates != null)
-                "${merchant.ratings} (${merchant.rates} ${if (merchant.rates == 1) "Review" 
+                "${merchant.ratings ?: 0.0} (${merchant.rates} ${if (merchant.rates == 1) "Review" 
                 else "Reviews"})" else "0.0"
         Glide
             .with(this)
-            .load(merchant.img_url)
+            .load(getImageUrl(merchant.img_url))
             .placeholder(R.drawable.ic_placeholder)
             .into(binding.merchantImg)
     }
@@ -179,10 +180,12 @@ class MerchantFragment : BaseFragment<FragmentMerchantBinding>(
         }
     }
 
-    private fun initializeTabItem(products: List<ProductSections>?) {
+    private fun initializeTabItem(sections: List<ProductSections>?) {
         binding.tlMerchant.removeAllTabs()
-        products?.forEach { product ->
-            binding.tlMerchant.addTab(binding.tlMerchant.newTab().setText(product.name))
+        sections?.forEach { section ->
+            if (section.products.isNotEmpty()) {
+                binding.tlMerchant.addTab(binding.tlMerchant.newTab().setText(section.name))
+            }
         }
     }
 

@@ -6,8 +6,8 @@ import com.vroomvroom.android.data.model.cart.CartItemWithOptions
 import com.vroomvroom.android.data.model.merchant.Option
 
 interface CartRepository {
-    suspend fun insertCartItem(cartItemEntity: CartItemEntity)
-    suspend fun insertCartItemOptions(options: Map<String, Option>)
+    suspend fun insertCartItem(cartItemEntity: CartItemEntity): Long
+    suspend fun insertCartItemOptions(options: Map<String, Option>, productId: Int)
     suspend fun updateCartItem(cartItemEntity: CartItemEntity)
     suspend fun deleteCartItem(cartItemEntity: CartItemEntity)
     suspend fun deleteAllCartItem()

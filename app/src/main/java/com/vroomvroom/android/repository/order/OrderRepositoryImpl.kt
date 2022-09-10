@@ -109,12 +109,14 @@ class OrderRepositoryImpl @Inject constructor(
         try {
             val body = mapOf(
                 "merchantId" to merchantId,
-                "rate" to rate,
+                "rate" to rate.toString(),
                 "comment" to comment
             )
             val result = service.createReview(id, body)
             if (result.isSuccessful && result.code() == 201) {
                 data = handleSuccess(true)
+            } else {
+                return handleException(result.code(), result.errorBody())
             }
         } catch (e: Exception) {
             Log.d(TAG, "Error: ${e.message}")

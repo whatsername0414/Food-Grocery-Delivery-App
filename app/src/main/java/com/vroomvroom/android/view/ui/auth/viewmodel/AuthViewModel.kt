@@ -24,7 +24,7 @@ class AuthViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository,
     private val firebaseAuthRepository: FirebaseAuthRepository,
-    private val smsBroadcastReceiver: SmsBroadcastReceiver,
+    smsBroadcastReceiver: SmsBroadcastReceiver,
     private val preferences: UserPreferences
 ) : ViewModel() {
 
@@ -50,6 +50,7 @@ class AuthViewModel @Inject constructor(
     val messageIntent by lazy { MutableLiveData<Resource<Intent>>() }
 
     val signInIntent = firebaseAuthRepository.signInIntent()
+
     val broadcastReceiver = smsBroadcastReceiver
 
     fun resetOtpLiveData() {
@@ -155,10 +156,10 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    fun register(locationEntity: LocationEntity) {
+    fun register(locationEntity: LocationEntity, fcmToken: String) {
         _isRegistered.postValue(Resource.Loading)
         viewModelScope.launch(Dispatchers.IO) {
-            val response = authRepository.register(locationEntity)
+            val response = authRepository.register(locationEntity, fcmToken)
             response.let { data ->
                 when (data) {
                     is Resource.Success -> {
@@ -283,7 +284,7 @@ class AuthViewModel @Inject constructor(
 
     fun registerBroadcastReceiver() {
         firebaseAuthRepository.smsRetrieverClient()
-        smsBroadcastReceiver.smsBroadcastReceiverListener = object : SmsBroadcastReceiverListener {
+        broadcastReceiver.smsBroadcastReceiverListener = object : SmsBroadcastReceiverListener {
             override fun onIntent(intent: Resource<Intent>) {
                 when (intent) {
                     is Resource.Success -> {

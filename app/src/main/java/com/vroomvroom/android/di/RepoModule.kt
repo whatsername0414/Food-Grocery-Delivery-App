@@ -1,7 +1,6 @@
 package com.vroomvroom.android.di
 
 import android.content.Context
-import androidx.core.app.NotificationCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
@@ -11,7 +10,6 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.vroomvroom.android.data.db.Database
 import com.vroomvroom.android.repository.local.UserPreferences
-import com.vroomvroom.android.utils.Constants.CHANNEL_ID
 import com.vroomvroom.android.utils.Constants.PREFERENCES_STORE_NAME
 import com.vroomvroom.android.utils.Constants.VROOMVROOM_DATABASE
 import dagger.Module
@@ -49,12 +47,6 @@ object RepoModule {
 
     @Singleton
     @Provides
-    fun provideNotificationBuilder(@ApplicationContext app: Context): NotificationCompat.Builder {
-        return NotificationCompat.Builder(app, CHANNEL_ID)
-    }
-
-    @Singleton
-    @Provides
     fun provideOkHttpClient(preferences: UserPreferences): OkHttpClient {
         val interceptor = Interceptor { chain ->
             val token = runBlocking { preferences.token.first() }
@@ -81,7 +73,7 @@ object RepoModule {
     @Singleton
     fun getRetrofitInstance(httpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("http://192.168.1.8:5000/api/v1/")
+            .baseUrl("http://192.168.1.10:5000/api/v1/")
             .client(httpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()

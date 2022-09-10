@@ -1,6 +1,7 @@
 package com.vroomvroom.android.view.ui.home.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -11,6 +12,7 @@ import com.vroomvroom.android.databinding.ItemCartBinding
 import com.vroomvroom.android.data.model.cart.CartItemEntity
 import com.vroomvroom.android.data.model.cart.CartItemWithOptions
 import com.vroomvroom.android.data.model.cart.CartMerchantEntity
+import com.vroomvroom.android.utils.Utils.getImageUrl
 
 class CartAdapter: ListAdapter<CartItemWithOptions, CartViewHolder>(CartDiffUtil()) {
 
@@ -32,15 +34,11 @@ class CartAdapter: ListAdapter<CartItemWithOptions, CartViewHolder>(CartDiffUtil
         holder.binding.cartItemWithChoice = cartItemWithChoice
         Glide
             .with(holder.itemView.context)
-            .load(cartItemWithChoice.cartItem.productImgUrl)
+            .load(getImageUrl(cartItemWithChoice.cartItem.productImgUrl.orEmpty()))
             .placeholder(R.drawable.ic_placeholder)
             .into(holder.binding.productImage)
-        val choiceList = StringBuilder()
-        cartItemWithChoice?.cartItemOptions?.forEach { choice ->
-            choiceList.append("${choice.optionType}: ${choice.name} •\n")
-        }
-
-        holder.binding.productDescription.text = choiceList
+        val optionList = cartItemWithChoice.cartItemOptions?.map { "${it.optionType}: ${it.name}" }
+        holder.binding.productDescription.text = optionList?.joinToString(", ")
         holder.binding.productPrice.text = holder.itemView.context.getString(
             R.string.peso, "%.2f".format(cartItemWithChoice.cartItem.price))
 

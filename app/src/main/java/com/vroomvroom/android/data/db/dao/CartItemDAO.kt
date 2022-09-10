@@ -10,7 +10,7 @@ import com.vroomvroom.android.data.model.cart.CartItemWithOptions
 interface CartItemDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCartItem(cartItemEntity: CartItemEntity)
+    suspend fun insertCartItem(cartItemEntity: CartItemEntity): Long
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCartItemOptions(cartItemOptions: List<CartItemOptionEntity>)
 

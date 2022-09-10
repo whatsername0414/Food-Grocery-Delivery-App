@@ -40,7 +40,7 @@ interface OrderService {
     @PUT("orders/{id}/review")
     suspend fun createReview(
         @Path("id") id: String,
-        @Body body: Map<String, Any>
+        @Body body: Map<String, String>
     ): Response<BaseResponse<Map<String, String>>>
 
 }

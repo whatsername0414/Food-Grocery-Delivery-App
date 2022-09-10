@@ -2,6 +2,7 @@ package com.vroomvroom.android.view.ui.home
 
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -27,6 +28,7 @@ import com.vroomvroom.android.view.ui.common.CommonAlertDialog
 import com.vroomvroom.android.view.ui.common.CompleteType
 import com.vroomvroom.android.view.ui.home.adapter.CheckoutAdapter
 import com.vroomvroom.android.view.ui.home.viewmodel.CheckoutViewModel
+import com.vroomvroom.android.view.ui.home.viewmodel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -37,6 +39,7 @@ class CheckoutFragment : BaseFragment<FragmentCheckoutBinding> (
     FragmentCheckoutBinding::inflate
 ), OnMapReadyCallback {
 
+    private val activityHomeViewModel by activityViewModels<HomeViewModel>()
     private val checkoutViewModel by viewModels<CheckoutViewModel>()
     private val checkoutAdapter by lazy { CheckoutAdapter() }
 
@@ -58,7 +61,7 @@ class CheckoutFragment : BaseFragment<FragmentCheckoutBinding> (
         observeRoomCartItemLiveData()
         observePaymentMethod()
         observeOrderLiveData()
-        observeLocation()
+        initPolyline()
 
         binding.editLocation.setOnClickListener {
             navController.navigate(
@@ -104,24 +107,28 @@ class CheckoutFragment : BaseFragment<FragmentCheckoutBinding> (
         }
     }
 
-    private fun observeLocation() {
-        locationViewModel.userLocation.observe(viewLifecycleOwner) { userLocation ->
-            locationEntity = userLocation.find { it.currentUse }
-            locationEntity?.let {
-                updateLocationViews(it)
-                val sydney1 =
-                    LatLng(it.latitude, it.longitude)
-                val sydney2 = LatLng(13.3571962,123.7297614)
+    private fun initPolyline() {
+        activityHomeViewModel.merchant.observe(viewLifecycleOwner) { res ->
+            if (res is Resource.Success) {
+                locationViewModel.userLocation.observe(viewLifecycleOwner) { locations ->
+                    locationEntity = locations.find { it.currentUse }
+                    locationEntity?.let {
+                        updateLocationViews(it)
+                        val point1 =
+                            LatLng(it.latitude, it.longitude)
+                        val point2 = LatLng(res.data.location?.get(0) ?: 0.0,
+                            res.data.location?.get(1) ?: 0.0)
+                        val boundsBuilder = LatLngBounds.Builder()
+                            .include(point1)
+                            .include(point2)
+                            .build()
+                        val cameraUpdate = CameraUpdateFactory.newLatLngBounds(boundsBuilder, 128)
+                        map?.moveCamera(cameraUpdate)
 
-                val boundsBuilder = LatLngBounds.Builder()
-                    .include(sydney1)
-                    .include(sydney2)
-                    .build()
-                val cameraUpdate = CameraUpdateFactory.newLatLngBounds(boundsBuilder, 128)
-                map?.moveCamera(cameraUpdate)
-
-                map?.setMapWithTwoPoint(requireContext(), sydney1, sydney2)
-                map?.showCurvedPolyline(sydney1, sydney2, context = requireContext())
+                        map?.setMapWithTwoPoint(requireContext(), point1, point2)
+                        map?.showCurvedPolyline(point1, point2, context = requireContext())
+                    }
+                }
             }
         }
     }

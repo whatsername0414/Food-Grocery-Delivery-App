@@ -52,7 +52,7 @@ class OrderDetailFragment : BaseFragment<FragmentOrderDetailBinding>(
                 }
             }
         }
-        ordersViewModel.getOrder(args.id)
+        ordersViewModel.getOrder(args.orderId)
         observeOrder()
         observeReviewed()
         onBackPressed()
@@ -90,7 +90,7 @@ class OrderDetailFragment : BaseFragment<FragmentOrderDetailBinding>(
                     binding.shimmerLayout.visibility = View.GONE
                     binding.shimmerLayout.stopShimmer()
                     binding.commonNoticeLayout.showNetworkError {
-                        ordersViewModel.getOrder(args.id)
+                        ordersViewModel.getOrder(args.orderId)
                     }
                 }
             }

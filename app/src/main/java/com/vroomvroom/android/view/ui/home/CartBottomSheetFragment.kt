@@ -3,10 +3,12 @@ package com.vroomvroom.android.view.ui.home
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.vroomvroom.android.R
 import com.vroomvroom.android.databinding.FragmentCartBottomSheetBinding
 import com.vroomvroom.android.data.model.cart.CartItemWithOptions
+import com.vroomvroom.android.data.model.merchant.Merchant
 import com.vroomvroom.android.utils.ClickType
 import com.vroomvroom.android.utils.Utils.safeNavigate
 import com.vroomvroom.android.utils.Utils.timeFormatter
@@ -14,6 +16,7 @@ import com.vroomvroom.android.view.resource.Resource
 import com.vroomvroom.android.view.ui.base.BaseBottomSheetFragment
 import com.vroomvroom.android.view.ui.home.adapter.CartAdapter
 import com.vroomvroom.android.view.ui.common.CommonAlertDialog
+import com.vroomvroom.android.view.ui.home.viewmodel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -23,7 +26,11 @@ class CartBottomSheetFragment : BaseBottomSheetFragment<FragmentCartBottomSheetB
     FragmentCartBottomSheetBinding::inflate
 ) {
 
+    private val activityHomeViewModel by activityViewModels<HomeViewModel>()
+
     private val cartAdapter by lazy { CartAdapter() }
+
+    private lateinit var merchant: Merchant
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -50,17 +57,52 @@ class CartBottomSheetFragment : BaseBottomSheetFragment<FragmentCartBottomSheetB
             if (previousDestination == R.id.homeFragment) {
                 findNavController().navigate(
                     CartBottomSheetFragmentDirections
-                        .actionCartBottomSheetFragmentToMerchantFragment(homeViewModel.currentMerchantId))
+                        .actionCartBottomSheetFragmentToMerchantFragment(activityHomeViewModel.currentMerchantId))
             } else findNavController().popBackStack()
         }
 
         binding.btnCheckOut.setOnClickListener {
-            homeViewModel.getMerchant(homeViewModel.currentMerchantId)
+            if (!this::merchant.isInitialized) {
+                dialog.show(
+                    getString(R.string.network_error),
+                    getString(R.string.network_error_message),
+                    getString(R.string.cancel),
+                    getString(R.string.retry),
+                    false
+                ) { type ->
+                    when (type) {
+                        ClickType.POSITIVE -> {
+                            activityHomeViewModel.getMerchant(activityHomeViewModel.currentMerchantId)
+                            dialog.dismiss()
+                        }
+                        ClickType.NEGATIVE -> dialog.dismiss()
+                    }
+                }
+                return@setOnClickListener
+            }
+            if (merchant.isOpen) {
+                findNavController().safeNavigate(
+                    CartBottomSheetFragmentDirections
+                        .actionCartBottomSheetFragmentToCheckoutFragment())
+            } else {
+                dialog.show(
+                    getString(R.string.closed),
+                    getString(R.string.closed_alert_label, timeFormatter(merchant.opening)),
+                    getString(R.string.cancel),
+                    getString(R.string.okay),
+                    false
+                ) { type ->
+                    when (type) {
+                        ClickType.POSITIVE -> dialog.dismiss()
+                        ClickType.NEGATIVE -> Unit
+                    }
+                }
+            }
         }
     }
 
     private fun observeMerchant() {
-        homeViewModel.merchant.observe(viewLifecycleOwner) { response ->
+        activityHomeViewModel.merchant.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Resource.Loading -> {
                     binding.cartProgress.visibility = View.VISIBLE
@@ -69,44 +111,12 @@ class CartBottomSheetFragment : BaseBottomSheetFragment<FragmentCartBottomSheetB
                 is Resource.Success -> {
                     binding.cartProgress.visibility = View.GONE
                     binding.btnCheckOut.isEnabled = true
-                    val merchant = response.data
-                    if (merchant.isOpen) {
-                        findNavController().safeNavigate(
-                            CartBottomSheetFragmentDirections
-                                .actionCartBottomSheetFragmentToCheckoutFragment())
-                    } else {
-                        dialog.show(
-                            getString(R.string.closed),
-                            getString(R.string.closed_alert_label, timeFormatter(merchant.opening)),
-                            getString(R.string.cancel),
-                            getString(R.string.okay),
-                            false
-                        ) { type ->
-                            when (type) {
-                                ClickType.POSITIVE -> dialog.dismiss()
-                                ClickType.NEGATIVE -> Unit
-                            }
-                        }
-                    }
+                    merchant = response.data
                 }
                 is Resource.Error -> {
                     binding.cartProgress.visibility = View.GONE
                     binding.btnCheckOut.isEnabled = true
-                    dialog.show(
-                        getString(R.string.network_error),
-                        getString(R.string.network_error_message),
-                        getString(R.string.cancel),
-                        getString(R.string.retry),
-                        false
-                    ) { type ->
-                        when (type) {
-                            ClickType.POSITIVE -> {
-                                homeViewModel.getMerchant(homeViewModel.currentMerchantId)
-                                dialog.dismiss()
-                            }
-                            ClickType.NEGATIVE -> dialog.dismiss()
-                        }
-                    }
+
                 }
             }
         }
@@ -122,7 +132,8 @@ class CartBottomSheetFragment : BaseBottomSheetFragment<FragmentCartBottomSheetB
             } else {
                 cartAdapter.submitList(items)
                 val subTotal = items.sumOf { it.cartItem.price }
-                homeViewModel.currentMerchantId = items.first().cartItem.cartMerchant.merchantId
+                activityHomeViewModel.getMerchant(items.first().cartItem.cartMerchant.merchantId)
+                activityHomeViewModel.currentMerchantId = items.first().cartItem.cartMerchant.merchantId
                 binding.merchantName.text = items.first().cartItem.cartMerchant.merchantName
                 binding.subtotalTv.text = "₱${"%.2f".format(subTotal)}"
                 binding.cartLayout.visibility = View.VISIBLE

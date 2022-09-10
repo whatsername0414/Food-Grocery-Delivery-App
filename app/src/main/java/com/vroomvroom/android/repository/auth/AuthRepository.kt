@@ -5,7 +5,7 @@ import com.vroomvroom.android.view.resource.Resource
 
 interface AuthRepository {
 
-    suspend fun register(locationEntity: LocationEntity): Resource<Boolean>?
+    suspend fun register(locationEntity: LocationEntity, fcmToken: String): Resource<Boolean>?
     suspend fun generateEmailOtp(emailAddress: String): Resource<Boolean>
     suspend fun verifyEmailOtp(emailAddress: String, otp: String): Resource<Boolean>
 

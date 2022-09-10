@@ -1,6 +1,7 @@
 package com.vroomvroom.android.view.ui.home.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
@@ -42,9 +43,13 @@ class ProductSectionAdapter(
     }
 
     override fun onBindViewHolder(holder: ProductsSectionViewHolder, position: Int) {
-        holder.binding.productSection = getItem(position)
+        val section = getItem(position)
+        holder.binding.productSection = section
         val productAdapter = ProductAdapter(getItem(position).products, listener)
         holder.binding.productSectionRv.adapter = productAdapter
+        if (section.products.isEmpty()) {
+            holder.itemView.visibility = View.GONE
+        }
     }
 }
 

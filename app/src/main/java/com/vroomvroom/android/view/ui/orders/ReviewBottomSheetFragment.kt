@@ -36,42 +36,37 @@ class ReviewBottomSheetFragment : BaseBottomSheetFragment<FragmentReviewBottomSh
         ordersViewModel.isReviewCreated.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Resource.Loading -> {
-                    isCancelable = false
+                    loadingDialog.show(getString(R.string.loading))
                     binding.progressIndicator.visibility = View.VISIBLE
                     binding.btnSubmit.isEnabled = false
                 }
                 is Resource.Success -> {
+                    loadingDialog.dismiss()
                     mainActivityViewModel.reviewed.postValue(true)
                     dismiss()
                 }
                 is Resource.Error -> {
+                    loadingDialog.dismiss()
                     binding.progressIndicator.visibility = View.GONE
                     binding.btnSubmit.isEnabled = true
                     isCancelable = true
-                    initAlertDialog()
+                    dialog.show(
+                        getString(R.string.failed),
+                        response.exception.message ?: getString(R.string.general_error_message),
+                        getString(R.string.cancel),
+                        getString(R.string.retry)
+                    ) { type ->
+                        when (type) {
+                            ClickType.POSITIVE -> {
+                                val rate = binding.ratingBar.rating.toInt()
+                                val comment = binding.inputEditText.text?.toString().orEmpty()
+                                ordersViewModel.createReview(args.orderId, args.merchantId, rate, comment)
+                                dialog.dismiss()
+                            }
+                            ClickType.NEGATIVE -> dialog.dismiss()
+                        }
+                    }
                 }
-            }
-        }
-    }
-
-    private fun initAlertDialog() {
-        val dialog = CommonAlertDialog(
-            requireActivity()
-        )
-        dialog.show(
-            getString(R.string.network_error),
-            getString(R.string.network_error_message),
-            getString(R.string.cancel),
-            getString(R.string.retry)
-        ) { type ->
-            when (type) {
-                ClickType.POSITIVE -> {
-                    val rate = binding.ratingBar.rating.toInt()
-                    val comment = binding.inputEditText.text?.toString().orEmpty()
-                    ordersViewModel.createReview(args.orderId, args.merchantId, rate, comment)
-                    dialog.dismiss()
-                }
-                ClickType.NEGATIVE -> dialog.dismiss()
             }
         }
     }

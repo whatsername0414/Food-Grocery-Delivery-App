@@ -9,7 +9,7 @@ data class MerchantDto(
     val rates: Int?,
     val ratings: Double?,
     var favorite: Boolean?,
-    val location: List<String>?,
+    val location: List<Double>?,
     val opening: Int,
     val closing: Int,
     val isOpen: Boolean,
@@ -28,16 +28,16 @@ data class ProductDto(
     val product_img_url: String?,
     val price: Double,
     val description: String?,
-    val option: List<OptionDto>?
+    val option_sections: List<OptionSectionDto>?
+)
+
+data class OptionSectionDto(
+    val name: String,
+    val required: Boolean,
+    val options: List<OptionDto>
 )
 
 data class OptionDto(
-    val name: String,
-    val required: Boolean,
-    val choice: List<ChoiceDto>
-)
-
-data class ChoiceDto(
     val name: String,
     val additional_price: Double?
 )

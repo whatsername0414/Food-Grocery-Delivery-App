@@ -7,21 +7,21 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.vroomvroom.android.R
-import com.vroomvroom.android.data.model.merchant.OptionType
+import com.vroomvroom.android.data.model.merchant.OptionSections
 import com.vroomvroom.android.databinding.ItemOptionTypeBinding
 import com.vroomvroom.android.utils.OnOptionClickListener
 
-class OptionSectionDiffUtil: DiffUtil.ItemCallback<OptionType>() {
+class OptionSectionDiffUtil: DiffUtil.ItemCallback<OptionSections>() {
     override fun areItemsTheSame(
-        oldItem: OptionType,
-        newItem: OptionType
+        oldItem: OptionSections,
+        newItem: OptionSections
     ): Boolean {
         return oldItem.name == newItem.name
     }
 
     override fun areContentsTheSame(
-        oldItem: OptionType,
-        newItem: OptionType
+        oldItem: OptionSections,
+        newItem: OptionSections
     ): Boolean {
         return oldItem == newItem
     }
@@ -29,7 +29,7 @@ class OptionSectionDiffUtil: DiffUtil.ItemCallback<OptionType>() {
 
 class OptionSectionAdapter (
     private val listener: OnOptionClickListener
-): ListAdapter<OptionType, OptionSectionViewHolder>(OptionSectionDiffUtil()) {
+): ListAdapter<OptionSections, OptionSectionViewHolder>(OptionSectionDiffUtil()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OptionSectionViewHolder {
         val binding: ItemOptionTypeBinding = DataBindingUtil.inflate(
@@ -43,7 +43,7 @@ class OptionSectionAdapter (
 
     override fun onBindViewHolder(holder: OptionSectionViewHolder, position: Int) {
         val optionType = getItem(position)
-        holder.binding.optionType = optionType
+        holder.binding.sections = optionType
         val productAdapter = OptionAdapter(getItem(position).options, listener)
         productAdapter.setProductOptionType(optionType.name)
         holder.binding.optionSectionRv.adapter = productAdapter

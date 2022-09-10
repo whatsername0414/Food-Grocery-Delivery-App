@@ -41,6 +41,6 @@ data class OrderProduct (
 
 data class OrderProductOption (
 	val name : String,
-	val additionalPrice : Double?,
-	val optionType : String
+	@SerializedName("additional_price") val additionalPrice : Double?,
+	@SerializedName("option_type") val optionType : String
 )

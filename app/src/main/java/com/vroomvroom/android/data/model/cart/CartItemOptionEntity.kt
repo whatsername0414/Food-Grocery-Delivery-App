@@ -11,5 +11,5 @@ data class CartItemOptionEntity(
     val name: String,
     val additionalPrice: Double? = null,
     val optionType: String,
-    val productId: String? = null
+    val productId: Int? = null
 )
